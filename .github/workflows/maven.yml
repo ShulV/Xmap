@@ -37,14 +37,19 @@ jobs:
     runs-on: ubuntu-latest
     # needs: ["build"]
     steps:
-    - name: Docker image pulling from hub
-      run: |
-        ssh Shulpov@185.249.227.104
-        ${{ secrets.FTP_PASSWORD }}
-        docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker pull shulpov/spring-boot-spots-app
-    - name: Docker running
-      run: docker run shulpov/spring-boot-spots-app &
+    - name: Docker image pulling from hub and running
+      uses: fifsky/ssh-action@master
+      with:
+        command: |
+          ssh Shulpov@185.249.227.104
+          ${{ secrets.FTP_PASSWORD }}
+          docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker pull shulpov/spring-boot-spots-app
+          docker run shulpov/spring-boot-spots-app &
+        host: ${{ secrets.FTP_IP_ADDRESS }}
+        user: ${{ secrets.FTP_REMOTE_USER}}
+        key: ${{ secrets.FTP_SSH_KEY}}
+
 
 
   
