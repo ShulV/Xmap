@@ -16,7 +16,7 @@ on:
 
 jobs:
   build:
-
+    name: Build & test & push to dockerHUB
     runs-on: ubuntu-latest
     steps:
     - name: Copying project to runner
@@ -33,11 +33,18 @@ jobs:
     - name: Build & push docker image
       uses: mr-smithers-excellent/docker-build-push@v5
       with:
-        image: shulpov/springboot-spots-app
+        image: shulpov/spring-boot-spots-app
         tags: latest
         registry: docker.io
         dockerfile: ./Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+  
+  deploy:
+    name: Pull from docker & run images
+    runs-on: ubuntu-latest
+    steps:
+    - name: Copying project to runner
+
 
     
