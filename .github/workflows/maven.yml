@@ -45,9 +45,9 @@ jobs:
     - name: Docker image pulling from hub and running
       run: |
         sshpass -p ${{ secrets.FTP_PASSWORD }} ssh -T Shulpov@185.249.227.104
-        # docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
-        # docker pull shulpov/spring-boot-spots-app
-        # docker run shulpov/spring-boot-spots-app &
+      # docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
+      # docker pull shulpov/spring-boot-spots-app
+       # docker run shulpov/spring-boot-spots-app &
 
 
 
