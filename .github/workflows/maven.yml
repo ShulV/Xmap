@@ -42,10 +42,13 @@ jobs:
       with:
         host: ${{ secrets.FTP_IP_ADDRESS }}
         username: ${{ secrets.FTP_REMOTE_USER }}
-        key: ${{ secrets.FTP_SSH_KEY }}
+        password: ${{ secrets.FTP_PASSWORD }}
         script: |
           whoami
           ls -a
+          pwd
+
+          
     # - name: installing
     #   uses: awalsh128/cache-apt-pkgs-action@latest
     #   with:
