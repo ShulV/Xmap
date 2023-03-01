@@ -1,11 +1,3 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
-
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Java CI with Maven
 
 on:
@@ -43,9 +35,12 @@ jobs:
   deploy:
     name: Pull from docker & run images
     runs-on: ubuntu-latest
+    needed: ["build"]
     steps:
     - name: Docker image pulling from hub
       run: |
+        ssh Shulpov@185.249.227.104
+        ${{ secrets.FTP_PASSWORD }}
         docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
         docker pull shulpov/spring-boot-spots-app
     - name: Docker running
