@@ -1,0 +1,63 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Copying project to runner
+      uses: actions/checkout@v3 # копирует проект в runner
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3 # конфигурирует Eclipse 17 JDK
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - name: ls
+      run: ls -a
+    - name: Build with Maven
+      run: mvn -f ./test-project/ --batch-mode --update-snapshots verify
+    - name: Archive prod artifact
+      uses: actions/upload-artifact@main
+      with:
+        name: dist
+        path: dist
+    - name: ls
+      run: ls -a
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@main
+        with:
+          name: dist
+          path: dist
+      - name: ls
+        run: ls -a
+      - name: Sync files to host
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        with:
+          server: ${{ secrets.FTP_IP_ADDRESS }}
+          username: ${{ secrets.FTP_REMOTE_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 8080
+          protocol: ftps
+    
