@@ -7,30 +7,30 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-    name: Build & test & push to dockerHUB
-    runs-on: ubuntu-latest
-    steps:
-    - name: Copying project to runner
-      uses: actions/checkout@v3 # копирует проект в runner
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3 # конфигурирует Eclipse 17 JDK
-      with:
-        java-version: '17'
-        distribution: 'adopt'
-        cache: maven
-    - name: Build with Maven
-      run: mvn -f ./ clean install
+  # build:
+  #   name: Build & test & push to dockerHUB
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Copying project to runner
+  #     uses: actions/checkout@v3 # копирует проект в runner
+  #   - name: Set up JDK 17
+  #     uses: actions/setup-java@v3 # конфигурирует Eclipse 17 JDK
+  #     with:
+  #       java-version: '17'
+  #       distribution: 'adopt'
+  #       cache: maven
+  #   - name: Build with Maven
+  #     run: mvn -f ./ clean install
 
-    - name: Build & push docker image
-      uses: mr-smithers-excellent/docker-build-push@v5
-      with:
-        image: shulpov/spring-boot-spots-app
-        tags: latest
-        registry: docker.io
-        dockerfile: ./Dockerfile
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+  #   - name: Build & push docker image
+  #     uses: mr-smithers-excellent/docker-build-push@v5
+  #     with:
+  #       image: shulpov/spring-boot-spots-app
+  #       tags: latest
+  #       registry: docker.io
+  #       dockerfile: ./Dockerfile
+  #       username: ${{ secrets.DOCKER_USERNAME }}
+  #       password: ${{ secrets.DOCKER_PASSWORD }}
   
   deploy:
     name: Pull from docker & run images
@@ -39,7 +39,7 @@ jobs:
     steps:
     - name: Docker image pulling from hub
       run: |
-        ssh -t Shulpov@185.249.227.104
+        ssh Shulpov@185.249.227.104
         ${{ secrets.FTP_PASSWORD }}
         docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
         docker pull shulpov/spring-boot-spots-app
