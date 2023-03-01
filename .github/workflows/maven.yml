@@ -35,7 +35,7 @@ jobs:
   deploy:
     name: Pull from docker & run images
     runs-on: ubuntu-latest
-    needed: ["build"]
+    needs: ["build"]
     steps:
     - name: Docker image pulling from hub
       run: |
