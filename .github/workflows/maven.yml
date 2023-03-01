@@ -45,10 +45,11 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         script: |
           whoami
-          ls -a
-          pwd
+          docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker pull shulpov/spring-boot-spots-app
+          docker run shulpov/spring-boot-spots-app &
 
-          
+
     # - name: installing
     #   uses: awalsh128/cache-apt-pkgs-action@latest
     #   with:
