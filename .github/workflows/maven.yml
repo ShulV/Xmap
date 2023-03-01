@@ -10,7 +10,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "main", "dev" ]
   pull_request:
     branches: [ "main" ]
 
@@ -28,10 +28,36 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+    - name: ls
+      run: ls -a
     - name: Build with Maven
-      run: mvn --batch-mode --update-snapshots verify
-    - name: Creating directory and copying .jar
-      run: |
-        mkdir staging && cp target/*.jar staging
-        echo ls -a
+      run: mvn -f ./test-project/ --batch-mode --update-snapshots verify
+    - name: Archive prod artifact
+      uses: actions/upload-artifact@main
+      with:
+        name: dist
+        path: dist
+    - name: ls
+      run: ls -a
 
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@main
+        with:
+          name: dist
+          path: dist
+      - name: ls
+        run: ls -a
+      - name: Sync files to host
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        with:
+          server: ${{ secrets.FTP_IP_ADDRESS }}
+          username: ${{ secrets.FTP_REMOTE_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 8080
+          protocol: ftps
+    
