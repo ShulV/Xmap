@@ -39,7 +39,7 @@ jobs:
     steps:
     - name: installing
       uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
+      with:
           packages: sshpass
           version: 1.0
     - name: Docker image pulling from hub and running
