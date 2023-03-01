@@ -40,11 +40,20 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
   
-  # deploy:
-  #   name: Pull from docker & run images
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - name: Copying project to runner
+  deploy:
+    name: Pull from docker & run images
+    runs-on: ubuntu-latest
+    steps:
+    - name: Docker image pulling from hub
+      run: |
+        docker login -u shulpov
+        ${{ secrets.DOCKER_RW_TOKEN }}
+        docker pull shulpov/spring-boot-spots-app
+    - name: Docker running
+      run: docker run shulpov/spring-boot-spots-app &
+
+
+  
 
 
     
