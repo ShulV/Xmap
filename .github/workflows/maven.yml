@@ -39,7 +39,7 @@ jobs:
     steps:
     - name: Docker image pulling from hub
       run: |
-        ssh Shulpov@185.249.227.104
+        ssh -t Shulpov@185.249.227.104
         ${{ secrets.FTP_PASSWORD }}
         docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
         docker pull shulpov/spring-boot-spots-app
