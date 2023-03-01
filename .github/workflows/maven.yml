@@ -46,8 +46,8 @@ jobs:
     steps:
     - name: Docker image pulling from hub
       run: |
-        winpty docker login -u shulpov
-        ${{ secrets.DOCKER_RW_TOKEN }}
+        docker login -u shulpov
+        ${{ secrets.PASSWORD }}
         docker pull shulpov/spring-boot-spots-app
     - name: Docker running
       run: docker run shulpov/spring-boot-spots-app &
