@@ -41,7 +41,7 @@ jobs:
       uses: fifsky/ssh-action@master
       with:
         command: |
-          ssh Shulpov@185.249.227.104
+          ssh -tt Shulpov@185.249.227.104
           ${{ secrets.FTP_PASSWORD }}
           docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
           docker pull shulpov/spring-boot-spots-app
