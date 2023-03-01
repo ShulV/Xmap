@@ -46,8 +46,7 @@ jobs:
     steps:
     - name: Docker image pulling from hub
       run: |
-        docker login -u shulpov
-        ${{ secrets.PASSWORD }}
+        docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
         docker pull shulpov/spring-boot-spots-app
     - name: Docker running
       run: docker run shulpov/spring-boot-spots-app &
