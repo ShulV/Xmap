@@ -28,7 +28,7 @@ jobs:
         distribution: 'adopt'
         cache: maven
     - name: Build with Maven
-      run: mvn -f ./test-project/ clean install
+      run: mvn -f ./ clean install
 
     - name: Build & push docker image
       uses: mr-smithers-excellent/docker-build-push@v5
@@ -36,7 +36,7 @@ jobs:
         image: shulpov/springboot-spots-app
         tags: latest
         registry: docker.io
-        dockerfile: ./test-project/Dockerfile
+        dockerfile: ./Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
