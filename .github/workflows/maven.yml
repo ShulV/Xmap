@@ -40,11 +40,11 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
   
-  deploy:
-    name: Pull from docker & run images
-    runs-on: ubuntu-latest
-    steps:
-    - name: Copying project to runner
+  # deploy:
+  #   name: Pull from docker & run images
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Copying project to runner
 
 
     
