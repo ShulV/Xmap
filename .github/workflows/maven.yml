@@ -36,7 +36,7 @@ jobs:
         image: shulpov/springboot-spots-app
         tags: latest
         registry: docker.io
-        dockerfile: Dockerfile
+        dockerfile: ./test-project/Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
