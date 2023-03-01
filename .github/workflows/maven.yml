@@ -47,24 +47,8 @@ jobs:
           whoami
           docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
           docker pull shulpov/spring-boot-spots-app
-          docker run -p 8080:8080 -it --rm shulpov/spring-boot-spots-app
-        script_stop: true
-
-
-    # - name: installing
-    #   uses: awalsh128/cache-apt-pkgs-action@latest
-    #   with:
-    #       packages: sshpass
-    #       version: 1.0
-    # - name: Docker image pulling from hub and running
-    #   run: |
-    #     sshpass -p ${{ secrets.FTP_PASSWORD }} ssh Shulpov@185.249.227.104
-      
-      
-      # docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
-      # docker pull shulpov/spring-boot-spots-app
-      # docker run shulpov/spring-boot-spots-app &
-
+          docker run shulpov/spring-boot-spots-app &
+          exit
 
 
   
