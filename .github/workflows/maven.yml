@@ -48,7 +48,7 @@ jobs:
           docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
           docker pull shulpov/spring-boot-spots-app
           docker run -p 8080:8080 -it --rm shulpov/spring-boot-spots-app
-          exit
+        script_stop: true
 
 
     # - name: installing
