@@ -31,7 +31,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-		<finalName>springboot-spots-app</finalName>
+		<finalName>spring-boot-spots-app</finalName>
 	</build>
 
 </project>
