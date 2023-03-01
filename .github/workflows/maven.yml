@@ -47,10 +47,7 @@ jobs:
           whoami
           docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
           docker pull shulpov/spring-boot-spots-app
-          docker run -p 8080:8080 -it --rm shulpov/spring-boot-spots-app &
-          echo 'wait 10s'
-          sleep(10)
-          echo 'Completed successfully!'
+          docker run -p 8080:8080 -it --rm shulpov/spring-boot-spots-app
           exit
 
 
