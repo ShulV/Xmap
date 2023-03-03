@@ -47,6 +47,7 @@ jobs:
           whoami
           docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
           docker pull shulpov/spring-boot-spots-app
+          docker rmi $(docker images 'shulpov/spring-boot-spots-app' -a -q)
           docker run -d -p 8080:8080 --name spots_app --rm shulpov/spring-boot-spots-app
         # -d запуск в фоне, --name имя контейнера, --rm удалить контейнер, когда он остановится
           
