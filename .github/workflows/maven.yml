@@ -2,7 +2,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "main", "dev" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -23,7 +23,7 @@ jobs:
       run: mvn -f ./ clean install
 
     - name: Build & push docker image
-      uses: mr-smithers-excellent/docker-build-push@v5
+      uses: mr-smithers-excellent/docker-build-push@v5 # пушит image в dockerHUB
       with:
         image: shulpov/spring-boot-spots-app
         tags: latest
@@ -38,7 +38,7 @@ jobs:
     needs: ["build"]
     steps:
     - name: multiple command
-      uses: appleboy/ssh-action@v0.1.8
+      uses: appleboy/ssh-action@v0.1.8 # подключается по SSH к remote server
       with:
         host: ${{ secrets.FTP_IP_ADDRESS }}
         username: ${{ secrets.FTP_REMOTE_USER }}
