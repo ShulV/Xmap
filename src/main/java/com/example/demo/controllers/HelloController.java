@@ -1,14 +1,40 @@
 package com.example.demo.controllers;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.demo.models.User;
+import com.example.demo.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api")
 public class HelloController {
-    @GetMapping()
+
+    private final UserService userService;
+
+    @Autowired
+    public HelloController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping("/")
     public String getHello() {
         return "Оно работает!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! v3 + фича 1 + фича 2";
+    }
+
+    @GetMapping("/addUser")
+    public String addUser(@RequestParam String name) {
+        userService.addUser(name);
+        return "User " + name + " добавлен";
+    }
+
+    @GetMapping("/getUser/{id}")
+    public String addUser(@PathVariable Long id) {
+        Optional<User> user = userService.getUserById(id);
+        if (user.isEmpty()) {
+            return "User not found";
+        }
+        return "User: id=" + user.get().getId() + "; name="+user.get().getName();
     }
 }
