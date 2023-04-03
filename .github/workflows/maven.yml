@@ -49,7 +49,7 @@ jobs:
           docker rmi $(docker images 'shulpov/spring-boot-spots-app' -a -q)
           docker stop spots_app
           docker pull shulpov/spring-boot-spots-app
-          docker run -d -p 8080:8080 --name spots_app --rm shulpov/spring-boot-spots-app
+#          docker run -d -p 8080:8080 --name spots_app --rm shulpov/spring-boot-spots-app
         # -d запуск в фоне, --name имя контейнера, --rm удалить контейнер, когда он остановится
           
 
