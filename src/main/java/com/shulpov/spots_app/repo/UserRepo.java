@@ -1,6 +1,6 @@
-package com.example.demo.repo;
+package com.shulpov.spots_app.repo;
 
-import com.example.demo.models.User;
+import com.shulpov.spots_app.models.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

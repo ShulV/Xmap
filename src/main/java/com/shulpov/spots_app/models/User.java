@@ -1,4 +1,4 @@
-package com.example.demo.models;
+package com.shulpov.spots_app.models;
 
 import jakarta.persistence.*;
 

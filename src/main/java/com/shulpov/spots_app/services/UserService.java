@@ -1,7 +1,7 @@
-package com.example.demo.services;
+package com.shulpov.spots_app.services;
 
-import com.example.demo.models.User;
-import com.example.demo.repo.UserRepo;
+import com.shulpov.spots_app.models.User;
+import com.shulpov.spots_app.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
