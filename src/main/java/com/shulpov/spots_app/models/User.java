@@ -1,6 +1,12 @@
 package com.shulpov.spots_app.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 
 @Entity
@@ -13,6 +19,33 @@ public class User {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "pass_hash")
+    private String passHash;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "birthday")
+    @NotNull(message = "Дата дня рождения не должна быть пустой")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate birthday;
+
+    @Column(name = "reg_date")
+    private LocalDate regDate;
+
+    @Transient
+    @NotNull(message = "Пароль не должен быть пустой")
+    @Size(min = 6, max = 256, message = "Длина пароля должна быть от 6 до 50 символов")
+    private String password;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    private Role role;
 
     public User() {
     }
@@ -35,5 +68,65 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassHash() {
+        return passHash;
+    }
+
+    public void setPassHash(String passHash) {
+        this.passHash = passHash;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public LocalDate getRegDate() {
+        return regDate;
+    }
+
+    public void setRegDate(LocalDate regDate) {
+        this.regDate = regDate;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getRoleCodeName() {
+        return role.getNameCode();
     }
 }
