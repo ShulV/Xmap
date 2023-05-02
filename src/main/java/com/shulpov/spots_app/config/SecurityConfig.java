@@ -1,11 +1,12 @@
 package com.shulpov.spots_app.config;
 
-import com.shulpov.spots_app.services.JpaUserDetailsService;
+import com.shulpov.spots_app.services.AppUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -15,32 +16,31 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JpaUserDetailsService jpaUserDetailsService;
+    private final AppUserDetailsService appUserDetailsService;
+//    private final JWTFilter jwtFilter;
 
-    public SecurityConfig(JpaUserDetailsService jpaUserDetailsService) {
-        this.jpaUserDetailsService = jpaUserDetailsService;
+    public SecurityConfig(AppUserDetailsService appUserDetailsService) {
+        this.appUserDetailsService = appUserDetailsService;
+//        this.jwtFilter = jwtFilter;
     }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .authorizeRequests()
-                //пускать неаутентифицир. пользователя на эти страницы
-//                .antMatchers("/people/**").hasRole("ADMIN")
-//                .antMatchers("/auth/login", "/auth/registration", "/error").permitAll()
-//                .anyRequest().hasAnyRole("USER", "ADMIN")
-                .anyRequest().permitAll()
+                //отключаем межасайтовую подделку форм, т.к. у нас REST API и здесь такой проблемы нет
+                .csrf().disable()
+//                .authorizeHttpRequests()
+                //разрешить неаутентифицир. пользователям обращаться
+//                .requestMatchers("/api/auth/register", "/error").permitAll()
+//                .and()
+                //не сохранять сессии автоматически (т.к. мы используем JWT)
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                //кастомная форма аутентификации
-                .formLogin().loginPage("/auth/login")
-                .loginProcessingUrl("/process_login")
-                .defaultSuccessUrl("/people", true)
-                .failureUrl("/auth/login?error")
-                .and()
-                //разлогирование
-                .logout().logoutUrl("/logout").logoutSuccessUrl("/auth/login")
-                .and()
-                .userDetailsService(jpaUserDetailsService)
+                //фильтр для проверки токенов всех запросов
+//                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                //
+                .userDetailsService(appUserDetailsService)
                 .build();
     }
 

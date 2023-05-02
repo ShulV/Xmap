@@ -2,7 +2,6 @@ package com.shulpov.spots_app.services;
 
 import com.shulpov.spots_app.models.SecurityUser;
 import com.shulpov.spots_app.models.User;
-import com.shulpov.spots_app.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,12 +13,12 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class JpaUserDetailsService implements UserDetailsService {
+public class AppUserDetailsService implements UserDetailsService {
 
     private final UserService userService;
 
     @Autowired
-    public JpaUserDetailsService(UserService userService) {
+    public AppUserDetailsService(UserService userService) {
         this.userService = userService;
     }
 
