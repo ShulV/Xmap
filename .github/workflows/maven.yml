@@ -50,8 +50,8 @@ jobs:
           docker stop spots_app
           docker pull shulpov/spring-boot-spots-app
 
-          docker run -d -p 8080:8080 --name spots_app --rm shulpov/spring-boot-spots-app logs spots_app >& .spots-app/spring.log
-          docker logs spots_app >& logs/springLogs.log
+          docker run -d -p 8080:8080 --name spots_app --rm shulpov/spring-boot-spots-app
+#          docker logs spots_app >& logs/springLogs.log
         # -d запуск в фоне, --name имя контейнера, --rm удалить контейнер, когда он остановится
           
 
