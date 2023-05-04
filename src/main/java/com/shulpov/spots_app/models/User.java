@@ -2,10 +2,7 @@ package com.shulpov.spots_app.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -27,6 +24,7 @@ public class User {
     @Column(name = "email")
     @NotNull(message = "Email не должен быть пустой")
     @Email(message = "Email должен быть валидным")
+    @Size(min = 5, max = 50, message = "Длина почты должна быть от 5 до 50 символов")
     private String email;
 
     @Column(name = "pass_hash")
@@ -34,6 +32,7 @@ public class User {
 
     @Column(name = "phone_number")
     @NotEmpty(message = "Номер не должен быть пустым")
+    @Max(value = 15, message = "В номере телефона должно быть меньше 16 цифр")
     private String phoneNumber;
 
     @Column(name = "birthday")
@@ -47,7 +46,7 @@ public class User {
 
     @Transient
     @NotNull(message = "Пароль не должен быть пустой")
-    @Size(min = 6, max = 256, message = "Длина пароля должна быть от 6 до 50 символов")
+    @Size(min = 6, max = 50, message = "Длина пароля должна быть от 6 до 50 символов")
     private String password;
 
     @ManyToOne

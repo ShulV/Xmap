@@ -1,19 +1,25 @@
 package com.shulpov.spots_app.controllers;
 
+import com.shulpov.spots_app.dto.AuthenticationDTO;
 import com.shulpov.spots_app.dto.UserDTO;
 import com.shulpov.spots_app.models.User;
 import com.shulpov.spots_app.security.JWTUtil;
 import com.shulpov.spots_app.services.RegistrationService;
 import com.shulpov.spots_app.services.RoleService;
+import com.shulpov.spots_app.services.UserService;
 import com.shulpov.spots_app.utils.UserValidator;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -23,16 +29,19 @@ public class AuthController {
     private final UserValidator userValidator;
     private final ModelMapper modelMapper;
     private final RegistrationService registrationService;
-
     private final RoleService roleService;
+    private final UserService userService;
+    private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public AuthController(JWTUtil jwtUtil, UserValidator userValidator, ModelMapper modelMapper, RegistrationService registrationService, RoleService roleService) {
+    public AuthController(JWTUtil jwtUtil, UserValidator userValidator, ModelMapper modelMapper, RegistrationService registrationService, RoleService roleService, UserService userService, AuthenticationManager authenticationManager) {
         this.jwtUtil = jwtUtil;
         this.userValidator = userValidator;
         this.modelMapper = modelMapper;
         this.registrationService = registrationService;
         this.roleService = roleService;
+        this.userService = userService;
+        this.authenticationManager = authenticationManager;
     }
 
 //    @GetMapping("/login")
@@ -53,9 +62,30 @@ public class AuthController {
         }
         registrationService.register(user);
 
-        String token = jwtUtil.generateToken(user.getEmail());
+        String token = jwtUtil.generateToken(user);
         return Map.of("jwtToken", token);
         //TODO возвращать response со статус успешным кодом (нужно возвращать еще токен)
+    }
+
+    @PostMapping("/login")
+    public Map<String, String> performLogin(@RequestBody AuthenticationDTO authenticationDTO) {
+        UsernamePasswordAuthenticationToken authInputToken =
+                new UsernamePasswordAuthenticationToken(authenticationDTO.getEmail(),
+                        authenticationDTO.getPassword());
+
+        try {
+            authenticationManager.authenticate(authInputToken);
+        } catch (BadCredentialsException e) {
+            return Map.of("message", "Incorrect credentials!");
+        }
+        Optional<User> userOpt = userService.findByEmail(authenticationDTO.getEmail());
+        if(userOpt.isPresent()) {
+            String token = jwtUtil.generateToken(userOpt.get());
+            return Map.of("jwtToken", token);
+        } else {
+            return Map.of("error", "Пользователь с такими данными не найден");
+        }
+
     }
 
     public User convertToUser(UserDTO userDTO) {

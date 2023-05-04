@@ -25,7 +25,19 @@ public class UserService {
         return userRepo.findById(id);
     }
 
-    public Optional<User> findByLogin(String username) {
-        return userRepo.findByEmail(username);
+    public Optional<User> findByEmail(String email) {
+        return userRepo.findByEmail(email);
+    }
+
+    public Optional<User> findByName(String name) {
+        return userRepo.findByName(name);
+    }
+
+    public void deleteById(Long id) {
+        userRepo.deleteById(id);
+    }
+
+    public Optional<User> findByPhoneNumber(String phoneNumber) {
+        return userRepo.findByPhoneNumber(phoneNumber);
     }
 }

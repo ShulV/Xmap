@@ -1,10 +1,7 @@
 package com.shulpov.spots_app.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -16,9 +13,11 @@ public class UserDTO {
 
     @NotNull(message = "Email не должен быть пустой")
     @Email(message = "Email должен быть валидным")
+    @Size(min = 5, max = 50, message = "Длина почты должна быть от 5 до 50 символов")
     private String email;
 
     @NotEmpty(message = "Номер не должен быть пустым")
+    @Max(value = 15, message = "В номере телефона должно быть меньше 16 цифр")
     private String phoneNumber;
 
     @NotNull(message = "Дата дня рождения не должна быть пустой")

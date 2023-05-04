@@ -7,16 +7,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
-public class SecurityUser implements UserDetails {
+public class PersonDetails implements UserDetails {
     private final User user;
 
-    public SecurityUser(User user) {
+    public PersonDetails(User user) {
         this.user = user;
     }
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return user.getName();
     }
 
     @Override

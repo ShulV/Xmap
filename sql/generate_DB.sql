@@ -63,7 +63,7 @@ CREATE TABLE public.users(
                        "name" varchar(30) NOT NULL UNIQUE,
                        email varchar(50) NOT NULL UNIQUE,
                        pass_hash varchar(256) NOT NULL,
-                       phone_number varchar(15) NOT NULL,
+                       phone_number varchar(15) NOT NULL UNIQUE,
                        birthday date NOT NULL,
                        reg_date date NOT NULL,
                         -- удалять роли и изменять их id запрещено
