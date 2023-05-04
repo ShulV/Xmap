@@ -15,12 +15,16 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -59,7 +63,12 @@ public class AuthController {
         userValidator.validate(user, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            return Map.of("error_key", "error_value");
+            Map<String, String> errorMap = new HashMap<>();
+            List<ObjectError> errors = bindingResult.getAllErrors();
+            errors.forEach((er)->{
+                errorMap.put(er.getObjectName(), er.getDefaultMessage());
+            });
+            return errorMap;
             //TODO сделать исключение или придумать как возвращать ошибку REST API
             //надо выбрасывать исключение, ловить его с помощью HandleException как в проекте N 3
         }

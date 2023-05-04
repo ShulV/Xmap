@@ -32,7 +32,6 @@ public class User {
 
     @Column(name = "phone_number")
     @NotEmpty(message = "Номер не должен быть пустым")
-    @Max(value = 15, message = "В номере телефона должно быть меньше 16 цифр")
     private String phoneNumber;
 
     @Column(name = "birthday")
