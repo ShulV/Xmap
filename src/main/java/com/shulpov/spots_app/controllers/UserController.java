@@ -24,7 +24,6 @@ public class UserController {
 
     //Получить информацию о пользователе
     @GetMapping("/get-user-info")
-    @ResponseBody
     public Map<String, String> showUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
@@ -49,7 +48,6 @@ public class UserController {
 
     //Удалить пользователя
     @DeleteMapping("/delete-user")
-    @ResponseBody
     public Map<String, String> deleteUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();

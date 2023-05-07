@@ -34,9 +34,9 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests()
                 //разрешить неаутентифицир. пользователям обращаться
-                .requestMatchers("/admin").hasRole("ADMIN")
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/auth/login", "/api/auth/register", "/error").permitAll()
-                .anyRequest().hasAnyRole("USER", "ADMIN")
+                .anyRequest().hasAnyRole("USER", "MODERATOR", "ADMIN")
                 .and()
                 //не сохранять сессии автоматически (т.к. мы используем JWT)
                 .sessionManagement()

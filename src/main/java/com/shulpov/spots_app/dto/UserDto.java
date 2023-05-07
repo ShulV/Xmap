@@ -1,12 +1,15 @@
 package com.shulpov.spots_app.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.shulpov.spots_app.models.User;
+import com.shulpov.spots_app.services.RoleService;
 import jakarta.validation.constraints.*;
+import org.modelmapper.ModelMapper;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-public class UserDTO {
+public class UserDto {
     @NotEmpty(message = "Имя не должен быть пустым")
     @Size(min = 2, max = 30, message = "Длина имени должна быть от 2 до 30 символов")
     private String name;

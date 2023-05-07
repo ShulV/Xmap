@@ -1,7 +1,7 @@
 package com.shulpov.spots_app.controllers;
 
-import com.shulpov.spots_app.dto.AuthenticationDTO;
-import com.shulpov.spots_app.dto.UserDTO;
+import com.shulpov.spots_app.dto.AuthenticationDto;
+import com.shulpov.spots_app.dto.UserDto;
 import com.shulpov.spots_app.models.User;
 import com.shulpov.spots_app.security.JWTUtil;
 import com.shulpov.spots_app.services.RegistrationService;
@@ -15,7 +15,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,7 +56,7 @@ public class AuthController {
 //    }
 
     @PostMapping("/register")
-    public Map<String, String> performRegistration(@RequestBody @Valid UserDTO userDTO,
+    public Map<String, String> performRegistration(@RequestBody @Valid UserDto userDTO,
                                       BindingResult bindingResult) {
         User user = convertToUser(userDTO);
         userValidator.validate(user, bindingResult);
@@ -80,7 +79,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public Map<String, String> performLogin(@RequestBody AuthenticationDTO authenticationDTO) {
+    public Map<String, String> performLogin(@RequestBody AuthenticationDto authenticationDTO) {
         UsernamePasswordAuthenticationToken authInputToken =
                 new UsernamePasswordAuthenticationToken(authenticationDTO.getEmail(),
                         authenticationDTO.getPassword());
@@ -100,8 +99,8 @@ public class AuthController {
 
     }
 
-    public User convertToUser(UserDTO userDTO) {
-        User user = this.modelMapper.map(userDTO, User.class);
+    public User convertToUser(UserDto userDto) {
+        User user = modelMapper.map(userDto, User.class);
         user.setRegDate(LocalDate.now());
         user.setRole(roleService.getUserRole());
         return user;
