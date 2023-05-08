@@ -5,7 +5,10 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.shulpov.spots_app.models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
@@ -17,8 +20,11 @@ public class JWTUtil {
     @Value("${jwt_secret}")
     private String secretJWT;
 
+    private final static Logger logger = LoggerFactory.getLogger(JWTUtil.class);
+
     //Генерировать токен
     public String generateToken(User user) {
+        logger.atInfo().log("generateToken user.name={}", user.getName());
         Date expirationDate = Date.from(ZonedDateTime.now().plusMinutes(60).toInstant());
         return JWT.create()
                 .withSubject("User details")
@@ -41,11 +47,13 @@ public class JWTUtil {
 
     //Валидировать токен
     public String validateTokenAndRetrieveClaim(String token) {
+        logger.atInfo().log("validateTokenAndRetrieveClaim(token)");
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretJWT))
                 .withSubject("User details")
                 .withIssuer("Spring-app Shulpov")
                 .build();
         DecodedJWT decodedJWT = verifier.verify(token);
+        logger.atInfo().log("validateTokenAndRetrieveClaim(token) success");
         return decodedJWT.getClaim("email").asString();
     }
 }

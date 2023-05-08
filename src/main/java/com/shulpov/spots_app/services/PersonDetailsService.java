@@ -1,8 +1,11 @@
 package com.shulpov.spots_app.services;
 
+import com.shulpov.spots_app.controllers.AuthController;
 import com.shulpov.spots_app.models.PersonDetails;
 import com.shulpov.spots_app.models.User;
 import com.shulpov.spots_app.repo.UserRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,6 +18,7 @@ import java.util.Optional;
 public class PersonDetailsService implements UserDetailsService {
 
     private final UserRepo userRepo;
+    private final static Logger logger = LoggerFactory.getLogger(UserDetailsService.class);
 
     @Autowired
     public PersonDetailsService(UserRepo userRepo) {
@@ -23,11 +27,14 @@ public class PersonDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        logger.atInfo().log("loadUserByUsername email={}", email);
         Optional<User> user = userRepo.findByEmail(email);
 
-        if (user.isEmpty())
+        if (user.isEmpty()) {
+            logger.atInfo().log("loadUserByUsername user not found email={}", email);
             throw new UsernameNotFoundException("User not found");
-
+        }
+        logger.atInfo().log("loadUserByUsername returned success");
         return new PersonDetails(user.get());
     }
 }

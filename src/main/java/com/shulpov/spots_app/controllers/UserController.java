@@ -3,6 +3,8 @@ package com.shulpov.spots_app.controllers;
 import com.shulpov.spots_app.models.PersonDetails;
 import com.shulpov.spots_app.models.User;
 import com.shulpov.spots_app.services.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +18,7 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class UserController {
     private final UserService userService;
-
+    private final static Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
@@ -25,12 +27,14 @@ public class UserController {
     //Получить информацию о пользователе
     @GetMapping("/get-user-info")
     public Map<String, String> showUserInfo() {
+        logger.atInfo().log("/user-get-info");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
         String username = personDetails.getUsername();
         Optional<User> userOpt = userService.findByName(username);
 
         if(userOpt.isPresent()) {
+            logger.atInfo().log("/user-get-info principle exists");
             User user = userOpt.get();
             Map<String, String> userInfoMap = new HashMap<>();
             userInfoMap.put("name", user.getName());
@@ -42,21 +46,24 @@ public class UserController {
             return userInfoMap;
         }
         //TODO else ??
-
+        logger.atError().log("/user-get-info username={} not found", username);
         return Map.of("error", String.format("Пользователь с именем %s не найден", username));
     }
 
     //Удалить пользователя
     @DeleteMapping("/delete-user")
     public Map<String, String> deleteUser() {
+        logger.atInfo().log("/delete-user");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
         String username = personDetails.getUsername();
         Optional<User> userOpt = userService.findByName(username);
         if(userOpt.isPresent()) {
+            logger.atInfo().log("/delete-user principle exists");
             userService.deleteById(userOpt.get().getId());
             return Map.of("message", "Аккаунт пользователя удален");
         }
+        logger.atError().log("/delete-user username={} not found", username);
         return Map.of("error", "Пользователь не найден");
     }
 }
