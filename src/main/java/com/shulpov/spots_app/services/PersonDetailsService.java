@@ -18,7 +18,7 @@ import java.util.Optional;
 public class PersonDetailsService implements UserDetailsService {
 
     private final UserRepo userRepo;
-    private final static Logger logger = LoggerFactory.getLogger(UserDetailsService.class);
+    private final static Logger logger = LoggerFactory.getLogger(PersonDetailsService.class);
 
     @Autowired
     public PersonDetailsService(UserRepo userRepo) {
@@ -34,7 +34,16 @@ public class PersonDetailsService implements UserDetailsService {
             logger.atInfo().log("loadUserByUsername user not found email={}", email);
             throw new UsernameNotFoundException("User not found");
         }
-        logger.atInfo().log("loadUserByUsername returned success");
+        logger.atInfo().log("loadUserByUsername returned success " +
+                        "user: id={} name={} email={} password={} birthday={} regDate={} phone={}",
+                user.get().getId(),
+                user.get().getName(),
+                user.get().getEmail(),
+                user.get().getPassword(),
+                user.get().getBirthday(),
+                user.get().getRegDate(),
+                user.get().getPhoneNumber()
+                );
         return new PersonDetails(user.get());
     }
 }

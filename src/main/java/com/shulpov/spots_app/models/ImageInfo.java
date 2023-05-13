@@ -1,7 +1,9 @@
 package com.shulpov.spots_app.models;
 
 import com.shulpov.spots_app.dto.ImageInfoDto;
+import com.shulpov.spots_app.utils.ImageUtil;
 import jakarta.persistence.*;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDate;
 
@@ -33,14 +35,23 @@ public class ImageInfo {
     @JoinColumn(name = "spot_id", referencedColumnName = "id")
     private Spot spot;
 
-    public ImageInfoDto toDto() {
+    //to data transfer object
+    public ImageInfoDto toDto() throws Exception {
         ImageInfoDto imageInfoDto = new ImageInfoDto();
-        imageInfoDto.setOriginalName(this.originalName);
-        imageInfoDto.setGenName(this.genName);
+        String url;
+        if(this.spot != null && this.user == null) {
+            url = ImageUtil.getSpotImageUrl(this.id);
+        } else if(this.user != null && this.spot == null) {
+            url = ImageUtil.getUserImageUrl(this.id);
+        } else {
+            throw new Exception("Invalid imageInfo object");
+        }
+        imageInfoDto.setUrl(url);
         imageInfoDto.setSize(this.size);
         imageInfoDto.setUploadDate(this.uploadDate);
         return imageInfoDto;
     }
+
     public Long getId() {
         return id;
     }

@@ -29,7 +29,16 @@ public class RegistrationService {
 
     @Transactional
     public void register(User user) {
-        logger.atInfo().log("register user.name={}", user.getName());
+        logger.atInfo().log("register id={} name={} email={} " +
+                        "password={} phoneNumber={} role={} birthday={} regDate={}",
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getPhoneNumber(),
+                user.getRoleCodeName(),
+                user.getBirthday(),
+                user.getRegDate());
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassHash(encodedPassword);
         Role userRole = roleService.getUserRole();

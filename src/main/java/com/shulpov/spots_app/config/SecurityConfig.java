@@ -35,7 +35,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 //разрешить неаутентифицир. пользователям обращаться
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/auth/login", "/api/auth/register", "/error").permitAll()
+                .requestMatchers(
+                        "/api/auth/login",
+                        "/api/auth/register",
+                        "/api/spot-types/**",
+                        "/api/sport-types/**",
+                        "/api/space-types/**",
+                        "/error").permitAll()
                 .anyRequest().hasAnyRole("USER", "MODERATOR", "ADMIN")
                 .and()
                 //не сохранять сессии автоматически (т.к. мы используем JWT)

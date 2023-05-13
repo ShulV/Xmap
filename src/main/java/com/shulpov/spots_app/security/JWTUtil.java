@@ -22,10 +22,18 @@ public class JWTUtil {
 
     private final static Logger logger = LoggerFactory.getLogger(JWTUtil.class);
 
-    //Генерировать токен
+    //Генерировать токен (время действия 7 дней)
     public String generateToken(User user) {
-        logger.atInfo().log("generateToken user.name={}", user.getName());
-        Date expirationDate = Date.from(ZonedDateTime.now().plusMinutes(60).toInstant());
+        logger.atInfo().log("generateToken user: id={} name={} email={} phoneNumber={} birthday={}" +
+                " regDate={} role={}",
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getPhoneNumber(),
+                user.getBirthday(),
+                user.getRegDate(),
+                user.getRoleCodeName());
+        Date expirationDate = Date.from(ZonedDateTime.now().plusDays(7).toInstant());
         return JWT.create()
                 .withSubject("User details")
                 //Клеймы - пары ключ:значение, можно сделать много .withClaim пар
@@ -47,7 +55,7 @@ public class JWTUtil {
 
     //Валидировать токен
     public String validateTokenAndRetrieveClaim(String token) {
-        logger.atInfo().log("validateTokenAndRetrieveClaim(token)");
+        logger.atInfo().log("validateTokenAndRetrieveClaim(token) token={}", token);
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretJWT))
                 .withSubject("User details")
                 .withIssuer("Spring-app Shulpov")

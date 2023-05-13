@@ -1,7 +1,9 @@
 package com.shulpov.spots_app.models;
 
-import com.shulpov.spots_app.dto.ImageInfoDto;
 import jakarta.persistence.*;
+
+
+//TODO VALID ANNOTATION
 
 import java.time.LocalDate;
 import java.util.List;
@@ -35,10 +37,29 @@ public class Spot {
     @Column(name = "desc")
     private String description;
 
-    //TODO модер, тип спота, тип помещения
+    //TODO модер, тип спорта, тип помещения
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "spots_spot_types",
+            joinColumns = @JoinColumn(name = "spot_id"),
+            inverseJoinColumns = @JoinColumn(name = "spot_type_id")
+    )
+    private List<SpotType> spotTypes;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "spots_sport_types",
+            joinColumns = @JoinColumn(name = "spot_id"),
+            inverseJoinColumns = @JoinColumn(name = "sport_type_id")
+    )
+    private List<SportType> sportTypes;
 
     @OneToMany(mappedBy = "spot")
     private List<ImageInfo> imageInfos;
+
+    @OneToMany(mappedBy = "spot")
+    private List<SpotUser> spotUsers;
 
     public Long getId() {
         return id;
@@ -110,5 +131,29 @@ public class Spot {
 
     public void setImageInfos(List<ImageInfo> imageInfos) {
         this.imageInfos = imageInfos;
+    }
+
+    public List<SpotType> getSpotTypes() {
+        return spotTypes;
+    }
+
+    public void setSpotTypes(List<SpotType> spotTypes) {
+        this.spotTypes = spotTypes;
+    }
+
+    public List<SportType> getSportTypes() {
+        return sportTypes;
+    }
+
+    public void setSportTypes(List<SportType> sportTypes) {
+        this.sportTypes = sportTypes;
+    }
+
+    public List<SpotUser> getSpotUsers() {
+        return spotUsers;
+    }
+
+    public void setSpotUsers(List<SpotUser> spotUsers) {
+        this.spotUsers = spotUsers;
     }
 }

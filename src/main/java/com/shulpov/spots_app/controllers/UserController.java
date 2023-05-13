@@ -24,9 +24,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    //Получить информацию о пользователе
+    //Получить информацию о своем пользователе по токену
     @GetMapping("/get-user-info")
-    public Map<String, String> showUserInfo() {
+    public Map<String, Object> showUserInfo() {
         logger.atInfo().log("/user-get-info");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
@@ -36,13 +36,13 @@ public class UserController {
         if(userOpt.isPresent()) {
             logger.atInfo().log("/user-get-info principle exists");
             User user = userOpt.get();
-            Map<String, String> userInfoMap = new HashMap<>();
+            Map<String, Object> userInfoMap = new HashMap<>();
             userInfoMap.put("name", user.getName());
             userInfoMap.put("email", user.getEmail());
             userInfoMap.put("phone", user.getPhoneNumber());
             userInfoMap.put("birthday", user.getBirthday().toString());//TODO возвращает в формате yyyy-MM-dd
             userInfoMap.put("registrationDate", user.getRegDate().toString());//TODO возвращает в формате yyyy-MM-dd
-
+            logger.atInfo().log("userInfoMap = {}", userInfoMap.toString());
             return userInfoMap;
         }
         //TODO else ??
@@ -50,7 +50,7 @@ public class UserController {
         return Map.of("error", String.format("Пользователь с именем %s не найден", username));
     }
 
-    //Удалить пользователя
+    //Удалить своего пользователя (по токену)
     @DeleteMapping("/delete-user")
     public Map<String, String> deleteUser() {
         logger.atInfo().log("/delete-user");
@@ -59,7 +59,15 @@ public class UserController {
         String username = personDetails.getUsername();
         Optional<User> userOpt = userService.findByName(username);
         if(userOpt.isPresent()) {
-            logger.atInfo().log("/delete-user principle exists");
+            logger.atInfo().log("/delete-user principle exists " +
+                            "user: id={} name={} email={} phone={} birthday={} regDate={} role={}",
+                    userOpt.get().getId(),
+                    userOpt.get().getName(),
+                    userOpt.get().getEmail(),
+                    userOpt.get().getPhoneNumber(),
+                    userOpt.get().getBirthday(),
+                    userOpt.get().getRegDate(),
+                    userOpt.get().getRoleCodeName());
             userService.deleteById(userOpt.get().getId());
             return Map.of("message", "Аккаунт пользователя удален");
         }

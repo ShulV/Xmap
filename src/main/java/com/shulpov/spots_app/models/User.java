@@ -53,8 +53,11 @@ public class User {
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<ImageInfo> imageInfos;
+
+    @OneToMany(mappedBy = "user")
+    private List<SpotUser> spotUsers;
 
     public User() {
     }
@@ -137,5 +140,21 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<ImageInfo> getImageInfos() {
+        return imageInfos;
+    }
+
+    public void setImageInfos(List<ImageInfo> imageInfos) {
+        this.imageInfos = imageInfos;
+    }
+
+    public List<SpotUser> getSpotUsers() {
+        return spotUsers;
+    }
+
+    public void setSpotUsers(List<SpotUser> spotUsers) {
+        this.spotUsers = spotUsers;
     }
 }

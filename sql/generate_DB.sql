@@ -83,10 +83,8 @@ CREATE TABLE public.spots(
                              adding_date date NOT NULL,
                              updating_date date NOT NULL,
                              "desc" varchar(300) NOT NULL,
-                             spot_type_id int NOT NULL REFERENCES public.spot_types (id)
-                                 ON UPDATE CASCADE ON DELETE RESTRICT,
-                             space_type_id int NOT NULL REFERENCES public.space_types (id)
-                                 ON UPDATE CASCADE ON DELETE RESTRICT,
+                             user_id int NOT NULL REFERENCES public.users (id)
+                                 ON UPDATE CASCADE ON DELETE NO ACTION,
                              moder_id int DEFAULT NULL REFERENCES public.users (id)
                                  ON UPDATE CASCADE ON DELETE SET NULL
 
@@ -128,5 +126,25 @@ CREATE TABLE public.spots_users(
                                user_id int REFERENCES public.users (id)
                                    ON UPDATE CASCADE ON DELETE SET NULL,
                                PRIMARY KEY (spot_id, user_id)
+);
+------------------------------------------------------------------------------------------------------------------------
+-- ѕромежуточна€ таблица спот-вид_спота
+drop table if exists public.spots_spot_types cascade;
+CREATE TABLE public.spots_spot_types(
+                                   spot_id int NOT NULL REFERENCES public.spots (id)
+                                       ON UPDATE CASCADE ON DELETE CASCADE,
+                                   spot_type_id int REFERENCES public.spot_types (id)
+                                                        ON UPDATE CASCADE ON DELETE SET NULL,
+                                   PRIMARY KEY (spot_id, spot_type_id)
+);
+------------------------------------------------------------------------------------------------------------------------
+-- ѕромежуточна€ таблица спот-вид_спорта
+drop table if exists public.spots_sport_types cascade;
+CREATE TABLE public.spots_sport_types(
+                                       spot_id int NOT NULL REFERENCES public.spots (id)
+                                           ON UPDATE CASCADE ON DELETE CASCADE,
+                                       sport_type_id int REFERENCES public.sport_types (id)
+                                                       ON UPDATE CASCADE ON DELETE SET NULL,
+                                       PRIMARY KEY (spot_id, sport_type_id)
 );
 ------------------------------------------------------------------------------------------------------------------------

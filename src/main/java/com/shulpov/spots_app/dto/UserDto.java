@@ -1,15 +1,18 @@
 package com.shulpov.spots_app.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.shulpov.spots_app.models.ImageInfo;
 import com.shulpov.spots_app.models.User;
 import com.shulpov.spots_app.services.RoleService;
 import jakarta.validation.constraints.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
-public class UserDto {
+public class UserDto implements Serializable {
     @NotEmpty(message = "Имя не должен быть пустым")
     @Size(min = 2, max = 30, message = "Длина имени должна быть от 2 до 30 символов")
     private String name;
@@ -30,6 +33,8 @@ public class UserDto {
     @NotNull(message = "Пароль не должен быть пустой")
     @Size(min = 6, max = 50, message = "Длина пароля должна быть от 6 до 50 символов")
     private String password;
+
+    private List<ImageInfoDto> imageInfoDtoList;
 
     public String getName() {
         return name;
@@ -69,5 +74,13 @@ public class UserDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<ImageInfoDto> getImageInfoDtoList() {
+        return imageInfoDtoList;
+    }
+
+    public void setImageInfoDtoList(List<ImageInfoDto> imageInfoDtoList) {
+        this.imageInfoDtoList = imageInfoDtoList;
     }
 }
