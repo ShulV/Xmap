@@ -1,5 +1,7 @@
 package com.shulpov.spots_app.models.pk;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
 import java.io.Serializable;
 

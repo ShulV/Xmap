@@ -8,7 +8,7 @@ import com.shulpov.spots_app.services.RegistrationService;
 import com.shulpov.spots_app.services.RoleService;
 import com.shulpov.spots_app.services.UserService;
 import com.shulpov.spots_app.utils.DtoConverter;
-import com.shulpov.spots_app.utils.UserValidator;
+import com.shulpov.spots_app.utils.validators.UserValidator;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,11 +79,11 @@ public class AuthController {
             //TODO сделать исключение или придумать как возвращать ошибку REST API
             //надо выбрасывать исключение, ловить его с помощью HandleException как в проекте N 3
         }
-        registrationService.register(user);
+        User createdUser = registrationService.register(user);
 
         String token = jwtUtil.generateToken(user);
         logger.atInfo().log("/auth/register success token={}", token);
-        return Map.of("jwtToken", token);
+        return Map.of("jwtToken", token, "id", createdUser.getId().toString());
         //TODO возвращать response со статус успешным кодом (нужно возвращать еще токен)
     }
 
@@ -106,7 +106,7 @@ public class AuthController {
             String token = jwtUtil.generateToken(userOpt.get());
             logger.atInfo().log("/auth/login success token={}", token);
 
-            return Map.of("jwtToken", token);
+            return Map.of("jwtToken", token, "id", userOpt.get().getId().toString());
         } else {
             logger.atError().log("/auth/login user with such email not found");
             return Map.of("error", "Пользователь с такими данными не найден");

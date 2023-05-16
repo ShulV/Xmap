@@ -1,5 +1,6 @@
 package com.shulpov.spots_app.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -18,7 +19,8 @@ public class SportType {
     @Column(name = "transport_name")
     String transportName;
 
-    @ManyToMany(mappedBy = "sportTypes", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "sportTypes")
+    @JsonIgnore
     private List<Spot> spots;
 
     public Integer getId() {

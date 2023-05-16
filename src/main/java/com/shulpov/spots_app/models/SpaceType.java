@@ -1,6 +1,9 @@
 package com.shulpov.spots_app.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "space_types")
@@ -12,6 +15,10 @@ public class SpaceType {
 
     @Column(name = "name")
     String name;
+
+    @OneToMany(mappedBy = "spaceType")
+    @JsonIgnore
+    private List<Spot> spots;
 
     public Integer getId() {
         return id;
@@ -27,5 +34,13 @@ public class SpaceType {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Spot> getSpots() {
+        return spots;
+    }
+
+    public void setSpots(List<Spot> spots) {
+        this.spots = spots;
     }
 }

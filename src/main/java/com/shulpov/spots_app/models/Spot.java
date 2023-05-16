@@ -2,10 +2,7 @@ package com.shulpov.spots_app.models;
 
 import jakarta.persistence.*;
 
-
-//TODO VALID ANNOTATION
-
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -29,15 +26,13 @@ public class Spot {
     private Boolean accepted;
 
     @Column(name = "adding_date")
-    private LocalDate addingDate;
+    private Date addingDate;
 
     @Column(name = "updating_date")
-    private LocalDate updatingDate;
+    private Date updatingDate;
 
-    @Column(name = "desc")
+    @Column(name = "description")
     private String description;
-
-    //TODO модер, тип спорта, тип помещения
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -60,6 +55,18 @@ public class Spot {
 
     @OneToMany(mappedBy = "spot")
     private List<SpotUser> spotUsers;
+
+    @ManyToOne
+    @JoinColumn(name = "space_type_id", referencedColumnName = "id")
+    private SpaceType spaceType;
+
+    @OneToOne
+    @JoinColumn(name = "moder_id", referencedColumnName = "id")
+    private User moderUser;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User creatorUser;
 
     public Long getId() {
         return id;
@@ -101,19 +108,19 @@ public class Spot {
         this.accepted = accepted;
     }
 
-    public LocalDate getAddingDate() {
+    public Date getAddingDate() {
         return addingDate;
     }
 
-    public void setAddingDate(LocalDate addingDate) {
+    public void setAddingDate(Date addingDate) {
         this.addingDate = addingDate;
     }
 
-    public LocalDate getUpdatingDate() {
+    public Date getUpdatingDate() {
         return updatingDate;
     }
 
-    public void setUpdatingDate(LocalDate updatingDate) {
+    public void setUpdatingDate(Date updatingDate) {
         this.updatingDate = updatingDate;
     }
 
@@ -155,5 +162,29 @@ public class Spot {
 
     public void setSpotUsers(List<SpotUser> spotUsers) {
         this.spotUsers = spotUsers;
+    }
+
+    public SpaceType getSpaceType() {
+        return spaceType;
+    }
+
+    public void setSpaceType(SpaceType spaceType) {
+        this.spaceType = spaceType;
+    }
+
+    public User getModerUser() {
+        return moderUser;
+    }
+
+    public void setModerUser(User moderUser) {
+        this.moderUser = moderUser;
+    }
+
+    public User getCreatorUser() {
+        return creatorUser;
+    }
+
+    public void setCreatorUser(User creatorUser) {
+        this.creatorUser = creatorUser;
     }
 }

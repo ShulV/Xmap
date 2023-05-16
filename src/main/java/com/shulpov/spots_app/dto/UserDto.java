@@ -1,15 +1,14 @@
 package com.shulpov.spots_app.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.shulpov.spots_app.models.ImageInfo;
-import com.shulpov.spots_app.models.User;
-import com.shulpov.spots_app.services.RoleService;
-import jakarta.validation.constraints.*;
-import org.modelmapper.ModelMapper;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public class UserDto implements Serializable {
@@ -28,7 +27,7 @@ public class UserDto implements Serializable {
     @NotNull(message = "Дата дня рождения не должна быть пустой")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate birthday;
+    private Date birthday;
 
     @NotNull(message = "Пароль не должен быть пустой")
     @Size(min = 6, max = 50, message = "Длина пароля должна быть от 6 до 50 символов")
@@ -60,11 +59,11 @@ public class UserDto implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public LocalDate getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(LocalDate birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 

@@ -2,10 +2,13 @@ package com.shulpov.spots_app.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 
@@ -39,10 +42,10 @@ public class User {
     @NotNull(message = "Дата дня рождения не должна быть пустой")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate birthday;
+    private Date birthday;
 
     @Column(name = "reg_date")
-    private LocalDate regDate;
+    private Date regDate;
 
     @Transient
     @NotNull(message = "Пароль не должен быть пустой")
@@ -58,6 +61,12 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<SpotUser> spotUsers;
+
+    @OneToOne(mappedBy = "moderUser")
+    private Spot moderSpot;
+
+    @OneToOne(mappedBy = "creatorUser")
+    private Spot userSpot;
 
     public User() {
     }
@@ -106,19 +115,19 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public LocalDate getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(LocalDate birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 
-    public LocalDate getRegDate() {
+    public Date getRegDate() {
         return regDate;
     }
 
-    public void setRegDate(LocalDate regDate) {
+    public void setRegDate(Date regDate) {
         this.regDate = regDate;
     }
 
@@ -156,5 +165,21 @@ public class User {
 
     public void setSpotUsers(List<SpotUser> spotUsers) {
         this.spotUsers = spotUsers;
+    }
+
+    public Spot getModerSpot() {
+        return moderSpot;
+    }
+
+    public void setModerSpot(Spot moderSpot) {
+        this.moderSpot = moderSpot;
+    }
+
+    public Spot getUserSpot() {
+        return userSpot;
+    }
+
+    public void setUserSpot(Spot userSpot) {
+        this.userSpot = userSpot;
     }
 }

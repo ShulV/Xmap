@@ -3,9 +3,8 @@ package com.shulpov.spots_app.models;
 import com.shulpov.spots_app.dto.ImageInfoDto;
 import com.shulpov.spots_app.utils.ImageUtil;
 import jakarta.persistence.*;
-import org.springframework.beans.factory.annotation.Value;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "image_info")
@@ -25,7 +24,7 @@ public class ImageInfo {
     private int size;
 
     @Column(name = "upload_date")
-    private LocalDate uploadDate;
+    private Date uploadDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -84,11 +83,11 @@ public class ImageInfo {
         this.size = size;
     }
 
-    public LocalDate getUploadDate() {
+    public Date getUploadDate() {
         return uploadDate;
     }
 
-    public void setUploadDate(LocalDate uploadDate) {
+    public void setUploadDate(Date uploadDate) {
         this.uploadDate = uploadDate;
     }
 

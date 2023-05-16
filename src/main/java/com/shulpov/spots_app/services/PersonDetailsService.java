@@ -1,6 +1,5 @@
 package com.shulpov.spots_app.services;
 
-import com.shulpov.spots_app.controllers.AuthController;
 import com.shulpov.spots_app.models.PersonDetails;
 import com.shulpov.spots_app.models.User;
 import com.shulpov.spots_app.repo.UserRepo;

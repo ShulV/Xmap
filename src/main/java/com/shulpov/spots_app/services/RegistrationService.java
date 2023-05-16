@@ -6,7 +6,6 @@ import com.shulpov.spots_app.repo.UserRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +17,7 @@ public class RegistrationService {
     private final UserRepo userRepo;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
-    private final static Logger logger = LoggerFactory.getLogger(RegistrationService.class);
+    private final Logger logger = LoggerFactory.getLogger(RegistrationService.class);
 
     @Autowired
     public RegistrationService(UserRepo userRepo, RoleService roleService, PasswordEncoder passwordEncoder) {
@@ -28,7 +27,7 @@ public class RegistrationService {
     }
 
     @Transactional
-    public void register(User user) {
+    public User register(User user) {
         logger.atInfo().log("register id={} name={} email={} " +
                         "password={} phoneNumber={} role={} birthday={} regDate={}",
                 user.getId(),
@@ -43,7 +42,7 @@ public class RegistrationService {
         user.setPassHash(encodedPassword);
         Role userRole = roleService.getUserRole();
         user.setRole(userRole);
-        userRepo.save(user);
+        return userRepo.save(user);
     }
 
 

@@ -15,7 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.rmi.NoSuchObjectException;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,12 +32,14 @@ public class ImageInfoService {
     private String spotsUploadPath;
 
     private final ImageInfoRepo imageInfoRepo;
+    private final SpotService spotService;
     private final FileManager imageManager;
-    private final static Logger logger = LoggerFactory.getLogger(ImageInfoService.class);
+    private final Logger logger = LoggerFactory.getLogger(ImageInfoService.class);
 
     @Autowired
-    public ImageInfoService(ImageInfoRepo imageInfoRepo, FileManager imageManager) {
+    public ImageInfoService(ImageInfoRepo imageInfoRepo, SpotService spotService, FileManager imageManager) {
         this.imageInfoRepo = imageInfoRepo;
+        this.spotService = spotService;
         this.imageManager = imageManager;
     }
 
@@ -58,7 +62,7 @@ public class ImageInfoService {
         createdFile.setOriginalName(file.getOriginalFilename());
         createdFile.setGenName(genName);
         createdFile.setSize((int) file.getSize());
-        createdFile.setUploadDate(LocalDate.now());
+        createdFile.setUploadDate(new Date(System.currentTimeMillis()));
         createdFile.setUser(user);
 
         createdFile = imageInfoRepo.save(createdFile);
@@ -70,6 +74,33 @@ public class ImageInfoService {
                 createdFile.getGenName(),
                 createdFile.getUploadDate());
         return createdFile;
+    }
+
+    //TODO ??? экспериментальный метод - Загрузить картинку спота (КАК МИНИМУМ ИЗМЕНИТЬ ПРАВА ДОСТУПА К МЕТОДУ)
+    @Transactional(rollbackFor = {IOException.class})
+    public ImageInfo uploadSpotImage(MultipartFile file, Long spotId) throws IOException {
+        logger.atInfo().log("uploadSpotImage file.name={} spotId={}", file.getOriginalFilename(), spotId);
+        String genName = generateName(file.getOriginalFilename());
+        ImageInfo createdFile = new ImageInfo();
+        createdFile.setOriginalName(file.getOriginalFilename());
+        createdFile.setGenName(genName);
+        createdFile.setSize((int) file.getSize());
+        createdFile.setUploadDate(new Date(System.currentTimeMillis()));
+        Optional<Spot> spot = spotService.findById(spotId);
+        if(spot.isPresent()) {
+            createdFile.setSpot(spot.get());
+            createdFile = imageInfoRepo.save(createdFile);
+            imageManager.upload(file.getBytes(), spotsUploadPath, genName);
+            logger.atInfo().log("uploadSpotImage success " +
+                            "file: id={} name={} genName={} uploadDate={}",
+                    createdFile.getId(),
+                    createdFile.getOriginalName(),
+                    createdFile.getGenName(),
+                    createdFile.getUploadDate());
+            return createdFile;
+        } else {
+            throw new NoSuchObjectException("No such spot in DB spotId=" + spotId);
+        }
     }
 
     //Скачать картинку пользователя

@@ -1,7 +1,6 @@
-package com.shulpov.spots_app.utils;
+package com.shulpov.spots_app.utils.validators;
 
 import com.shulpov.spots_app.models.User;
-import com.shulpov.spots_app.services.ImageInfoService;
 import com.shulpov.spots_app.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,12 +9,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Component
 public class UserValidator implements Validator {
     private final UserService userService;
-    private final static Logger logger = LoggerFactory.getLogger(UserValidator.class);
+    private final Logger logger = LoggerFactory.getLogger(UserValidator.class);
 
     @Autowired
     public UserValidator(UserService userService) {
@@ -52,7 +51,7 @@ public class UserValidator implements Validator {
             errors.rejectValue("phoneNumber", "", "Пользователь с таким телефоном уже существует");
         }
 
-        boolean birthdayLessToday = user.getBirthday().isBefore(LocalDate.now());
+        boolean birthdayLessToday = user.getBirthday().before(new Date(System.currentTimeMillis()));
         if(!birthdayLessToday) {
             logger.atInfo().log("validate birthday is in future birthday={}", user.getBirthday());
             // поле, код ошибки, сообщение ошибки

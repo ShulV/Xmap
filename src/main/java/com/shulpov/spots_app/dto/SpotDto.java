@@ -1,12 +1,13 @@
 package com.shulpov.spots_app.dto;
 
 
-import java.time.LocalDate;
+import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 //TODO VALID ANNOTATION
 
-public class SpotDto {
+public class SpotDto implements Serializable {
     private String name;
 
     private Double latitude;
@@ -15,13 +16,19 @@ public class SpotDto {
 
     private Boolean accepted;
 
-    private LocalDate addingDate;
+    private Date addingDate;
 
-    private LocalDate updatingDate;
+    private Date updatingDate;
 
     private String description;
 
     private List<ImageInfoDto> imageInfoDtoList;
+
+    private List<Integer> spotTypeIds;
+
+    private List<Integer> sportTypeIds;
+
+    private Integer spaceTypeId;
 
     public String getName() {
         return name;
@@ -55,19 +62,19 @@ public class SpotDto {
         this.accepted = accepted;
     }
 
-    public LocalDate getAddingDate() {
+    public Date getAddingDate() {
         return addingDate;
     }
 
-    public void setAddingDate(LocalDate addingDate) {
+    public void setAddingDate(Date addingDate) {
         this.addingDate = addingDate;
     }
 
-    public LocalDate getUpdatingDate() {
+    public Date getUpdatingDate() {
         return updatingDate;
     }
 
-    public void setUpdatingDate(LocalDate updatingDate) {
+    public void setUpdatingDate(Date updatingDate) {
         this.updatingDate = updatingDate;
     }
 
@@ -85,5 +92,29 @@ public class SpotDto {
 
     public void setImageInfoDtoList(List<ImageInfoDto> imageInfoDtoList) {
         this.imageInfoDtoList = imageInfoDtoList;
+    }
+
+    public List<Integer> getSpotTypeIds() {
+        return spotTypeIds;
+    }
+
+    public void setSpotTypeIds(List<Integer> spotTypeIds) {
+        this.spotTypeIds = spotTypeIds;
+    }
+
+    public List<Integer> getSportTypeIds() {
+        return sportTypeIds;
+    }
+
+    public void setSportTypeIds(List<Integer> sportTypeIds) {
+        this.sportTypeIds = sportTypeIds;
+    }
+
+    public Integer getSpaceTypeId() {
+        return spaceTypeId;
+    }
+
+    public void setSpaceTypeId(Integer spaceTypeId) {
+        this.spaceTypeId = spaceTypeId;
     }
 }

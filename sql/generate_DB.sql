@@ -81,8 +81,10 @@ CREATE TABLE public.spots(
                              lon FLOAT NOT NULL,
                              accepted BOOLEAN NOT NULL DEFAULT FALSE,
                              adding_date date NOT NULL,
-                             updating_date date NOT NULL,
-                             "desc" varchar(300) NOT NULL,
+                             updating_date date,
+                             description varchar(300) NOT NULL,
+                             space_type_id int NOT NULL REFERENCES public.space_types (id)
+                                                           ON UPDATE CASCADE ON DELETE NO ACTION,
                              user_id int NOT NULL REFERENCES public.users (id)
                                  ON UPDATE CASCADE ON DELETE NO ACTION,
                              moder_id int DEFAULT NULL REFERENCES public.users (id)

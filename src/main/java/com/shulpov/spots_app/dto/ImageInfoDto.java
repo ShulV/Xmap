@@ -1,13 +1,13 @@
 package com.shulpov.spots_app.dto;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 public class ImageInfoDto {
         private String url;
 
         private int size;
 
-        private LocalDate uploadDate;
+        private Date uploadDate;
 
     public int getSize() {
         return size;
@@ -17,11 +17,11 @@ public class ImageInfoDto {
         this.size = size;
     }
 
-    public LocalDate getUploadDate() {
+    public Date getUploadDate() {
         return uploadDate;
     }
 
-    public void setUploadDate(LocalDate uploadDate) {
+    public void setUploadDate(Date uploadDate) {
         this.uploadDate = uploadDate;
     }
 

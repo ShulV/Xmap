@@ -1,7 +1,6 @@
 package com.shulpov.spots_app.config;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.shulpov.spots_app.controllers.AuthController;
 import com.shulpov.spots_app.security.JWTUtil;
 import com.shulpov.spots_app.services.PersonDetailsService;
 import jakarta.servlet.FilterChain;

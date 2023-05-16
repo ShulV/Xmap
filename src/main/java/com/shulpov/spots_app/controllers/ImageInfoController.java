@@ -19,13 +19,15 @@ import java.security.Principal;
 import java.util.Map;
 import java.util.Optional;
 
+//TODO ПОДУМАТЬ КАК ВЫНЕСТИ ОБЩИЙ КОД В ОТЕДЛЬНЫЕ ФУНКЦИИ (DRY)
+
 @RestController
 @RequestMapping("/api/image-service")
 public class ImageInfoController {
     private final ImageInfoService imageInfoService;
     private final UserService userService;
 
-    private final static Logger logger = LoggerFactory.getLogger(ImageInfoController.class);
+    private final Logger logger = LoggerFactory.getLogger(ImageInfoController.class);
 
     @Autowired
     public ImageInfoController(ImageInfoService imageInfoService, UserService userService) {
@@ -50,6 +52,28 @@ public class ImageInfoController {
             }
         } else {
             logger.atInfo().log("/upload-user-image 403");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+    }
+
+    //Загрузить картинку для спота по id
+    @PostMapping("/upload-spot-image/{id}")
+    public ResponseEntity<Map<String, Long>> uploadSpotImage(
+            @PathVariable(name = "id") Long spotId, @RequestParam MultipartFile file, Principal principal) {
+        logger.atInfo().log("/upload-spot-image filename={} size={} principle.name={}",
+                file.getOriginalFilename(), file.getSize(), principal.getName());
+        Optional<User> user = userService.findByName(principal.getName());
+        if(user.isPresent()) {
+            try {
+                ImageInfo imageInfo = imageInfoService.uploadSpotImage(file, spotId);
+                logger.atInfo().log("image info created in with id={}", imageInfo.getId());
+                return new ResponseEntity<>(Map.of("id", imageInfo.getId()), HttpStatus.CREATED);
+            } catch (IOException e) {
+                logger.atInfo().log("/upload-spot-image IOException 400");
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            logger.atInfo().log("/upload-spot-image 403");
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
