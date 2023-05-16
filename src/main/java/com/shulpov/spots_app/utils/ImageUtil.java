@@ -19,6 +19,6 @@ public class ImageUtil {
     }
 
     public static String getSpotImageUrl(Long imageId) {
-        return String.format("%s:%s/api/image-service/download-user-image/%d", address, port, imageId);
+        return String.format("%s:%s/api/image-service/download-spot-image/%d", address, port, imageId);
     }
 }

@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/space-types/")
+@RequestMapping("/api/space-types")
 public class SpaceTypeController {
     private final SpaceTypeService spaceTypeService;
 

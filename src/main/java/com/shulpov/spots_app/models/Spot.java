@@ -72,6 +72,9 @@ public class Spot {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User creatorUser;
 
+    @OneToMany(mappedBy = "commentedSpot")
+    private List<Comment> comments;
+
     public Long getId() {
         return id;
     }
@@ -190,5 +193,13 @@ public class Spot {
 
     public void setCreatorUser(User creatorUser) {
         this.creatorUser = creatorUser;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

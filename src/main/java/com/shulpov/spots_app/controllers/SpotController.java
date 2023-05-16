@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/spots/")
+@RequestMapping("/api/spots")
 public class SpotController {
     private final SpotService spotService;
     private final UserService userService;

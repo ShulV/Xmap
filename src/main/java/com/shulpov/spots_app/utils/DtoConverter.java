@@ -42,11 +42,11 @@ public class DtoConverter {
         this.sportTypeService = sportTypeService;
     }
 
-//    public UserDto userToDto(User user) {
-//        UserDto userDto = new UserDto();
-//        //TODO ...
-//        return userDto;
-//    }
+    public UserDto userToDto(User user) {
+        UserDto dto = modelMapper.map(user, UserDto.class);
+        dto.setImageInfoDtoList(user.getImageInfos().stream().map(this::imageInfoToDto).toList());
+        return dto;
+    }
 
     public User dtoToNewUser(UserDto userDto) {
         User user = modelMapper.map(userDto, User.class);
@@ -137,4 +137,11 @@ public class DtoConverter {
 //    public SpaceType dtoToSpaceType(SpaceTypeDto spaceTypeDto) {
 //        return modelMapper.map(spaceTypeDto, SpaceType.class);
 //    }
+
+    public CommentDto commentToDto(Comment comment) {
+        CommentDto dto = modelMapper.map(comment, CommentDto.class);
+        dto.setCommentatorDto(userToDto(comment.getCommentator()));
+        return dto;
+    }
+
 }

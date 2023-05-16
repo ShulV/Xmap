@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/spot-types/")
+@RequestMapping("/api/spot-types")
 public class SpotTypeController {
     private final SpotTypeService spotTypeService;
     private final static Logger logger = LoggerFactory.getLogger(SpotTypeController.class);

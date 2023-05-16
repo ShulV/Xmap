@@ -42,6 +42,7 @@ public class SecurityConfig {
                         "/api/sport-types/**",
                         "/api/space-types/**",
                         "/api/spots/get-all",
+                        "/api/image-service/download-spot-image/**",
                         "/error").permitAll()
                 .anyRequest().hasAnyRole("USER", "MODERATOR", "ADMIN")
                 .and()

@@ -1,24 +1,14 @@
-package com.shulpov.spots_app.models;
+package com.shulpov.spots_app.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-import java.util.List;
 
-@Entity
-@Table(name = "comments")
-public class Comment {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "text")
+public class CommentDto {
     @NotBlank(message = "Комментарий не должен быть пустым")
     @Size(max = 100, message = "Длина комментария не должна быть больше 100 символов")
     private String text;
@@ -28,21 +18,7 @@ public class Comment {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date uploadDate;
 
-    @ManyToOne
-    @JoinColumn(name = "spot_id", referencedColumnName = "id")
-    private Spot commentedSpot;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User commentator;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private UserDto commentatorDto;
 
     public String getText() {
         return text;
@@ -60,19 +36,11 @@ public class Comment {
         this.uploadDate = uploadDate;
     }
 
-    public Spot getCommentedSpot() {
-        return commentedSpot;
+    public UserDto getCommentatorDto() {
+        return commentatorDto;
     }
 
-    public void setCommentedSpot(Spot commentedSpot) {
-        this.commentedSpot = commentedSpot;
-    }
-
-    public User getCommentator() {
-        return commentator;
-    }
-
-    public void setCommentator(User commentator) {
-        this.commentator = commentator;
+    public void setCommentatorDto(UserDto commentatorDto) {
+        this.commentatorDto = commentatorDto;
     }
 }

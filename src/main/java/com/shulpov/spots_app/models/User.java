@@ -73,6 +73,9 @@ public class User {
             cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     private List<Spot> acceptedSpots;
 
+    @OneToMany(mappedBy = "commentator")
+    private List<Comment> comments;
+
     public User() {
     }
 
@@ -186,5 +189,13 @@ public class User {
 
     public void setAcceptedSpots(List<Spot> acceptedSpots) {
         this.acceptedSpots = acceptedSpots;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/sport-types/")
+@RequestMapping("/api/sport-types")
 public class SportTypeController {
     private final SportTypeService sportTypeService;
 
