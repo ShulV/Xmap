@@ -52,21 +52,26 @@ public class User {
     @Size(min = 6, max = 50, message = "Длина пароля должна быть от 6 до 50 символов")
     private String password;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "photographedUser",
+            fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     private List<ImageInfo> imageInfos;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "userActor",
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     private List<SpotUser> spotUsers;
 
-    @OneToOne(mappedBy = "moderUser")
-    private Spot moderSpot;
+    @OneToMany(mappedBy = "creatorUser",
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE })
+    private List<Spot> createdSpots;
 
-    @OneToOne(mappedBy = "creatorUser")
-    private Spot userSpot;
+    @OneToMany(mappedBy = "moderUser",
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE })
+    private List<Spot> acceptedSpots;
 
     public User() {
     }
@@ -167,19 +172,19 @@ public class User {
         this.spotUsers = spotUsers;
     }
 
-    public Spot getModerSpot() {
-        return moderSpot;
+    public List<Spot> getCreatedSpots() {
+        return createdSpots;
     }
 
-    public void setModerSpot(Spot moderSpot) {
-        this.moderSpot = moderSpot;
+    public void setCreatedSpots(List<Spot> createdSpots) {
+        this.createdSpots = createdSpots;
     }
 
-    public Spot getUserSpot() {
-        return userSpot;
+    public List<Spot> getAcceptedSpots() {
+        return acceptedSpots;
     }
 
-    public void setUserSpot(Spot userSpot) {
-        this.userSpot = userSpot;
+    public void setAcceptedSpots(List<Spot> acceptedSpots) {
+        this.acceptedSpots = acceptedSpots;
     }
 }

@@ -18,7 +18,8 @@ public class Role {
     @Column(name = "code_name")
     private String nameCode;
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "role",
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     private List<User> users;
 
     public Long getId() {

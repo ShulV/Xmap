@@ -40,16 +40,21 @@ public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
 
+    private final DtoConverter dtoConverter;
+
     private final static Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
-    public AuthController(JWTUtil jwtUtil, UserValidator userValidator, RegistrationService registrationService, RoleService roleService, UserService userService, AuthenticationManager authenticationManager) {
+    public AuthController(JWTUtil jwtUtil, UserValidator userValidator, RegistrationService registrationService,
+                          RoleService roleService, UserService userService,
+                          AuthenticationManager authenticationManager, DtoConverter dtoConverter) {
         this.jwtUtil = jwtUtil;
         this.userValidator = userValidator;
         this.registrationService = registrationService;
         this.roleService = roleService;
         this.userService = userService;
         this.authenticationManager = authenticationManager;
+        this.dtoConverter = dtoConverter;
     }
 
 //    @GetMapping("/login")
@@ -66,7 +71,7 @@ public class AuthController {
                 userDTO.getPassword(),
                 userDTO.getPhoneNumber(),
                 userDTO.getBirthday());
-        User user = DtoConverter.dtoToNewUser(userDTO);
+        User user = dtoConverter.dtoToNewUser(userDTO);
         userValidator.validate(user, bindingResult);
 
         if (bindingResult.hasErrors()) {

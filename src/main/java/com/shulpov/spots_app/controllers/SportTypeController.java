@@ -20,18 +20,21 @@ import java.util.Optional;
 @RequestMapping("/api/sport-types/")
 public class SportTypeController {
     private final SportTypeService sportTypeService;
+
+    private final DtoConverter dtoConverter;
     private final static Logger logger = LoggerFactory.getLogger(SportTypeController.class);
 
     @Autowired
-    public SportTypeController(SportTypeService sportTypeService) {
+    public SportTypeController(SportTypeService sportTypeService, DtoConverter dtoConverter) {
         this.sportTypeService = sportTypeService;
+        this.dtoConverter = dtoConverter;
     }
 
     //Получить все типы спорта
     @GetMapping("/get-all")
     public List<SportTypeDto> getAllSportTypes() {
         logger.atInfo().log("/get-all");
-        return sportTypeService.getAll().stream().map(DtoConverter::sportTypeToDto).toList();
+        return sportTypeService.getAll().stream().map(dtoConverter::sportTypeToDto).toList();
     }
 
     //Получить тип спорта по id

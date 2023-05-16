@@ -26,21 +26,21 @@ public class ImageInfo {
     @Column(name = "upload_date")
     private Date uploadDate;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    private User photographedUser;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     @JoinColumn(name = "spot_id", referencedColumnName = "id")
-    private Spot spot;
+    private Spot photographedSpot;
 
     //to data transfer object
     public ImageInfoDto toDto() throws Exception {
         ImageInfoDto imageInfoDto = new ImageInfoDto();
         String url;
-        if(this.spot != null && this.user == null) {
+        if(this.photographedSpot != null && this.photographedUser == null) {
             url = ImageUtil.getSpotImageUrl(this.id);
-        } else if(this.user != null && this.spot == null) {
+        } else if(this.photographedUser != null && this.photographedSpot == null) {
             url = ImageUtil.getUserImageUrl(this.id);
         } else {
             throw new Exception("Invalid imageInfo object");
@@ -91,19 +91,19 @@ public class ImageInfo {
         this.uploadDate = uploadDate;
     }
 
-    public User getUser() {
-        return user;
+    public User getPhotographedUser() {
+        return photographedUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setPhotographedUser(User photographedUser) {
+        this.photographedUser = photographedUser;
     }
 
-    public Spot getSpot() {
-        return spot;
+    public Spot getPhotographedSpot() {
+        return photographedSpot;
     }
 
-    public void setSpot(Spot spot) {
-        this.spot = spot;
+    public void setPhotographedSpot(Spot photographedSpot) {
+        this.photographedSpot = photographedSpot;
     }
 }

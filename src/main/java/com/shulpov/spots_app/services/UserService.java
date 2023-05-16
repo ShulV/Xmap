@@ -3,11 +3,15 @@ package com.shulpov.spots_app.services;
 import com.shulpov.spots_app.models.User;
 import com.shulpov.spots_app.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
+@Scope(value = "prototype")
 public class UserService {
 
     private final UserRepo userRepo;
@@ -17,13 +21,14 @@ public class UserService {
         this.userRepo = userRepo;
     }
 
-    public void addUser(String name) {
-        userRepo.save(new User(name));
-    }
+//    @Transactional
+//    public void addUser(String name) {
+//        userRepo.save(new User(name));
+//    }
 
-    public Optional<User> getUserById(Long id) {
-        return userRepo.findById(id);
-    }
+//    public Optional<User> getUserById(Long id) {
+//        return userRepo.findById(id);
+//    }
 
     public Optional<User> findByEmail(String email) {
         return userRepo.findByEmail(email);
@@ -33,6 +38,7 @@ public class UserService {
         return userRepo.findByName(name);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         userRepo.deleteById(id);
     }

@@ -19,7 +19,8 @@ public class SportType {
     @Column(name = "transport_name")
     String transportName;
 
-    @ManyToMany(mappedBy = "sportTypes")
+    @ManyToMany(mappedBy = "sportTypes",
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     @JsonIgnore
     private List<Spot> spots;
 

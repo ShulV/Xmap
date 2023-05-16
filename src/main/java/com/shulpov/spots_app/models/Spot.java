@@ -34,7 +34,8 @@ public class Spot {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     @JoinTable(
             name = "spots_spot_types",
             joinColumns = @JoinColumn(name = "spot_id"),
@@ -42,7 +43,8 @@ public class Spot {
     )
     private List<SpotType> spotTypes;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     @JoinTable(
             name = "spots_sport_types",
             joinColumns = @JoinColumn(name = "spot_id"),
@@ -50,21 +52,23 @@ public class Spot {
     )
     private List<SportType> sportTypes;
 
-    @OneToMany(mappedBy = "spot")
+    @OneToMany(mappedBy = "photographedSpot",
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     private List<ImageInfo> imageInfos;
 
-    @OneToMany(mappedBy = "spot")
+    @OneToMany(mappedBy = "postedSpot",
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     private List<SpotUser> spotUsers;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "space_type_id", referencedColumnName = "id")
     private SpaceType spaceType;
 
-    @OneToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     @JoinColumn(name = "moder_id", referencedColumnName = "id")
     private User moderUser;
 
-    @OneToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User creatorUser;
 

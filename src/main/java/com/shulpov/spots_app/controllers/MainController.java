@@ -8,7 +8,7 @@ public class MainController {
 
     @GetMapping("/")
     public String getMessage() {
-        return "Оно работает!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! v3 + фича 1 + фича 2";
+        return "Simple mapping for tests!! :)";
     }
 
 }

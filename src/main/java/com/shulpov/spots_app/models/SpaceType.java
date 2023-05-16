@@ -16,7 +16,8 @@ public class SpaceType {
     @Column(name = "name")
     String name;
 
-    @OneToMany(mappedBy = "spaceType")
+    @OneToMany(mappedBy = "spaceType",
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     @JsonIgnore
     private List<Spot> spots;
 

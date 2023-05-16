@@ -16,7 +16,9 @@ public class SpotType {
     @Column(name = "name")
     String name;
 
-    @ManyToMany(mappedBy = "spotTypes", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "spotTypes",
+            fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     @JsonIgnore
     private List<Spot> spots;
 

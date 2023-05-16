@@ -22,16 +22,19 @@ public class SpotTypeController {
     private final SpotTypeService spotTypeService;
     private final static Logger logger = LoggerFactory.getLogger(SpotTypeController.class);
 
+    private final DtoConverter dtoConverter;
+
     @Autowired
-    public SpotTypeController(SpotTypeService spotTypeService) {
+    public SpotTypeController(SpotTypeService spotTypeService, DtoConverter dtoConverter) {
         this.spotTypeService = spotTypeService;
+        this.dtoConverter = dtoConverter;
     }
 
     //Получить все типы спотов
     @GetMapping("/get-all")
     public List<SpotTypeDto> getAllSpots() {
         logger.atInfo().log("/get-all");
-        return spotTypeService.getAll().stream().map(DtoConverter::spotTypeToDto).toList();
+        return spotTypeService.getAll().stream().map(dtoConverter::spotTypeToDto).toList();
     }
 
     //Получить тип спота по id

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
+@Scope(value = "prototype")
 public class ImageInfoService {
     @Value("${file-storage.images.users}")
     private String usersUploadPath;
@@ -34,7 +36,7 @@ public class ImageInfoService {
     private final ImageInfoRepo imageInfoRepo;
     private final SpotService spotService;
     private final FileManager imageManager;
-    private final Logger logger = LoggerFactory.getLogger(ImageInfoService.class);
+    private final static Logger logger = LoggerFactory.getLogger(ImageInfoService.class);
 
     @Autowired
     public ImageInfoService(ImageInfoRepo imageInfoRepo, SpotService spotService, FileManager imageManager) {
@@ -63,7 +65,7 @@ public class ImageInfoService {
         createdFile.setGenName(genName);
         createdFile.setSize((int) file.getSize());
         createdFile.setUploadDate(new Date(System.currentTimeMillis()));
-        createdFile.setUser(user);
+        createdFile.setPhotographedUser(user);
 
         createdFile = imageInfoRepo.save(createdFile);
         imageManager.upload(file.getBytes(), usersUploadPath, genName);
@@ -88,7 +90,7 @@ public class ImageInfoService {
         createdFile.setUploadDate(new Date(System.currentTimeMillis()));
         Optional<Spot> spot = spotService.findById(spotId);
         if(spot.isPresent()) {
-            createdFile.setSpot(spot.get());
+            createdFile.setPhotographedSpot(spot.get());
             createdFile = imageInfoRepo.save(createdFile);
             imageManager.upload(file.getBytes(), spotsUploadPath, genName);
             logger.atInfo().log("uploadSpotImage success " +

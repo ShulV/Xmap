@@ -5,7 +5,9 @@ import com.shulpov.spots_app.models.*;
 import com.shulpov.spots_app.services.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -16,21 +18,22 @@ import java.util.Optional;
 public class DtoConverter {
 
     //TODO прологировать класс
-    private static ModelMapper modelMapper;
-    private static RoleService roleService;
+    private final  ModelMapper modelMapper;
+    private final  RoleService roleService;
 
-    private static SpotService spotService;
+    private final  SpotService spotService;
 
-    private static SpaceTypeService spaceTypeService;
+    private final  SpaceTypeService spaceTypeService;
 
-    private static SpotTypeService spotTypeService;
+    private final  SpotTypeService spotTypeService;
 
-    private static SportTypeService sportTypeService;
+    private final  SportTypeService sportTypeService;
+
 
     @Autowired
-    public DtoConverter(ModelMapper modelMapper, RoleService roleService,
-                        SpotService spotService, SpaceTypeService spaceTypeService,
-                        SpotTypeService spotTypeService, SportTypeService sportTypeService) {
+    public DtoConverter(ModelMapper modelMapper, @Lazy RoleService roleService,
+                        @Lazy SpotService spotService, @Lazy SpaceTypeService spaceTypeService,
+                        @Lazy SpotTypeService spotTypeService, @Lazy SportTypeService sportTypeService) {
         this.modelMapper = modelMapper;
         this.roleService = roleService;
         this.spotService = spotService;
@@ -39,20 +42,20 @@ public class DtoConverter {
         this.sportTypeService = sportTypeService;
     }
 
-//    public static UserDto userToDto(User user) {
+//    public UserDto userToDto(User user) {
 //        UserDto userDto = new UserDto();
 //        //TODO ...
 //        return userDto;
 //    }
 
-    public static User dtoToNewUser(UserDto userDto) {
+    public User dtoToNewUser(UserDto userDto) {
         User user = modelMapper.map(userDto, User.class);
         user.setRegDate(new Date(System.currentTimeMillis()));
         user.setRole(roleService.getUserRole());
         return user;
     }
 
-    public static Spot dtoToNewSpot(SpotDto dto) throws NoSuchElementException {
+    public Spot dtoToNewSpot(SpotDto dto) throws NoSuchElementException {
         Spot spot = modelMapper.map(dto, Spot.class);
         spot.setAccepted(false);
         spot.setAddingDate(new Date(System.currentTimeMillis()));
@@ -73,11 +76,10 @@ public class DtoConverter {
 
         spotTypeService.getByIds(dto.getSpotTypeIds());
 
-        //TODO images
         return spot;
     }
 
-    public static SpotDto spotToDto(Spot spot) {
+    public SpotDto spotToDto(Spot spot) {
         SpotDto dto = new SpotDto();
         dto.setAccepted(spot.getAccepted());
         dto.setLatitude(spot.getLatitude());
@@ -91,19 +93,19 @@ public class DtoConverter {
         dto.setSpaceTypeId(spot.getSpaceType().getId());
 
         List<ImageInfoDto> imageInfoDtoList = spot.getImageInfos().stream()
-                .map(DtoConverter::imageInfoToDto).toList();
+                .map(this::imageInfoToDto).toList();
         dto.setImageInfoDtoList(imageInfoDtoList);
         return dto;
     }
 
-    public static ImageInfoDto imageInfoToDto(ImageInfo imageInfo) throws NullPointerException {
+    public ImageInfoDto imageInfoToDto(ImageInfo imageInfo) throws NullPointerException {
         ImageInfoDto dto = new ImageInfoDto();
         dto.setSize(imageInfo.getSize());
         dto.setUploadDate(imageInfo.getUploadDate());
-        if(imageInfo.getUser() != null) {
+        if(imageInfo.getPhotographedUser() != null) {
             String url = ImageUtil.getUserImageUrl(imageInfo.getId());
             dto.setUrl(url);
-        } else if(imageInfo.getSpot() != null) {
+        } else if(imageInfo.getPhotographedSpot() != null) {
             String url = ImageUtil.getSpotImageUrl(imageInfo.getId());
             dto.setUrl(url);
         } else {
@@ -112,27 +114,27 @@ public class DtoConverter {
         return dto;
     }
 
-    public static SportTypeDto sportTypeToDto(SportType sportType) {
+    public SportTypeDto sportTypeToDto(SportType sportType) {
         return modelMapper.map(sportType, SportTypeDto.class);
     }
 
-//    public static SportType dtoToSportType(SportTypeDto sportTypeDto) {
+//    public SportType dtoToSportType(SportTypeDto sportTypeDto) {
 //        return modelMapper.map(sportTypeDto, SportType.class);
 //    }
 
-    public static SpotTypeDto spotTypeToDto(SpotType spotType) {
+    public SpotTypeDto spotTypeToDto(SpotType spotType) {
         return modelMapper.map(spotType, SpotTypeDto.class);
     }
 
-//    public static SpotType dtoToSpotType(SpotTypeDto spotTypeDto) {
+//    public SpotType dtoToSpotType(SpotTypeDto spotTypeDto) {
 //        return modelMapper.map(spotTypeDto, SpotType.class);
 //    }
 
-    public static SpaceTypeDto spaceTypeToDto(SpaceType spaceType) {
+    public SpaceTypeDto spaceTypeToDto(SpaceType spaceType) {
         return modelMapper.map(spaceType, SpaceTypeDto.class);
     }
 
-//    public static SpaceType dtoToSpaceType(SpaceTypeDto spaceTypeDto) {
+//    public SpaceType dtoToSpaceType(SpaceTypeDto spaceTypeDto) {
 //        return modelMapper.map(spaceTypeDto, SpaceType.class);
 //    }
 }

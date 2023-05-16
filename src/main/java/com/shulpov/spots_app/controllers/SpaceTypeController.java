@@ -20,18 +20,21 @@ import java.util.Optional;
 @RequestMapping("/api/space-types/")
 public class SpaceTypeController {
     private final SpaceTypeService spaceTypeService;
+
+    private final DtoConverter dtoConverter;
     private final static Logger logger = LoggerFactory.getLogger(SpaceTypeController.class);
 
     @Autowired
-    public SpaceTypeController(SpaceTypeService spaceTypeService) {
+    public SpaceTypeController(SpaceTypeService spaceTypeService, DtoConverter dtoConverter) {
         this.spaceTypeService = spaceTypeService;
+        this.dtoConverter = dtoConverter;
     }
 
     //Получить все типы спорта
     @GetMapping("/get-all")
     public List<SpaceTypeDto> getAllSpaceTypes() {
         logger.atInfo().log("/get-all");
-        return spaceTypeService.getAll().stream().map(DtoConverter::spaceTypeToDto).toList();
+        return spaceTypeService.getAll().stream().map(dtoConverter::spaceTypeToDto).toList();
     }
 
     //Получить тип помещения по id

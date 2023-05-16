@@ -12,7 +12,6 @@ import jakarta.security.auth.message.AuthException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,20 +27,23 @@ public class SpotController {
     private final SpotService spotService;
     private final UserService userService;
     private final SpotValidator spotValidator;
-    private final Logger logger = LoggerFactory.getLogger(SpotController.class);
+
+    private final DtoConverter dtoConverter;
+    private final static Logger logger = LoggerFactory.getLogger(SpotController.class);
 
     @Autowired
-    public SpotController(SpotService spotService, @Lazy UserService userService, SpotValidator spotValidator) {
+    public SpotController(SpotService spotService, UserService userService, SpotValidator spotValidator, DtoConverter dtoConverter) {
         this.spotService = spotService;
         this.userService = userService;
         this.spotValidator = spotValidator;
+        this.dtoConverter = dtoConverter;
     }
 
     //Получить все споты
     @GetMapping("/get-all")
     public List<SpotDto> getAllSpots() {
         logger.atInfo().log("/get-all");
-        return spotService.getAllSpots().stream().map(DtoConverter::spotToDto).toList();
+        return spotService.getAllSpots().stream().map(dtoConverter::spotToDto).toList();
     }
 
     //Добавить спот (отправить на модерацию)
@@ -52,16 +54,18 @@ public class SpotController {
         logger.atInfo().log("/send-to-moderation");
         ObjectMapper objectMapper = new ObjectMapper();
         SpotDto spotDto = objectMapper.readValue(jsonSpotDto, SpotDto.class);
-        Spot spot = DtoConverter.dtoToNewSpot(spotDto);
+        Spot spot = dtoConverter.dtoToNewSpot(spotDto);
 
 //        spotValidator.validate(spot, bindingResult);//TODO
-        Optional<User> creatorUserOpt = userService.findByName(principal.getName());
+        String name = principal.getName();
+        Optional<User> creatorUserOpt = userService.findByName(name);
+
         if(creatorUserOpt.isPresent()) {
             spot.setCreatorUser(creatorUserOpt.get());
         } else {
             throw new AuthException("No user principle for spot creating");
         }
-        spot = spotService.saveWithAvatars(files, spot);
-        return Map.of("id", spot.getId());//TODO
+        Spot newSpot = spotService.saveWithAvatars(files, spot);
+        return Map.of("id", newSpot.getId());//TODO
     }
 }

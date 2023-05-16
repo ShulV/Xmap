@@ -41,6 +41,7 @@ public class SecurityConfig {
                         "/api/spot-types/**",
                         "/api/sport-types/**",
                         "/api/space-types/**",
+                        "/api/spots/get-all",
                         "/error").permitAll()
                 .anyRequest().hasAnyRole("USER", "MODERATOR", "ADMIN")
                 .and()

@@ -9,15 +9,15 @@ public class SpotUser {
     @EmbeddedId
     private UserSpotPK id;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     @MapsId("spotId")
     @JoinColumn(name = "spot_id")
-    private Spot spot;
+    private Spot postedSpot;//название не spot, т.к. есть пересечения mappedBy  классе spot
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     @MapsId("userId")
     @JoinColumn(name = "user_id")
-    private User user;
+    private User userActor;
 
     @Column(name = "liked")
     private Boolean liked;
@@ -49,19 +49,19 @@ public class SpotUser {
         this.favorite = favorite;
     }
 
-    public Spot getSpot() {
-        return spot;
+    public Spot getPostedSpot() {
+        return postedSpot;
     }
 
-    public void setSpot(Spot spot) {
-        this.spot = spot;
+    public void setPostedSpot(Spot postedSpot) {
+        this.postedSpot = postedSpot;
     }
 
-    public User getUser() {
-        return user;
+    public User getUserActor() {
+        return userActor;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserActor(User userActor) {
+        this.userActor = userActor;
     }
 }

@@ -66,5 +66,6 @@ public class JWTFilter extends OncePerRequestFilter {
         }
         logger.atInfo().log("to next filters");
         filterChain.doFilter(httpServletRequest, httpServletResponse);
+        logger.atInfo().log("after next filters");
     }
 }
