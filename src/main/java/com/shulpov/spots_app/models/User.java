@@ -1,12 +1,10 @@
 package com.shulpov.spots_app.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
@@ -40,8 +38,6 @@ public class User {
 
     @Column(name = "birthday")
     @NotNull(message = "Дата дня рождения не должна быть пустой")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date birthday;
 
     @Column(name = "reg_date")

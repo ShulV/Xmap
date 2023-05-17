@@ -1,13 +1,9 @@
 package com.shulpov.spots_app.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.shulpov.spots_app.models.Spot;
-import jakarta.servlet.http.PushBuilder;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -27,12 +23,8 @@ public class UserDto implements Serializable {
     private String phoneNumber;
 
     @NotNull(message = "Дата дня рождения не должна быть пустой")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date birthday;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date regDate;
 
     @NotNull(message = "Пароль не должен быть пустой")

@@ -1,10 +1,8 @@
 package com.shulpov.spots_app.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Size;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -14,8 +12,6 @@ public class CommentDto {
     private String text;
 
     @Column(name = "upload_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date uploadDate;
 
     private UserDto commentatorDto;
