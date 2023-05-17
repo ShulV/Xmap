@@ -1,6 +1,8 @@
 package com.shulpov.spots_app.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.shulpov.spots_app.models.Spot;
+import jakarta.servlet.http.PushBuilder;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -29,11 +31,17 @@ public class UserDto implements Serializable {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date birthday;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private Date regDate;
+
     @NotNull(message = "Пароль не должен быть пустой")
     @Size(min = 6, max = 50, message = "Длина пароля должна быть от 6 до 50 символов")
     private String password;
 
     private List<ImageInfoDto> imageInfoDtoList;
+
+    private List<SpotDto> createdSpots;
 
     public String getName() {
         return name;
@@ -67,6 +75,14 @@ public class UserDto implements Serializable {
         this.birthday = birthday;
     }
 
+    public Date getRegDate() {
+        return regDate;
+    }
+
+    public void setRegDate(Date regDate) {
+        this.regDate = regDate;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -78,8 +94,15 @@ public class UserDto implements Serializable {
     public List<ImageInfoDto> getImageInfoDtoList() {
         return imageInfoDtoList;
     }
-
     public void setImageInfoDtoList(List<ImageInfoDto> imageInfoDtoList) {
         this.imageInfoDtoList = imageInfoDtoList;
+    }
+
+    public List<SpotDto> getCreatedSpots() {
+        return createdSpots;
+    }
+
+    public void setCreatedSpots(List<SpotDto> createdSpots) {
+        this.createdSpots = createdSpots;
     }
 }

@@ -7,7 +7,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -45,6 +44,7 @@ public class DtoConverter {
     public UserDto userToDto(User user) {
         UserDto dto = modelMapper.map(user, UserDto.class);
         dto.setImageInfoDtoList(user.getImageInfos().stream().map(this::imageInfoToDto).toList());
+        dto.setCreatedSpots(user.getCreatedSpots().stream().map(this::spotToDto).toList());
         return dto;
     }
 
@@ -103,10 +103,10 @@ public class DtoConverter {
         dto.setSize(imageInfo.getSize());
         dto.setUploadDate(imageInfo.getUploadDate());
         if(imageInfo.getPhotographedUser() != null) {
-            String url = ImageUtil.getUserImageUrl(imageInfo.getId());
+            String url = ImageUtil.getUserImageDownloadUrl(imageInfo.getId());
             dto.setUrl(url);
         } else if(imageInfo.getPhotographedSpot() != null) {
-            String url = ImageUtil.getSpotImageUrl(imageInfo.getId());
+            String url = ImageUtil.getSpotImageDownloadUrl(imageInfo.getId());
             dto.setUrl(url);
         } else {
             throw new NullPointerException("Invalid image info object (user and spot are null)");

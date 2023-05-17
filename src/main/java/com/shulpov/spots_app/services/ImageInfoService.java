@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class ImageInfoService {
     private final static Logger logger = LoggerFactory.getLogger(ImageInfoService.class);
 
     @Autowired
-    public ImageInfoService(ImageInfoRepo imageInfoRepo, SpotService spotService, FileManager imageManager) {
+    public ImageInfoService(ImageInfoRepo imageInfoRepo, @Lazy SpotService spotService, FileManager imageManager) {
         this.imageInfoRepo = imageInfoRepo;
         this.spotService = spotService;
         this.imageManager = imageManager;

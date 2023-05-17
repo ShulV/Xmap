@@ -11,11 +11,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
 @Scope(value = "prototype")
+@Transactional(readOnly = true)
 public class PersonDetailsService implements UserDetailsService {
 
     private final UserRepo userRepo;
@@ -48,27 +50,3 @@ public class PersonDetailsService implements UserDetailsService {
         return new PersonDetails(user.get());
     }
 }
-
-//@Service
-//public class PersonDetailsService implements UserDetailsService {
-//
-//    private final UserService userService;
-//
-//    @Autowired
-//    public PersonDetailsService(UserService userService) {
-//        this.userService = userService;
-//    }
-//
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        return userService
-//                .findByLogin(username)
-//                .map(SecurityUser::new)
-//                .orElseThrow(() -> new UsernameNotFoundException("Username not found: " + username));
-//    }
-//
-//    public Optional<User> getAuthenticatedUser() {
-//       Authentication authentication =  SecurityContextHolder.getContext().getAuthentication();
-//       return userService.findByLogin(authentication.getName());
-//    }
-//}

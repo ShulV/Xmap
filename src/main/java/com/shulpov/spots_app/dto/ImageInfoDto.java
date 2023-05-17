@@ -1,13 +1,16 @@
 package com.shulpov.spots_app.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class ImageInfoDto {
-        private String url;
-
-        private int size;
-
-        private Date uploadDate;
+    private String url;
+    private int size;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private Date uploadDate;
 
     public int getSize() {
         return size;

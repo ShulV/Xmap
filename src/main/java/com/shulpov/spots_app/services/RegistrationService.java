@@ -6,6 +6,7 @@ import com.shulpov.spots_app.repo.UserRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class RegistrationService {
     private final static Logger logger = LoggerFactory.getLogger(RegistrationService.class);
 
     @Autowired
-    public RegistrationService(UserRepo userRepo, RoleService roleService, PasswordEncoder passwordEncoder) {
+    public RegistrationService(UserRepo userRepo, @Lazy RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;

@@ -52,6 +52,9 @@ public class Spot {
     )
     private List<SportType> sportTypes;
 
+    @OneToMany(mappedBy = "postedSpot")
+    private List<SpotUser> spotUserList;
+
     @OneToMany(mappedBy = "photographedSpot",
             cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     private List<ImageInfo> imageInfos;
@@ -201,5 +204,13 @@ public class Spot {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public List<SpotUser> getSpotUserList() {
+        return spotUserList;
+    }
+
+    public void setSpotUserList(List<SpotUser> spotUserList) {
+        this.spotUserList = spotUserList;
     }
 }

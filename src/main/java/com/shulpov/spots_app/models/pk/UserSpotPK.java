@@ -14,6 +14,14 @@ public class UserSpotPK implements Serializable {
     @Column(name = "user_id")
     private Long userId;
 
+    public UserSpotPK(Long spotId, Long userId) {
+        this.spotId = spotId;
+        this.userId = userId;
+    }
+
+    public UserSpotPK() {
+    }
+
     public Long getSpotId() {
         return spotId;
     }

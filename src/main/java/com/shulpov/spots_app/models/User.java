@@ -76,6 +76,9 @@ public class User {
     @OneToMany(mappedBy = "commentator")
     private List<Comment> comments;
 
+    @OneToMany(mappedBy = "userActor")
+    private List<SpotUser> spotUserList;
+
     public User() {
     }
 
@@ -197,5 +200,13 @@ public class User {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public List<SpotUser> getSpotUserList() {
+        return spotUserList;
+    }
+
+    public void setSpotUserList(List<SpotUser> spotUserList) {
+        this.spotUserList = spotUserList;
     }
 }

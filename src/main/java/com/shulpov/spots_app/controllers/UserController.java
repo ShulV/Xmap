@@ -1,8 +1,11 @@
 package com.shulpov.spots_app.controllers;
 
+import com.shulpov.spots_app.dto.UserDto;
 import com.shulpov.spots_app.models.PersonDetails;
 import com.shulpov.spots_app.models.User;
 import com.shulpov.spots_app.services.UserService;
+import com.shulpov.spots_app.utils.DtoConverter;
+import jakarta.security.auth.message.AuthException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +24,12 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class UserController {
     private final UserService userService;
+    private final DtoConverter dtoConverter;
     private final static Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, DtoConverter dtoConverter) {
         this.userService = userService;
+        this.dtoConverter = dtoConverter;
     }
 
     //Получить информацию о своем пользователе по токену
@@ -51,6 +56,26 @@ public class UserController {
         //TODO else ??
         logger.atError().log("/user-get-info username={} not found", username);
         return Map.of("error", String.format("Пользователь с именем %s не найден", username));
+    }
+
+    //Получить полную информацию о пользователе
+    @GetMapping("/get-user")
+    public UserDto getAuthUser() throws AuthException {
+        logger.atInfo().log("/get-user");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+        String username = personDetails.getUsername();
+        Optional<User> userOpt = userService.findByName(username);
+
+        if(userOpt.isPresent()) {
+            logger.atInfo().log("/user-get-info principle exists");
+            User user = userOpt.get();
+
+            return dtoConverter.userToDto(user);
+        } else {
+            logger.atError().log("/get-user username={} not found", username);
+            throw new AuthException("No principle");
+        }
     }
 
     //Удалить своего пользователя (по токену)

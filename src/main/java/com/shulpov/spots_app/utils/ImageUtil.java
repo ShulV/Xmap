@@ -14,11 +14,11 @@ public class ImageUtil {
         this.port = port;
     }
 
-    public static String getUserImageUrl(Long imageId) {
+    public static String getUserImageDownloadUrl(Long imageId) {
         return String.format("%s:%s/api/image-service/download-user-image/%d", address, port, imageId);
     }
 
-    public static String getSpotImageUrl(Long imageId) {
+    public static String getSpotImageDownloadUrl(Long imageId) {
         return String.format("%s:%s/api/image-service/download-spot-image/%d", address, port, imageId);
     }
 }

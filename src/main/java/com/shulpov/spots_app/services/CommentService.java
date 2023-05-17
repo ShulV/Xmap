@@ -4,11 +4,11 @@ import com.shulpov.spots_app.models.Comment;
 import com.shulpov.spots_app.models.Spot;
 import com.shulpov.spots_app.models.User;
 import com.shulpov.spots_app.repo.CommentRepo;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -21,7 +21,7 @@ public class CommentService {
     private final CommentRepo commentRepo;
     private final SpotService spotService;
 
-    public CommentService(CommentRepo commentRepo, SpotService spotService) {
+    public CommentService(CommentRepo commentRepo, @Lazy SpotService spotService) {
         this.commentRepo = commentRepo;
         this.spotService = spotService;
     }
