@@ -18,6 +18,12 @@
 		<slf4j.version>2.0.7</slf4j.version>
 	</properties>
 	<dependencies>
+		<!-- Springfox dependencies for OpenAPI documentation -->
+<!--		<dependency>-->
+<!--			<groupId>io.springfox</groupId>-->
+<!--			<artifactId>springfox-boot-starter</artifactId>-->
+<!--			<version>3.0.0</version>-->
+<!--		</dependency>-->
 		<!--web base-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -105,18 +111,23 @@
 <!--			<version>2.15.0</version>-->
 <!--		</dependency>-->
 
-		<!--thymeleaf-->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
-		<!---->
-		<!-- https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity5 -->
-		<dependency>
-			<groupId>org.thymeleaf.extras</groupId>
-			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
-			<version>3.1.1.RELEASE</version>
-		</dependency>
+<!--		&lt;!&ndash;thymeleaf&ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-thymeleaf</artifactId>-->
+<!--		</dependency>-->
+<!--		&lt;!&ndash;&ndash;&gt;-->
+<!--		&lt;!&ndash; https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity5 &ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>org.thymeleaf.extras</groupId>-->
+<!--			<artifactId>thymeleaf-extras-springsecurity5</artifactId>-->
+<!--			<version>3.1.1.RELEASE</version>-->
+<!--		</dependency>-->
+
+
+
+
+
 
 	</dependencies>
 
