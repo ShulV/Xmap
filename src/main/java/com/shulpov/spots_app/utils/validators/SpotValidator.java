@@ -13,7 +13,7 @@ import org.springframework.validation.Validator;
 public class SpotValidator implements Validator {
 
     private final SpotService spotService;
-    private final static Logger logger = LoggerFactory.getLogger(SpotValidator.class);
+    private final Logger logger = LoggerFactory.getLogger(SpotValidator.class);
 
     @Autowired
     public SpotValidator(SpotService spotService) {

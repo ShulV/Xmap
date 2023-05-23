@@ -20,7 +20,7 @@ public class RegistrationService {
     private final UserRepo userRepo;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
-    private final static Logger logger = LoggerFactory.getLogger(RegistrationService.class);
+    private final Logger logger = LoggerFactory.getLogger(RegistrationService.class);
 
     @Autowired
     public RegistrationService(UserRepo userRepo, @Lazy RoleService roleService, PasswordEncoder passwordEncoder) {

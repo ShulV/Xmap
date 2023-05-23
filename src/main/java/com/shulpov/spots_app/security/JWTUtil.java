@@ -19,7 +19,7 @@ public class JWTUtil {
     @Value("${jwt_secret}")
     private String secretJWT;
 
-    private final static Logger logger = LoggerFactory.getLogger(JWTUtil.class);
+    private final Logger logger = LoggerFactory.getLogger(JWTUtil.class);
 
     //Генерировать токен (время действия 7 дней)
     public String generateToken(User user) {

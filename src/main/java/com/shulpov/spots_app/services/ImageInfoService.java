@@ -37,7 +37,7 @@ public class ImageInfoService {
     private final ImageInfoRepo imageInfoRepo;
     private final SpotService spotService;
     private final FileManager imageManager;
-    private static final Logger logger = LoggerFactory.getLogger(ImageInfoService.class);
+    private final Logger logger = LoggerFactory.getLogger(ImageInfoService.class);
 
     @Autowired
     public ImageInfoService(ImageInfoRepo imageInfoRepo, @Lazy SpotService spotService, FileManager imageManager) {

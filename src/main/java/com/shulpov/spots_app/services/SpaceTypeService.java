@@ -18,7 +18,7 @@ import java.util.Optional;
 public class SpaceTypeService {
     private final SpaceTypeRepo spaceTypeRepo;
 
-    private final static Logger logger = LoggerFactory.getLogger(SpaceTypeService.class);
+    private final Logger logger = LoggerFactory.getLogger(SpaceTypeService.class);
 
     @Autowired
     public SpaceTypeService(SpaceTypeRepo spaceTypeRepo) {

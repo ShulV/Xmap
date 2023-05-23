@@ -14,7 +14,7 @@ import java.util.Date;
 @Component
 public class UserValidator implements Validator {
     private final UserService userService;
-    private static final Logger logger = LoggerFactory.getLogger(UserValidator.class);
+    private final Logger logger = LoggerFactory.getLogger(UserValidator.class);
 
     @Autowired
     public UserValidator(UserService userService) {

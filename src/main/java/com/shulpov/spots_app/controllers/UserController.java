@@ -25,7 +25,7 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
     private final DtoConverter dtoConverter;
-    private final static Logger logger = LoggerFactory.getLogger(UserController.class);
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
     public UserController(UserService userService, DtoConverter dtoConverter) {
         this.userService = userService;

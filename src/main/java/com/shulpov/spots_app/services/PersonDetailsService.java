@@ -21,7 +21,7 @@ import java.util.Optional;
 public class PersonDetailsService implements UserDetailsService {
 
     private final UserRepo userRepo;
-    private final static Logger logger = LoggerFactory.getLogger(PersonDetailsService.class);
+    private final Logger logger = LoggerFactory.getLogger(PersonDetailsService.class);
 
     @Autowired
     public PersonDetailsService(UserRepo userRepo) {

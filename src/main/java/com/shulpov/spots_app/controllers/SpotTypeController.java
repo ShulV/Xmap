@@ -20,7 +20,7 @@ import java.util.Optional;
 @RequestMapping("/api/spot-types")
 public class SpotTypeController {
     private final SpotTypeService spotTypeService;
-    private final static Logger logger = LoggerFactory.getLogger(SpotTypeController.class);
+    private final Logger logger = LoggerFactory.getLogger(SpotTypeController.class);
 
     private final DtoConverter dtoConverter;
 

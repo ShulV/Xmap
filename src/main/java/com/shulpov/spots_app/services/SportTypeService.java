@@ -19,7 +19,7 @@ import java.util.Optional;
 public class SportTypeService {
     private final SportTypeRepo sportTypeRepo;
 
-    private final static Logger logger = LoggerFactory.getLogger(SportTypeService.class);
+    private final Logger logger = LoggerFactory.getLogger(SportTypeService.class);
 
     @Autowired
     public SportTypeService(SportTypeRepo sportTypeRepo) {

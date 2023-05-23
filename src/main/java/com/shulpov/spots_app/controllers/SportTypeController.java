@@ -22,7 +22,7 @@ public class SportTypeController {
     private final SportTypeService sportTypeService;
 
     private final DtoConverter dtoConverter;
-    private final static Logger logger = LoggerFactory.getLogger(SportTypeController.class);
+    private final Logger logger = LoggerFactory.getLogger(SportTypeController.class);
 
     @Autowired
     public SportTypeController(SportTypeService sportTypeService, DtoConverter dtoConverter) {

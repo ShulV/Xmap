@@ -27,7 +27,7 @@ public class ImageInfoController {
     private final ImageInfoService imageInfoService;
     private final UserService userService;
 
-    private final static Logger logger = LoggerFactory.getLogger(ImageInfoController.class);
+    private final Logger logger = LoggerFactory.getLogger(ImageInfoController.class);
 
     @Autowired
     public ImageInfoController(ImageInfoService imageInfoService, UserService userService) {

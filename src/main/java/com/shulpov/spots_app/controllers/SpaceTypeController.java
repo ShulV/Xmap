@@ -22,7 +22,7 @@ public class SpaceTypeController {
     private final SpaceTypeService spaceTypeService;
 
     private final DtoConverter dtoConverter;
-    private final static Logger logger = LoggerFactory.getLogger(SpaceTypeController.class);
+    private final Logger logger = LoggerFactory.getLogger(SpaceTypeController.class);
 
     @Autowired
     public SpaceTypeController(SpaceTypeService spaceTypeService, DtoConverter dtoConverter) {
