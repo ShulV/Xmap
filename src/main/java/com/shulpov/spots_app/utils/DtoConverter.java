@@ -28,23 +28,30 @@ public class DtoConverter {
 
     private final  SportTypeService sportTypeService;
 
+    private final SpotUserService spotUserService;
+
 
     @Autowired
     public DtoConverter(ModelMapper modelMapper, @Lazy RoleService roleService,
                         @Lazy SpotService spotService, @Lazy SpaceTypeService spaceTypeService,
-                        @Lazy SpotTypeService spotTypeService, @Lazy SportTypeService sportTypeService) {
+                        @Lazy SpotTypeService spotTypeService, @Lazy SportTypeService sportTypeService, SpotUserService spotUserService) {
         this.modelMapper = modelMapper;
         this.roleService = roleService;
         this.spotService = spotService;
         this.spaceTypeService = spaceTypeService;
         this.spotTypeService = spotTypeService;
         this.sportTypeService = sportTypeService;
+        this.spotUserService = spotUserService;
     }
 
     public UserDto userToDto(User user) {
         UserDto dto = modelMapper.map(user, UserDto.class);
         dto.setImageInfoDtoList(user.getImageInfos().stream().map(this::imageInfoToDto).toList());
         dto.setCreatedSpots(user.getCreatedSpots().stream().map(this::spotToDto).toList());
+        dto.setLikedSpotIds(spotUserService.getLikedSpotUsers(user).stream()
+                .map(ss -> ss.getPostedSpot().getId()).toList());
+        dto.setFavoriteSpotIds(spotUserService.getFavoriteSpotUsers(user).stream()
+                .map(ss -> ss.getPostedSpot().getId()).toList());
         return dto;
     }
 
@@ -81,6 +88,7 @@ public class DtoConverter {
 
     public SpotDto spotToDto(Spot spot) {
         SpotDto dto = new SpotDto();
+        dto.setId(spot.getId());
         dto.setAccepted(spot.getAccepted());
         dto.setLatitude(spot.getLatitude());
         dto.setLongitude(spot.getLongitude());
@@ -95,6 +103,13 @@ public class DtoConverter {
         List<ImageInfoDto> imageInfoDtoList = spot.getImageInfos().stream()
                 .map(this::imageInfoToDto).toList();
         dto.setImageInfoDtoList(imageInfoDtoList);
+
+        Integer favoriteNum = spotUserService.getFavoriteNumber(spot);
+        dto.setFavoriteNumber(favoriteNum);
+
+        Integer likeNum = spotUserService.getLikeNumber(spot);
+        dto.setLikeNumber(likeNum);
+
         return dto;
     }
 
@@ -140,7 +155,8 @@ public class DtoConverter {
 
     public CommentDto commentToDto(Comment comment) {
         CommentDto dto = modelMapper.map(comment, CommentDto.class);
-        dto.setCommentatorDto(userToDto(comment.getCommentator()));
+        UserDto userDto = userToDto(comment.getCommentator());
+        dto.setCommentatorDto(new UserWithoutSpotsDto(userDto));
         return dto;
     }
 

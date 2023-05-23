@@ -1,5 +1,6 @@
 package com.shulpov.spots_app.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -10,8 +11,8 @@ public class ImageUtil {
     public static String port;
 
     public ImageUtil(@Value("${server.address}") String address, @Value("${server.port}") String port) {
-        this.address = address;
-        this.port = port;
+        ImageUtil.address = address;
+        ImageUtil.port = port;
     }
 
     public static String getUserImageDownloadUrl(Long imageId) {

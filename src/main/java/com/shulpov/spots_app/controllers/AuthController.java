@@ -42,7 +42,7 @@ public class AuthController {
 
     private final DtoConverter dtoConverter;
 
-    private final static Logger logger = LoggerFactory.getLogger(AuthController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
     public AuthController(JWTUtil jwtUtil, UserValidator userValidator, RegistrationService registrationService,

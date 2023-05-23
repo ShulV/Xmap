@@ -29,7 +29,7 @@ public class SpotController {
     private final SpotValidator spotValidator;
 
     private final DtoConverter dtoConverter;
-    private final static Logger logger = LoggerFactory.getLogger(SpotController.class);
+    private final Logger logger = LoggerFactory.getLogger(SpotController.class);
 
     @Autowired
     public SpotController(SpotService spotService, UserService userService, SpotValidator spotValidator, DtoConverter dtoConverter) {

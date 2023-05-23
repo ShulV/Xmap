@@ -14,7 +14,7 @@ public class CommentDto {
     @Column(name = "upload_date")
     private Date uploadDate;
 
-    private UserDto commentatorDto;
+    private UserWithoutSpotsDto commentatorDto;
 
     public String getText() {
         return text;
@@ -32,11 +32,11 @@ public class CommentDto {
         this.uploadDate = uploadDate;
     }
 
-    public UserDto getCommentatorDto() {
+    public UserWithoutSpotsDto getCommentatorDto() {
         return commentatorDto;
     }
 
-    public void setCommentatorDto(UserDto commentatorDto) {
+    public void setCommentatorDto(UserWithoutSpotsDto commentatorDto) {
         this.commentatorDto = commentatorDto;
     }
 }

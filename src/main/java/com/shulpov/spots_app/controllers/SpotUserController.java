@@ -7,10 +7,7 @@ import com.shulpov.spots_app.services.SpotUserService;
 import com.shulpov.spots_app.services.UserService;
 import jakarta.security.auth.message.AuthException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Map;
@@ -59,5 +56,25 @@ public class SpotUserController {
             throw new NoSuchElementException("No spot with such id");
         }
         return spotUserService.changeFavoriteState(spotOpt.get(), userOpt.get());
+    }
+
+    //Получить количество лайков у спота
+    @GetMapping("/get-like-number/{spotId}")
+    public Integer getLikeNumber(@PathVariable Long spotId) {
+        Optional<Spot> spotOpt = spotService.findById(spotId);
+        if(spotOpt.isEmpty()) {
+            throw new NoSuchElementException("No spot with id = " + spotId);
+        }
+        return spotUserService.getLikeNumber(spotOpt.get());
+    }
+
+    //Получить количество добавлений в избранное у спота
+    @GetMapping("/get-favorite-number/{spotId}")
+    public Integer getFavoriteNumber(@PathVariable Long spotId) {
+        Optional<Spot> spotOpt = spotService.findById(spotId);
+        if(spotOpt.isEmpty()) {
+            throw new NoSuchElementException("No spot with id = " + spotId);
+        }
+        return spotUserService.getFavoriteNumber(spotOpt.get());
     }
 }

@@ -19,7 +19,7 @@ import java.util.Optional;
 public class SpotTypeService {
     private final SpotTypeRepo spotTypeRepo;
 
-    private final static Logger logger = LoggerFactory.getLogger(SpotTypeService.class);
+    private static final Logger logger = LoggerFactory.getLogger(SpotTypeService.class);
     @Autowired
     public SpotTypeService(SpotTypeRepo spotTypeRepo) {
         this.spotTypeRepo = spotTypeRepo;

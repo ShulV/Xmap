@@ -12,28 +12,32 @@ import java.util.List;
 public class UserDto implements Serializable {
     @NotEmpty(message = "Имя не должен быть пустым")
     @Size(min = 2, max = 30, message = "Длина имени должна быть от 2 до 30 символов")
-    private String name;
+    protected String name;
 
     @NotNull(message = "Email не должен быть пустой")
     @Email(message = "Email должен быть валидным")
     @Size(min = 5, max = 50, message = "Длина почты должна быть от 5 до 50 символов")
-    private String email;
+    protected String email;
 
     @NotEmpty(message = "Номер не должен быть пустым")
-    private String phoneNumber;
+    protected String phoneNumber;
 
     @NotNull(message = "Дата дня рождения не должна быть пустой")
-    private Date birthday;
+    protected Date birthday;
 
-    private Date regDate;
+    protected Date regDate;
 
     @NotNull(message = "Пароль не должен быть пустой")
     @Size(min = 6, max = 50, message = "Длина пароля должна быть от 6 до 50 символов")
-    private String password;
+    protected String password;
 
-    private List<ImageInfoDto> imageInfoDtoList;
+    protected List<ImageInfoDto> imageInfoDtoList;
 
-    private List<SpotDto> createdSpots;
+    protected List<SpotDto> createdSpots;
+
+    protected List<Long> likedSpotIds;
+
+    protected List<Long> favoriteSpotIds;
 
     public String getName() {
         return name;
@@ -96,5 +100,21 @@ public class UserDto implements Serializable {
 
     public void setCreatedSpots(List<SpotDto> createdSpots) {
         this.createdSpots = createdSpots;
+    }
+
+    public List<Long> getLikedSpotIds() {
+        return likedSpotIds;
+    }
+
+    public void setLikedSpotIds(List<Long> likedSpotIds) {
+        this.likedSpotIds = likedSpotIds;
+    }
+
+    public List<Long> getFavoriteSpotIds() {
+        return favoriteSpotIds;
+    }
+
+    public void setFavoriteSpotIds(List<Long> favoriteSpotIds) {
+        this.favoriteSpotIds = favoriteSpotIds;
     }
 }

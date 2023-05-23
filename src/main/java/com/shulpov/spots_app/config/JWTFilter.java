@@ -22,7 +22,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
     private final PersonDetailsService personDetailsService;
-    private final static Logger logger = LoggerFactory.getLogger(JWTFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(JWTFilter.class);
 
     public JWTFilter(JWTUtil jwtUtil, PersonDetailsService personDetailsService) {
         this.jwtUtil = jwtUtil;

@@ -25,7 +25,7 @@ public class SpotService {
 
 //    private final EntityManager entityManager;
 
-    private final static Logger logger = LoggerFactory.getLogger(SpotService.class);
+    private final Logger logger = LoggerFactory.getLogger(SpotService.class);
 
     @Autowired
     public SpotService(SpotRepo spotRepo, @Lazy ImageInfoService imageInfoService) {

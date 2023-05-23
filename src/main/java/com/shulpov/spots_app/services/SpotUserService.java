@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -68,5 +69,25 @@ public class SpotUserService {
             return Map.of("spotId", newSpotUser.getPostedSpot().getId(),
                     "userId", newSpotUser.getUserActor().getId());
         }
+    }
+
+    //получить количество лайков у спота
+    public Integer getLikeNumber(Spot spot) {
+        return spotUserRepo.getCountLikes(spot);
+    }
+
+    //получить количество добавлений в избранное у спота
+    public Integer getFavoriteNumber(Spot spot) {
+        return spotUserRepo.getCountFavorites(spot);
+    }
+
+    //получить сущности SpotUser, где liked = true и spot = spot
+    public List<SpotUser> getLikedSpotUsers(User user) {
+        return spotUserRepo.findByUserWhereLikedTrue(user);
+    }
+
+    //получить сущности SpotUser, где favorite = true и spot = spot
+    public List<SpotUser> getFavoriteSpotUsers(User user) {
+        return spotUserRepo.findByUserWhereFavoriteTrue(user);
     }
 }
