@@ -1,31 +1,26 @@
 package com.shulpov.spots_app;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-//@EnableSwagger2
 @SpringBootApplication
 public class SpotsApplication {
 
+	private static final Logger logger = LoggerFactory.getLogger(SpotsApplication.class);
 	public static void main(String[] args) {
-		System.out.println("MSG from main() before run()");
+		logger.atInfo().log("MSG from main() before run()");
 		SpringApplication.run(SpotsApplication.class, args);
-		System.out.println("MSG from main() after run()");
+		logger.atInfo().log("MSG from main() after run()");
 	}
 
 	@Bean
 	public ModelMapper modelMapper() {
-		return new ModelMapper();
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setAmbiguityIgnored(true);
+		return modelMapper;
 	}
-
-//	@Bean
-//	public Docket api() {
-//		return new Docket(DocumentationType.SWAGGER_2)
-//				.select()
-//				.apis(RequestHandlerSelectors.basePackage("com.shulpov.spots_app.controllers"))
-//				.paths(PathSelectors.any())
-//				.build();
-//	}
 }

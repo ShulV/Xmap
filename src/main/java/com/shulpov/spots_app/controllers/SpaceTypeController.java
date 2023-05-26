@@ -4,9 +4,11 @@ import com.shulpov.spots_app.dto.SpaceTypeDto;
 import com.shulpov.spots_app.models.SpaceType;
 import com.shulpov.spots_app.services.SpaceTypeService;
 import com.shulpov.spots_app.utils.DtoConverter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +20,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/space-types")
+@Tag(name="Контроллер типов помещений (справочник)", description="Выдает типы помещений")
 public class SpaceTypeController {
     private final SpaceTypeService spaceTypeService;
 
@@ -25,12 +28,12 @@ public class SpaceTypeController {
     private final Logger logger = LoggerFactory.getLogger(SpaceTypeController.class);
 
     @Autowired
-    public SpaceTypeController(SpaceTypeService spaceTypeService, DtoConverter dtoConverter) {
+    public SpaceTypeController(SpaceTypeService spaceTypeService, @Lazy DtoConverter dtoConverter) {
         this.spaceTypeService = spaceTypeService;
         this.dtoConverter = dtoConverter;
     }
 
-    //Получить все типы спорта
+    //Получить все типы помещений
     @GetMapping("/get-all")
     public List<SpaceTypeDto> getAllSpaceTypes() {
         logger.atInfo().log("/get-all");

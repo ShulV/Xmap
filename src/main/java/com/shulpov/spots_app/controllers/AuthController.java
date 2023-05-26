@@ -9,10 +9,13 @@ import com.shulpov.spots_app.services.RoleService;
 import com.shulpov.spots_app.services.UserService;
 import com.shulpov.spots_app.utils.DtoConverter;
 import com.shulpov.spots_app.utils.validators.UserValidator;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,6 +34,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name="Контроллер регистрации и входа", description="Выдает jwt-токен при удачной регистрации или аутентификации")
 public class AuthController {
 
     private final JWTUtil jwtUtil;
@@ -45,9 +49,10 @@ public class AuthController {
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
-    public AuthController(JWTUtil jwtUtil, UserValidator userValidator, RegistrationService registrationService,
-                          RoleService roleService, UserService userService,
-                          AuthenticationManager authenticationManager, DtoConverter dtoConverter) {
+    public AuthController(@Lazy JWTUtil jwtUtil, @Lazy UserValidator userValidator,
+                          RegistrationService registrationService,
+                          @Lazy RoleService roleService, @Lazy UserService userService,
+                          AuthenticationManager authenticationManager, @Lazy DtoConverter dtoConverter) {
         this.jwtUtil = jwtUtil;
         this.userValidator = userValidator;
         this.registrationService = registrationService;
@@ -62,6 +67,10 @@ public class AuthController {
 //        return "auth/login";
 //    }
 
+    @Operation(
+            summary = "Регистрация пользователя",
+            description = "Позволяет зарегистрировать пользователя"
+    )
     @PostMapping("/register")
     public Map<String, String> performRegistration(@RequestBody @Valid UserDto userDTO,
                                       BindingResult bindingResult) {
@@ -92,6 +101,10 @@ public class AuthController {
         //TODO возвращать response со статус успешным кодом (нужно возвращать еще токен)
     }
 
+    @Operation(
+            summary = "Вход пользователя",
+            description = "Позволяет зарегистрировать пользователя и получить токен"
+    )
     @PostMapping("/login")
     public Map<String, String> performLogin(@RequestBody AuthenticationDto authenticationDTO) {
         logger.atInfo().log("/auth/login email={} password={}",

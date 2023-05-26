@@ -4,6 +4,7 @@ import com.shulpov.spots_app.dto.SpotTypeDto;
 import com.shulpov.spots_app.models.SpotType;
 import com.shulpov.spots_app.services.SpotTypeService;
 import com.shulpov.spots_app.utils.DtoConverter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/spot-types")
+@Tag(name="Контроллер типов мест для катания (справочник)", description="Выдает типы мест для катания")
 public class SpotTypeController {
     private final SpotTypeService spotTypeService;
     private final Logger logger = LoggerFactory.getLogger(SpotTypeController.class);

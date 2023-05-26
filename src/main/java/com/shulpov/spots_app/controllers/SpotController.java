@@ -8,10 +8,12 @@ import com.shulpov.spots_app.services.SpotService;
 import com.shulpov.spots_app.services.UserService;
 import com.shulpov.spots_app.utils.DtoConverter;
 import com.shulpov.spots_app.utils.validators.SpotValidator;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.security.auth.message.AuthException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +25,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/spots")
+@Tag(name="Контроллер мест для катания", description="Позволяет добавлять и получать споты")
 public class SpotController {
     private final SpotService spotService;
     private final UserService userService;
@@ -32,7 +35,8 @@ public class SpotController {
     private final Logger logger = LoggerFactory.getLogger(SpotController.class);
 
     @Autowired
-    public SpotController(SpotService spotService, UserService userService, SpotValidator spotValidator, DtoConverter dtoConverter) {
+    public SpotController(SpotService spotService, @Lazy UserService userService, @Lazy SpotValidator spotValidator,
+                          @Lazy DtoConverter dtoConverter) {
         this.spotService = spotService;
         this.userService = userService;
         this.spotValidator = spotValidator;

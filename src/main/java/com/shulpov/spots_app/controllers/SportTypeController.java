@@ -4,9 +4,11 @@ import com.shulpov.spots_app.dto.SportTypeDto;
 import com.shulpov.spots_app.models.SportType;
 import com.shulpov.spots_app.services.SportTypeService;
 import com.shulpov.spots_app.utils.DtoConverter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +20,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/sport-types")
+@Tag(name="Контроллер типов спорта (справочник)", description="Выдает типы спорта")
 public class SportTypeController {
     private final SportTypeService sportTypeService;
 
@@ -25,7 +28,7 @@ public class SportTypeController {
     private final Logger logger = LoggerFactory.getLogger(SportTypeController.class);
 
     @Autowired
-    public SportTypeController(SportTypeService sportTypeService, DtoConverter dtoConverter) {
+    public SportTypeController(SportTypeService sportTypeService, @Lazy DtoConverter dtoConverter) {
         this.sportTypeService = sportTypeService;
         this.dtoConverter = dtoConverter;
     }

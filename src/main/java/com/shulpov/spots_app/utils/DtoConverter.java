@@ -160,4 +160,11 @@ public class DtoConverter {
         return dto;
     }
 
+    public SpotUserDto spotUserToDto(SpotUser spotUser) {
+       SpotUserDto dto = modelMapper.map(spotUser, SpotUserDto.class);
+        dto.setSpotId(spotUser.getPostedSpot().getId());
+        dto.setUserId(spotUser.getUserActor().getId());
+        return dto;
+    }
+
 }

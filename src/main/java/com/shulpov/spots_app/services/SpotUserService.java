@@ -1,10 +1,12 @@
 package com.shulpov.spots_app.services;
 
+import com.shulpov.spots_app.dto.SpotUserDto;
 import com.shulpov.spots_app.models.Spot;
 import com.shulpov.spots_app.models.SpotUser;
 import com.shulpov.spots_app.models.User;
 import com.shulpov.spots_app.models.pk.UserSpotPK;
 import com.shulpov.spots_app.repo.SpotUserRepo;
+import com.shulpov.spots_app.utils.DtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -89,5 +92,19 @@ public class SpotUserService {
     //получить сущности SpotUser, где favorite = true и spot = spot
     public List<SpotUser> getFavoriteSpotUsers(User user) {
         return spotUserRepo.findByUserWhereFavoriteTrue(user);
+    }
+
+    //получить текущую сущность SpotUser
+    public SpotUser getInfo(Spot spot, User user) {
+        Optional<SpotUser> spotUserOpt = spotUserRepo.findByPostedSpotAndUserActor(spot, user);
+        if (spotUserOpt.isEmpty()) {
+            SpotUser spotUser = new SpotUser();
+            spotUser.setUserActor(user);
+            spotUser.setPostedSpot(spot);
+            spotUser.setFavorite(false);
+            spotUser.setLiked(false);
+            return spotUser;
+        }
+        return spotUserOpt.get();
     }
 }

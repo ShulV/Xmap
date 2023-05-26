@@ -46,6 +46,8 @@ public class SecurityConfig {
                         "/api/spots-users/get-like-number/**",
                         "/api/spots-users/get-favorite-number/**",
                         "/api/image-service/download-spot-image/**",
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**",
                         "/error").permitAll()
                 .anyRequest().hasAnyRole("USER", "MODERATOR", "ADMIN")
                 .and()
