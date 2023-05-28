@@ -94,7 +94,7 @@ public class SpotUserService {
         return spotUserRepo.findByUserWhereFavoriteTrue(user);
     }
 
-    //получить текущую сущность SpotUser
+    //получить сущность SpotUser
     public SpotUser getInfo(Spot spot, User user) {
         Optional<SpotUser> spotUserOpt = spotUserRepo.findByPostedSpotAndUserActor(spot, user);
         if (spotUserOpt.isEmpty()) {

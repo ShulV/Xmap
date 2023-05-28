@@ -1,5 +1,6 @@
 package com.shulpov.spots_app.controllers;
 
+import com.shulpov.spots_app.dto.SpotDto;
 import com.shulpov.spots_app.dto.SpotUserDto;
 import com.shulpov.spots_app.models.Spot;
 import com.shulpov.spots_app.models.SpotUser;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -41,69 +43,68 @@ public class SpotUserController {
         this.dtoConverter = dtoConverter;
     }
 
-    //Изменить состояние лайка спота для авторизированного пользователя
-    @PatchMapping("/change-like-state/{spotId}")
-    public Map<String, Object> changeLikeState(@PathVariable Long spotId, Principal principal) throws AuthException {
-        //TODO дублируется 8 строк, подумать как вынести общее
+    //Проверить спот на существование
+    private Spot checkSpot(Long spotId) {
         Optional<Spot> spotOpt = spotService.findById(spotId);
+        if(spotOpt.isEmpty()) {
+            throw new NoSuchElementException("No spot with such id");
+        }
+        return spotOpt.get();
+    }
+
+    //Проверить юзера на существование
+    private User checkUser(Principal principal) throws AuthException {
         Optional<User> userOpt = userService.findByName(principal.getName());
         if(userOpt.isEmpty()) {
             throw new AuthException("No principal");
         }
-        if(spotOpt.isEmpty()) {
-            throw new NoSuchElementException("No spot with such id");
-        }
-        return spotUserService.changeLikeState(spotOpt.get(), userOpt.get());
+        return userOpt.get();
+    }
+
+    //Изменить состояние лайка спота для авторизированного пользователя
+    @PatchMapping("/change-like-state/{spotId}")
+    public Map<String, Object> changeLikeState(@PathVariable Long spotId, Principal principal) throws AuthException {
+        User user = checkUser(principal);
+        Spot spot = checkSpot(spotId);
+        return spotUserService.changeLikeState(spot, user);
     }
 
     //Изменить состояние добавления спота в избранные для авторизированного пользователя
     @PatchMapping("/change-favorite-state/{spotId}")
     public Map<String, Object> changeFavoriteState(@PathVariable Long spotId, Principal principal) throws AuthException {
-        //TODO дублируется 8 строк, подумать как вынести общее
-        Optional<Spot> spotOpt = spotService.findById(spotId);
-        Optional<User> userOpt = userService.findByName(principal.getName());
-        if(userOpt.isEmpty()) {
-            throw new AuthException("No principal");
-        }
-        if(spotOpt.isEmpty()) {
-            throw new NoSuchElementException("No spot with such id");
-        }
-        return spotUserService.changeFavoriteState(spotOpt.get(), userOpt.get());
+        User user = checkUser(principal);
+        Spot spot = checkSpot(spotId);
+        return spotUserService.changeFavoriteState(spot, user);
     }
 
     //Получить количество лайков у спота
     @GetMapping("/get-like-number/{spotId}")
     public Integer getLikeNumber(@PathVariable Long spotId) {
-        Optional<Spot> spotOpt = spotService.findById(spotId);
-        if(spotOpt.isEmpty()) {
-            throw new NoSuchElementException("No spot with id = " + spotId);
-        }
-        return spotUserService.getLikeNumber(spotOpt.get());
+        Spot spot = checkSpot(spotId);
+        return spotUserService.getLikeNumber(spot);
     }
 
     //Получить количество добавлений в избранное у спота
     @GetMapping("/get-favorite-number/{spotId}")
     public Integer getFavoriteNumber(@PathVariable Long spotId) {
-        Optional<Spot> spotOpt = spotService.findById(spotId);
-        if(spotOpt.isEmpty()) {
-            throw new NoSuchElementException("No spot with id = " + spotId);
-        }
-        return spotUserService.getFavoriteNumber(spotOpt.get());
+        Spot spot = checkSpot(spotId);
+        return spotUserService.getFavoriteNumber(spot);
     }
 
     //Получить информацию, добавлен ли спот у текущего пользователя в избранные и поставил ли он лайк
     @GetMapping("/get-info/{spotId}")
     public SpotUserDto getInfo(@PathVariable Long spotId, Principal principal) throws AuthException {
-        Optional<Spot> spotOpt = spotService.findById(spotId);
-        Optional<User> userOpt = userService.findByName(principal.getName());
-        if(userOpt.isEmpty()) {
-            throw new AuthException("No principal");
-        }
-        if(spotOpt.isEmpty()) {
-            throw new NoSuchElementException("No spot with such id");
-        }
-        SpotUser spotUser = spotUserService.getInfo(spotOpt.get(), userOpt.get());
-
+        User user = checkUser(principal);
+        Spot spot = checkSpot(spotId);
+        SpotUser spotUser = spotUserService.getInfo(spot, user);
         return dtoConverter.spotUserToDto(spotUser);
+    }
+
+    //Получить избранные споты текущего пользователя
+    @GetMapping("/get-favorite-spots")
+    public List<SpotDto> getFavoriteSpots(Principal principal) throws AuthException {
+        User user = checkUser(principal);
+        return spotUserService.getFavoriteSpotUsers(user).stream()
+                .map(ss->dtoConverter.spotToDto(ss.getPostedSpot())).toList();
     }
 }

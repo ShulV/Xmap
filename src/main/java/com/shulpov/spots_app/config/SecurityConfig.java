@@ -43,6 +43,7 @@ public class SecurityConfig {
                         "/api/sport-types/**",
                         "/api/space-types/**",
                         "/api/spots/get-all",
+                        "/api/comments/get-by-spot-id/**",
                         "/api/spots-users/get-like-number/**",
                         "/api/spots-users/get-favorite-number/**",
                         "/api/image-service/download-spot-image/**",
