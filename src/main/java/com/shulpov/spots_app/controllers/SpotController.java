@@ -72,4 +72,13 @@ public class SpotController {
         Spot newSpot = spotService.saveWithAvatars(files, spot);
         return Map.of("id", newSpot.getId());//TODO
     }
+
+    //Получить все споты в определенном радиусе
+    @GetMapping("/get-in-radius")
+    public List<SpotDto> getAllSpots(@RequestParam Double lat,
+                                     @RequestParam Double lon,
+                                     @RequestParam Double radius) {
+        logger.atInfo().log("/get-in-raduis: lat=" + lat + "; lon=" + lon + "; radius=" + radius);
+        return spotService.getSpotsInRadius(lat, lon, radius).stream().map(dtoConverter::spotToDto).toList();
+    }
 }

@@ -1,7 +1,9 @@
 package com.shulpov.spots_app.services;
 
+import com.shulpov.spots_app.dto.SpotDto;
 import com.shulpov.spots_app.models.Spot;
 import com.shulpov.spots_app.repo.SpotRepo;
+import com.shulpov.spots_app.utils.DtoConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,5 +55,10 @@ public class SpotService {
             imageInfoService.uploadSpotImage(file, spotId);
         }
         return spot;
+    }
+
+    //Получить все споты в определенном радиусе
+    public List<Spot> getSpotsInRadius(Double lat, Double lon, Double radius) {
+        return spotRepo.findSpotsInRadius(lat, lon, radius);
     }
 }

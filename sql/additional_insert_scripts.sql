@@ -2,14 +2,24 @@
 -- ВСТАВИТЬ 3 СПОТА СО ВСЕМИ ПАРАМЕТРАМИ
 ------------------------------------------------------------------------------------------------------------------------
 -- Вставить спот 1
-insert into spots (name, lat, lon, accepted, adding_date, updating_date, "desc", space_type_id, user_id, moder_id)
-values ('название спота1', 25.12, 199.3, false, '2001-07-07', null, 'описание спота1', 1, 1, null);
+insert into spots (name, lat, lon, accepted, adding_date, updating_date, description, space_type_id, user_id, moder_id)
+values ('Московский спот', 55.75, 37.62, false, '2001-07-07', null, 'описание спота1', 1, 1, null);
 -- Вставить спот 2
-insert into spots (name, lat, lon, accepted, adding_date, updating_date, "desc", space_type_id, user_id, moder_id)
-values ('название спота2', 35.12, 139.3, false, '2022-07-07', null, 'описание спота2', 2, 1, null);
+insert into spots (name, lat, lon, accepted, adding_date, updating_date, description, space_type_id, user_id, moder_id)
+values ('Питерский спот', 59.94, 30.31, false, '2022-07-07', null, 'описание спота2', 2, 1, null);
 -- Вставить спот 3
-insert into spots (name, lat, lon, accepted, adding_date, updating_date, "desc", space_type_id, user_id, moder_id)
-values ('название спота3', 5.12, 99.321, false, '2009-07-07', null, 'описание спота3', 3, 1, null);
+insert into spots (name, lat, lon, accepted, adding_date, updating_date, description, space_type_id, user_id, moder_id)
+values ('Барнаульский спот', 53.36, 83.76, false, '2009-07-07', null, 'описание спота3', 3, 1, null);
+-- Вставить спот 4
+insert into spots (name, lat, lon, accepted, adding_date, updating_date, description, space_type_id, user_id, moder_id)
+values ('Бийский спот', 52.54, 85.2, false, '2009-07-07', null, 'описание спота4', 3, 1, null);
+-- Вставить спот 5
+insert into spots (name, lat, lon, accepted, adding_date, updating_date, description, space_type_id, user_id, moder_id)
+values ('Новосибирский спот', 55.04, 82.93, false, '2009-07-07', null, 'описание спота5', 3, 1, null);
+-- Вставить спот 6
+insert into spots (name, lat, lon, accepted, adding_date, updating_date, description, space_type_id, user_id, moder_id)
+values ('Бердский спот', 54.76, 83.1, false, '2009-07-07', null, 'описание спота6', 3, 1, null);
+
 
 -- вставить виды спорта 1 2 3 5 для спота 1
 insert into spots_sport_types (spot_id, sport_type_id)

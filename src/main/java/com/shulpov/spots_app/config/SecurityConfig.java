@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -43,6 +42,7 @@ public class SecurityConfig {
                         "/api/sport-types/**",
                         "/api/space-types/**",
                         "/api/spots/get-all",
+                        "/api/spots/get-in-radius",
                         "/api/comments/get-by-spot-id/**",
                         "/api/spots-users/get-like-number/**",
                         "/api/spots-users/get-favorite-number/**",
