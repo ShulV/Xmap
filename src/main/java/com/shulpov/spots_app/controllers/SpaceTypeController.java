@@ -48,6 +48,7 @@ public class SpaceTypeController {
         if(spaceTypeOpt.isPresent()) {
             return spaceTypeOpt.get();
         } else {
+            logger.atError().log("No space type with such id");
             throw new NoSuchElementException("No space type with such id");
         }
     }

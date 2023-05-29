@@ -21,12 +21,8 @@ import java.util.Optional;
 @Scope(value = "prototype")
 @Transactional(readOnly = true)
 public class SpotService {
-
     private final SpotRepo spotRepo;
     private final ImageInfoService imageInfoService;
-
-//    private final EntityManager entityManager;
-
     private final Logger logger = LoggerFactory.getLogger(SpotService.class);
 
     @Autowired
@@ -44,11 +40,13 @@ public class SpotService {
 
     //Получить спот по id
     public Optional<Spot> findById(Long spotId) {
+        logger.atInfo().log("findById id={}", spotId);
         return spotRepo.findById(spotId);
     }
 
     @Transactional
     public Spot saveWithAvatars(MultipartFile[] files, Spot spot) throws IOException {
+        logger.atInfo().log("saveWithAvatars files.length={}, spot.name={}", files.length, spot.getName());
         spot = spotRepo.save(spot);
         Long spotId = spot.getId();
         for (MultipartFile file : files) {
@@ -59,6 +57,7 @@ public class SpotService {
 
     //Получить все споты в определенном радиусе
     public List<Spot> getSpotsInRadius(Double lat, Double lon, Double radius) {
+        logger.atInfo().log("getSpotsInRadius lat={}, lon={}, rad={}", lat, lon, radius);
         return spotRepo.findSpotsInRadius(lat, lon, radius);
     }
 }

@@ -7,7 +7,6 @@ import com.shulpov.spots_app.models.User;
 import com.shulpov.spots_app.services.SpotService;
 import com.shulpov.spots_app.services.UserService;
 import com.shulpov.spots_app.utils.DtoConverter;
-import com.shulpov.spots_app.utils.validators.SpotValidator;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.security.auth.message.AuthException;
 import org.slf4j.Logger;
@@ -29,17 +28,14 @@ import java.util.Optional;
 public class SpotController {
     private final SpotService spotService;
     private final UserService userService;
-    private final SpotValidator spotValidator;
-
     private final DtoConverter dtoConverter;
     private final Logger logger = LoggerFactory.getLogger(SpotController.class);
 
     @Autowired
-    public SpotController(SpotService spotService, @Lazy UserService userService, @Lazy SpotValidator spotValidator,
+    public SpotController(SpotService spotService, @Lazy UserService userService,
                           @Lazy DtoConverter dtoConverter) {
         this.spotService = spotService;
         this.userService = userService;
-        this.spotValidator = spotValidator;
         this.dtoConverter = dtoConverter;
     }
 
@@ -60,17 +56,17 @@ public class SpotController {
         SpotDto spotDto = objectMapper.readValue(jsonSpotDto, SpotDto.class);
         Spot spot = dtoConverter.dtoToNewSpot(spotDto);
 
-//        spotValidator.validate(spot, bindingResult);//TODO
         String name = principal.getName();
         Optional<User> creatorUserOpt = userService.findByName(name);
 
         if(creatorUserOpt.isPresent()) {
             spot.setCreatorUser(creatorUserOpt.get());
         } else {
+            logger.atError().log("No user principle for spot creating");
             throw new AuthException("No user principle for spot creating");
         }
         Spot newSpot = spotService.saveWithAvatars(files, spot);
-        return Map.of("id", newSpot.getId());//TODO
+        return Map.of("id", newSpot.getId());
     }
 
     //Получить все споты в определенном радиусе
@@ -78,7 +74,7 @@ public class SpotController {
     public List<SpotDto> getAllSpots(@RequestParam Double lat,
                                      @RequestParam Double lon,
                                      @RequestParam Double radius) {
-        logger.atInfo().log("/get-in-raduis: lat=" + lat + "; lon=" + lon + "; radius=" + radius);
+        logger.atInfo().log("/get-in-radius: lat=" + lat + "; lon=" + lon + "; radius=" + radius);
         return spotService.getSpotsInRadius(lat, lon, radius).stream().map(dtoConverter::spotToDto).toList();
     }
 }

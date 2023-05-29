@@ -48,6 +48,7 @@ public class SportTypeController {
         if(sportTypeOpt.isPresent()) {
             return sportTypeOpt.get();
         } else {
+            logger.atError().log("No sport type with such id");
             throw new NoSuchElementException("No sport type with such id");
         }
     }

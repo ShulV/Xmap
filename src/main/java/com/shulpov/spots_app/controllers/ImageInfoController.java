@@ -21,8 +21,6 @@ import java.security.Principal;
 import java.util.Map;
 import java.util.Optional;
 
-//TODO ПОДУМАТЬ КАК ВЫНЕСТИ ОБЩИЙ КОД В ОТЕДЛЬНЫЕ ФУНКЦИИ (DRY)
-
 @RestController
 @RequestMapping("/api/image-service")
 @Tag(name="Контроллер информации об изображениях",
@@ -128,7 +126,7 @@ public class ImageInfoController {
         logger.atInfo().log("/delete-user-image/{id}", id);
         try {
             Optional<User> user = userService.findByName(principal.getName());
-            if(imageInfoService.userHasImageWithId(user.get(), id)) {
+            if(user.isPresent() && imageInfoService.userHasImageWithId(user.get(), id)) {
                 Long delUserId = imageInfoService.deleteUserImage(id);
                 return new ResponseEntity<>(Map.of("id", delUserId), HttpStatus.OK);
             }
@@ -141,6 +139,4 @@ public class ImageInfoController {
             throw new RuntimeException(e);
         }
     }
-
-
 }

@@ -47,6 +47,7 @@ public class SpotTypeController {
         if(spotTypeOpt.isPresent()) {
             return spotTypeOpt.get();
         } else {
+            logger.atError().log("No spot type with such id");
             throw new NoSuchElementException("No spot type with such id");
         }
     }

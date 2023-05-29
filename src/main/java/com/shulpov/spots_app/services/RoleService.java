@@ -19,6 +19,7 @@ public class RoleService {
     }
 
     public Role getUserRole() {
+
         return roleRepo.findByNameCode("ROLE_USER");
     }
 }

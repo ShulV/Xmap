@@ -15,6 +15,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.webjars.NotFoundException;
 
 import java.io.IOException;
 import java.rmi.NoSuchObjectException;
@@ -49,9 +50,12 @@ public class ImageInfoService {
     //Сгенерировать название изображения
     private String generateName(String name) {
         logger.atInfo().log(" generateName({})", name);
-        return (UUID.randomUUID().toString() + LocalDate.now().toString() + name).trim();
+        String newName = (UUID.randomUUID().toString() + LocalDate.now().toString() + name).trim();
+        logger.atInfo().log("new generated name: {}", newName);
+        return newName;
     }
 
+    //Получить информацию о картинке по её id
     public Optional<ImageInfo> findById(Long id) {
         return imageInfoRepo.findById(id);
     }
@@ -120,9 +124,10 @@ public class ImageInfoService {
         return imageManager.download(spotsUploadPath, genName);
     }
 
+    //TODO проверка на то, что пользователь удаляет свою картинку
     //Удалить картинку пользователя
     @Transactional(rollbackFor = {IOException.class})
-    public Long deleteUserImage(Long id) throws Exception {
+    public Long deleteUserImage(Long id) throws IOException {
         logger.atInfo().log("deleteUserImage id={}", id);
         Optional<ImageInfo> file = imageInfoRepo.findById(id);
         if (file.isPresent()) {
@@ -132,12 +137,12 @@ public class ImageInfoService {
             return file.get().getId();
         }
         logger.atError().log("deleteUserImage imageInfo with id={} doesn't exist", id);
-        throw new Exception("Images not found in DB");
+        throw new NotFoundException("Images not found in DB");
     }
 
     //Удалить картинку спота
     @Transactional(rollbackFor = {IOException.class})
-    public Long deleteSpotImage(Long id) throws Exception {
+    public Long deleteSpotImage(Long id) throws IOException {
         logger.atInfo().log("deleteSpotImage id={}", id);
         Optional<ImageInfo> file = imageInfoRepo.findById(id);
         if (file.isPresent()) {
@@ -147,7 +152,7 @@ public class ImageInfoService {
             return file.get().getId();
         }
         logger.atError().log("deleteSpotImage imageInfo with id={} doesn't exist", id);
-        throw new Exception("Images not found in DB");
+        throw new NotFoundException("Images not found in DB");
     }
 
     //Проверка на наличие у юзера картинки с определенным id

@@ -27,6 +27,7 @@ public class SpotTypeService {
 
     //Получить все типы спотов
     public List<SpotType> getAll() {
+        logger.atInfo().log("getAll");
         return spotTypeRepo.findAll();
     }
 
@@ -46,7 +47,9 @@ public class SpotTypeService {
         return spotTypes;
     }
 
+    //Получить тип спота по id
     public Optional<SpotType> getById(Integer id) {
+        logger.atInfo().log("getById id={}", id);
         return spotTypeRepo.findById(id);
     }
 }
