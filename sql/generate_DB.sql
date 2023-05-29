@@ -85,8 +85,8 @@ CREATE TABLE public.spots(
                              description varchar(300) NOT NULL,
                              space_type_id int NOT NULL REFERENCES public.space_types (id)
                                                            ON UPDATE CASCADE ON DELETE NO ACTION,
-                             user_id BIGINT NOT NULL REFERENCES public.users (id)
-                                 ON UPDATE CASCADE ON DELETE NO ACTION,
+                             user_id BIGINT DEFAULT NULL REFERENCES public.users (id)
+                                 ON UPDATE CASCADE ON DELETE SET NULL,
                              moder_id BIGINT DEFAULT NULL REFERENCES public.users (id)
                                  ON UPDATE CASCADE ON DELETE SET NULL
 
@@ -126,7 +126,7 @@ CREATE TABLE public.spots_users(
                                spot_id BIGINT NOT NULL REFERENCES public.spots (id)
                                    ON UPDATE CASCADE ON DELETE CASCADE,
                                user_id BIGINT REFERENCES public.users (id)
-                                   ON UPDATE CASCADE ON DELETE SET NULL,
+                                   ON UPDATE CASCADE ON DELETE CASCADE,
                                PRIMARY KEY (spot_id, user_id)
 );
 ------------------------------------------------------------------------------------------------------------------------
