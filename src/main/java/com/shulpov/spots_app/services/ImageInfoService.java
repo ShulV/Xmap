@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.Resource;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.webjars.NotFoundException;
@@ -61,7 +63,8 @@ public class ImageInfoService {
     }
 
     //Загрузить картинку пользователя
-    @Transactional(rollbackFor = {IOException.class})
+    //P.s. используется в одном контроллере, там есть проверка на удаление СВОЕЙ картинки
+    @Transactional(rollbackFor = NoTransactionException.class)
     public ImageInfo uploadUserImage(MultipartFile file, User user) throws IOException {
         logger.atInfo().log("uploadUserImage file.name={} user.name={}", file.getOriginalFilename(), user.getName());
         String genName = generateName(file.getOriginalFilename());
@@ -83,8 +86,8 @@ public class ImageInfoService {
         return createdFile;
     }
 
-    //TODO ??? экспериментальный метод - Загрузить картинку спота (КАК МИНИМУМ ИЗМЕНИТЬ ПРАВА ДОСТУПА К МЕТОДУ)
-    @Transactional(rollbackFor = {IOException.class})
+    @Secured({"ROLE_MODERATOR", "ROLE_ADMIN"})
+    @Transactional(rollbackFor = NoTransactionException.class)
     public ImageInfo uploadSpotImage(MultipartFile file, Long spotId) throws IOException {
         logger.atInfo().log("uploadSpotImage file.name={} spotId={}", file.getOriginalFilename(), spotId);
         String genName = generateName(file.getOriginalFilename());
@@ -111,22 +114,21 @@ public class ImageInfoService {
     }
 
     //Скачать картинку пользователя
-    @Transactional(rollbackFor = {IOException.class})
     public Resource downloadUserImage(String genName) throws IOException{
         logger.atInfo().log("downloadUserImage genName={}", genName);
         return imageManager.download(usersUploadPath, genName);
     }
 
     //Скачать картинку спота
-    @Transactional(rollbackFor = {IOException.class})
     public Resource downloadSpotImage(String genName) throws IOException{
         logger.atInfo().log("downloadSpotImage genName={}", genName);
         return imageManager.download(spotsUploadPath, genName);
     }
 
-    //TODO проверка на то, что пользователь удаляет свою картинку
+
     //Удалить картинку пользователя
-    @Transactional(rollbackFor = {IOException.class})
+    //P.s. используется в одном контроллере, там есть проверка на удаление СВОЕЙ картинки
+    @Transactional(rollbackFor = NoTransactionException.class)
     public Long deleteUserImage(Long id) throws IOException {
         logger.atInfo().log("deleteUserImage id={}", id);
         Optional<ImageInfo> file = imageInfoRepo.findById(id);
@@ -141,7 +143,8 @@ public class ImageInfoService {
     }
 
     //Удалить картинку спота
-    @Transactional(rollbackFor = {IOException.class})
+    @Secured({"ROLE_MODERATOR", "ROLE_ADMIN"})
+    @Transactional(rollbackFor = NoTransactionException.class)
     public Long deleteSpotImage(Long id) throws IOException {
         logger.atInfo().log("deleteSpotImage id={}", id);
         Optional<ImageInfo> file = imageInfoRepo.findById(id);
@@ -157,6 +160,7 @@ public class ImageInfoService {
 
     //Проверка на наличие у юзера картинки с определенным id
     public boolean userHasImageWithId(User user, Long id) {
+        logger.atInfo().log("userHasImageWithId user_id={} image_id={}", user.getId(), id);
         int size = user.getImageInfos().stream()
                 .filter(el->Objects.equals(el.getId(), id)).toList().size();
         return size == 1;
@@ -164,6 +168,7 @@ public class ImageInfoService {
 
     //Проверка на наличие у спота картинки с определенным id
     public boolean spotHasImageWithId(Spot spot, Long id) {
+        logger.atInfo().log("spotHasImageWithId spot_id={} image_id={}", spot.getId(), id);
         int size = spot.getImageInfos().stream()
                 .filter(el->Objects.equals(el.getId(), id)).toList().size();
         return size == 1;

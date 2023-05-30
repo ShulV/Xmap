@@ -11,8 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,22 +41,30 @@ public class UserController {
 
     //Получить полную информацию о пользователе
     @GetMapping("/get-user")
-    public UserDto getAuthUser() throws AuthException {
+    public ResponseEntity<UserDto> getAuthUser() {
         logger.atInfo().log("/get-user");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
-        String username = personDetails.getUsername();
+        String username;
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+            username = personDetails.getUsername();
+        } catch (UsernameNotFoundException e) {
+            logger.atInfo().log("/get-user username={} not found");
+            ResponseEntity<UserDto> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return response;
+        }
         Optional<User> userOpt = userService.findByName(username);
 
         if(userOpt.isPresent()) {
             logger.atInfo().log("/user-get-info principle exists");
             User user = userOpt.get();
 
-            return dtoConverter.userToDto(user);
-        } else {
-            logger.atError().log("/get-user username={} not found", username);
-            throw new AuthException("No principle");
+            return new ResponseEntity(dtoConverter.userToDto(user), HttpStatus.OK);
         }
+
+        logger.atInfo().log("/get-user username={} not found", username);
+        ResponseEntity<UserDto> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return response;
     }
 
     //Удалить своего пользователя (по токену)
@@ -73,7 +86,7 @@ public class UserController {
                     userOpt.get().getRegDate(),
                     userOpt.get().getRoleCodeName());
             Long id = userOpt.get().getId();
-            if(userService.deleteById(id)) {
+            if(Boolean.TRUE.equals(userService.deleteById(id))) {
                 logger.atInfo().log("account was deleted id={}", id);
                 return Map.of("id", id, "message", "Аккаунт пользователя удален");
             } else {

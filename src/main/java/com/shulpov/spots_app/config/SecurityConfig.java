@@ -46,6 +46,8 @@ public class SecurityConfig {
                         "/api/comments/get-by-spot-id/**",
                         "/api/spots-users/get-like-number/**",
                         "/api/spots-users/get-favorite-number/**",
+                        "/api/spots-users/get-info/**",
+                        "/api/image-service/download-user-image/**",
                         "/api/image-service/download-spot-image/**",
                         "/v3/api-docs/**",
                         "/swagger-ui/**",

@@ -4,6 +4,7 @@ import com.shulpov.spots_app.models.ImageInfo;
 import com.shulpov.spots_app.models.User;
 import com.shulpov.spots_app.services.ImageInfoService;
 import com.shulpov.spots_app.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,7 +40,10 @@ public class ImageInfoController {
         this.userService = userService;
     }
 
-    //Загрузить картинку для своего пользователя (по токену)
+    @Operation(
+            summary = "Загрузка изображения для своего аккаунта",
+            description = "Позволяет пользователю загрузить изображение для своего аккаунта"
+    )
     @PostMapping("/upload-user-image")
     public ResponseEntity<Map<String, Long>> uploadUserImage(@RequestParam MultipartFile file, Principal principal) {
         logger.atInfo().log("/upload-user-image filename={} size={} principle.name={}",
@@ -58,7 +64,11 @@ public class ImageInfoController {
         }
     }
 
-    //Загрузить картинку для спота по id
+    @Secured({"ROLE_MODERATOR", "ROLE_ADMIN"})
+    @Operation(
+            summary = "Загрузка изображения для спота",
+            description = "Позволяет модератору или админу добавить 1 изображение для спота"
+    )
     @PostMapping("/upload-spot-image/{id}")
     public ResponseEntity<Map<String, Long>> uploadSpotImage(
             @PathVariable(name = "id") Long spotId, @RequestParam MultipartFile file, Principal principal) {
@@ -71,16 +81,20 @@ public class ImageInfoController {
                 logger.atInfo().log("image info created in with id={}", imageInfo.getId());
                 return new ResponseEntity<>(Map.of("id", imageInfo.getId()), HttpStatus.CREATED);
             } catch (IOException e) {
-                logger.atInfo().log("/upload-spot-image IOException 400");
+                logger.atInfo().log("/upload-spot-image IOException 400: filename={}, spotId={}",
+                        file.getOriginalFilename(), spotId);
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         } else {
-            logger.atInfo().log("/upload-spot-image 403");
+            logger.atError().log("/upload-spot-image 403 (shouldn't working after filter)");
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
-    //Скачать картинку пользователя по id
+    @Operation(
+            summary = "Скачивание изображения пользователя по id изображения",
+            description = "Позволяет пользователю скачивать изображение любого другого пользователя"
+    )
     @GetMapping(path = "/download-user-image/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<Resource> downloadUserImage(@PathVariable("id") Long id) throws IOException {
         logger.atInfo().log("/download-user-image/{}", id);
@@ -100,7 +114,6 @@ public class ImageInfoController {
         }
     }
 
-    //Скачать картинку спота по id
     @GetMapping(path = "/download-spot-image/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<Resource> downloadSpotImage(@PathVariable("id") Long id) throws IOException {
         logger.atInfo().log("/download-spot-image/{}", id);

@@ -62,11 +62,6 @@ public class AuthController {
         this.dtoConverter = dtoConverter;
     }
 
-//    @GetMapping("/login")
-//    public String loginPage() {
-//        return "auth/login";
-//    }
-
     @Operation(
             summary = "Регистрация пользователя",
             description = "Позволяет зарегистрировать пользователя"
@@ -90,15 +85,13 @@ public class AuthController {
             errors.forEach(er-> errorMap.put(er.getObjectName(), er.getDefaultMessage()));
             logger.atInfo().log(errorMap.toString());
             return errorMap;
-            //TODO сделать исключение или придумать как возвращать ошибку REST API
-            //надо выбрасывать исключение, ловить его с помощью HandleException как в проекте N 3
+            //TODO нужно выбрасывать исключение, ловить его с помощью HandleException как в проекте N 3
         }
         User createdUser = registrationService.register(user);
 
         String token = jwtUtil.generateToken(user);
         logger.atInfo().log("/auth/register success token={}", token);
         return Map.of("jwtToken", token, "id", createdUser.getId().toString());
-        //TODO возвращать response со статус успешным кодом (нужно возвращать еще токен)
     }
 
     @Operation(
