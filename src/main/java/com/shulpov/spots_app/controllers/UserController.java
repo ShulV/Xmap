@@ -56,7 +56,7 @@ public class UserController {
 
     //Удалить своего пользователя (по токену)
     @DeleteMapping("/delete-user")
-    public Map<String, String> deleteUser() {
+    public Map<String, Object> deleteUser() {
         logger.atInfo().log("/delete-user");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
@@ -72,8 +72,15 @@ public class UserController {
                     userOpt.get().getBirthday(),
                     userOpt.get().getRegDate(),
                     userOpt.get().getRoleCodeName());
-            userService.deleteById(userOpt.get().getId());
-            return Map.of("message", "Аккаунт пользователя удален");
+            Long id = userOpt.get().getId();
+            if(userService.deleteById(id)) {
+                logger.atInfo().log("account was deleted id={}", id);
+                return Map.of("id", id, "message", "Аккаунт пользователя удален");
+            } else {
+                logger.atInfo().log("account doesn't exist id={}", id);
+                return Map.of("id", id, "message", "Аккаунт пользователя не удален, так как не существует");
+            }
+
         }
         logger.atError().log("/delete-user username={} not found", username);
         return Map.of("error", "Пользователь не найден");

@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -17,11 +18,19 @@ import java.util.Optional;
 public class UserService {
 
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
+    private final ImageInfoService imageInfoService;
     private final UserRepo userRepo;
 
     @Autowired
-    public UserService(UserRepo userRepo) {
+    public UserService(ImageInfoService imageInfoService, UserRepo userRepo) {
+        this.imageInfoService = imageInfoService;
         this.userRepo = userRepo;
+    }
+
+    //Найти пользователя по id
+    public Optional<User> findById(Long id) {
+        logger.atInfo().log("findById id={}", id);
+        return userRepo.findById(id);
     }
 
     //Найти пользователя по email
@@ -37,10 +46,23 @@ public class UserService {
     }
 
     //Удалить пользователя по id
-    @Transactional
-    public void deleteById(Long id) {
+    @Transactional(rollbackFor = IOException.class)
+    public Boolean deleteById(Long id) {
         logger.atInfo().log("deleteById id={}", id);
-        userRepo.deleteById(id);
+        Optional<User> userOpt = findById(id);
+        if(userOpt.isPresent()) {
+            userOpt.get().getImageInfos().forEach(imageInfo -> {
+                try {
+                    imageInfoService.deleteUserImage(imageInfo.getId());
+                } catch (IOException e) {
+                    logger.atInfo().log("deleteById id={}; imageInfo with id={} not deleted", id, imageInfo.getId());
+                    throw new RuntimeException(e);
+                }
+            });
+            userRepo.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     //Найти пользователя по номеру телефона

@@ -158,7 +158,7 @@ public class DtoConverter {
 
     public SpotUserDto spotUserToDto(SpotUser spotUser) {
         logger.atInfo().log("spotUserToDto spot_id={}, user_id={}",
-                spotUser.getId().getSpotId(), spotUser.getId().getUserId());
+                spotUser.getPostedSpot().getId(), spotUser.getUserActor().getId());
         SpotUserDto dto = modelMapper.map(spotUser, SpotUserDto.class);
         dto.setSpotId(spotUser.getPostedSpot().getId());
         dto.setUserId(spotUser.getUserActor().getId());
