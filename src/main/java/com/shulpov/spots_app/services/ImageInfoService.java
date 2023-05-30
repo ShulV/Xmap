@@ -52,7 +52,7 @@ public class ImageInfoService {
     //Сгенерировать название изображения
     private String generateName(String name) {
         logger.atInfo().log(" generateName({})", name);
-        String newName = (UUID.randomUUID().toString() + LocalDate.now().toString() + name).trim();
+        String newName = (UUID.randomUUID().toString() + LocalDate.now().toString() + name).replaceAll(" ", "");
         logger.atInfo().log("new generated name: {}", newName);
         return newName;
     }
