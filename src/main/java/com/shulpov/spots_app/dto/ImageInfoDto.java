@@ -3,6 +3,8 @@ package com.shulpov.spots_app.dto;
 import java.util.Date;
 
 public class ImageInfoDto {
+
+    private Long id;
     private String url;
     private int size;
 
@@ -30,6 +32,14 @@ public class ImageInfoDto {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
 

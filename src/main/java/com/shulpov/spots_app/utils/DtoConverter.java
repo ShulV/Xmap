@@ -115,9 +115,11 @@ public class DtoConverter {
 
     public ImageInfoDto imageInfoToDto(ImageInfo imageInfo) throws NullPointerException {
         logger.atInfo().log("imageInfoToDto id: {}, genName: {}", imageInfo.getId(), imageInfo.getGenName());
-        ImageInfoDto dto = new ImageInfoDto();
-        dto.setSize(imageInfo.getSize());
-        dto.setUploadDate(imageInfo.getUploadDate());
+//        ImageInfoDto dto = new ImageInfoDto();
+//        dto.setSize(imageInfo.getSize());
+//        dto.setUploadDate(imageInfo.getUploadDate());
+        ImageInfoDto dto = modelMapper.map(imageInfo, ImageInfoDto.class);
+
         if(imageInfo.getPhotographedUser() != null) {
             String url = ImageUtil.getUserImageDownloadUrl(imageInfo.getId());
             dto.setUrl(url);
