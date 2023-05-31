@@ -150,7 +150,7 @@ public class ImageInfoService {
         Optional<ImageInfo> file = imageInfoRepo.findById(id);
         if (file.isPresent()) {
             logger.atInfo().log("deleteSpotImage imageInfo with id={} exists", id);
-            imageInfoRepo.deleteById(file.get().getId());
+            imageInfoRepo.deleteByIdWithoutRefs(file.get().getId());
             imageManager.delete(spotsUploadPath, file.get().getGenName());
             return file.get().getId();
         }
