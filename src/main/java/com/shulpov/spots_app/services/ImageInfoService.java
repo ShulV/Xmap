@@ -134,9 +134,9 @@ public class ImageInfoService {
         Optional<ImageInfo> file = imageInfoRepo.findById(id);
         if (file.isPresent()) {
             logger.atInfo().log("deleteUserImage imageInfo with id={} exists", id);
-            imageInfoRepo.delete(file.get());
+            imageInfoRepo.deleteByIdWithoutRefs(id);
             imageManager.delete(usersUploadPath, file.get().getGenName());
-            return file.get().getId();
+            return id;
         }
         logger.atError().log("deleteUserImage imageInfo with id={} doesn't exist", id);
         throw new NotFoundException("Images not found in DB");
@@ -150,7 +150,7 @@ public class ImageInfoService {
         Optional<ImageInfo> file = imageInfoRepo.findById(id);
         if (file.isPresent()) {
             logger.atInfo().log("deleteSpotImage imageInfo with id={} exists", id);
-            imageInfoRepo.delete(file.get());
+            imageInfoRepo.deleteById(file.get().getId());
             imageManager.delete(spotsUploadPath, file.get().getGenName());
             return file.get().getId();
         }

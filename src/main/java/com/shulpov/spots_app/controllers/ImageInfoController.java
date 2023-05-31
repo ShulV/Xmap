@@ -136,13 +136,15 @@ public class ImageInfoController {
     //Удалить картинку пользователя
     @DeleteMapping("/delete-user-image/{id}")
     public ResponseEntity<Map<String, Object>> deleteUserImage(@PathVariable("id") Long id, Principal principal) {
-        logger.atInfo().log("/delete-user-image/{id}", id);
+        logger.atInfo().log("/delete-user-image/{}", id);
         try {
             Optional<User> user = userService.findByName(principal.getName());
             if(user.isPresent() && imageInfoService.userHasImageWithId(user.get(), id)) {
+                logger.atInfo().log("/delete-user-image/{}: user exists and userHasImageWithId=true", id);
                 Long delUserId = imageInfoService.deleteUserImage(id);
-                return new ResponseEntity<>(Map.of("id", delUserId), HttpStatus.OK);
+                return new ResponseEntity<>(Map.of("id", delUserId, "message", "изображение удалено"), HttpStatus.OK);
             }
+            logger.atInfo().log("/delete-user-image/{}: user doesn't exist or userHasImageWithId=false", id);
             return new ResponseEntity<>(
                     Map.of("message","image with id=" + id + " for user=" + user.get().getName() + " not found"),
                     HttpStatus.BAD_REQUEST);
