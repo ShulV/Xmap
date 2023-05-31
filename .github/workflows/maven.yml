@@ -2,7 +2,8 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "main" ]
+#    branches: [ "main" ]
+    branches: [ "fake_branch" ] # чтобы не запускался деплой
   pull_request:
     branches: [ "main" ]
 
