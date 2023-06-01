@@ -15,17 +15,41 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+/**
+ * Класс, помогающий конвертировать модели в их DTO и обратно. Класс-@Component.
+ * @author Victor Shulpov "vshulpov@gmail.com"
+ * @version 1.0
+ * @since 1.0
+ */
 @Component
 public class DtoConverter {
 
     private final Logger logger = LoggerFactory.getLogger(DtoConverter.class);
+
+    /** Компонент маппинга классов */
     private final  ModelMapper modelMapper;
+
+    /** Сервис ролей */
     private final  RoleService roleService;
+
+    /** Сервис типов помещений */
     private final  SpaceTypeService spaceTypeService;
+    /** Сервис типов спотов */
     private final  SpotTypeService spotTypeService;
+    /** Сервис типов спорта */
     private final  SportTypeService sportTypeService;
+    /** Сервис управления данными между пользователями и спотами */
     private final SpotUserService spotUserService;
 
+    /**
+     * Конструктор компонента
+     * @param modelMapper компонент маппинга классов
+     * @param roleService сервис ролей
+     * @param spaceTypeService сервис типов помещений
+     * @param spotTypeService сервис типов спотов
+     * @param sportTypeService сервис типов спорта
+     * @param spotUserService сервис управления данными между пользователями и спотами
+     */
 
     @Autowired
     public DtoConverter(@Lazy ModelMapper modelMapper, @Lazy RoleService roleService,
@@ -39,6 +63,11 @@ public class DtoConverter {
         this.spotUserService = spotUserService;
     }
 
+    /**
+     * Конвертор класса User в класс UserDto
+     * @param user класс пользователя
+     * @return класс DTO пользователя
+     */
     public UserDto userToDto(User user) {
         logger.atInfo().log("userToDto id: {}, name: {}", user.getId(), user.getName());
         UserDto dto = modelMapper.map(user, UserDto.class);
@@ -51,6 +80,11 @@ public class DtoConverter {
         return dto;
     }
 
+    /**
+     * Конвертор класса UserDto в класс User
+     * @param dto класс DTO пользователя
+     * @return класс пользователя
+     */
     public User dtoToNewUser(UserDto dto) {
         logger.atInfo().log("dtoToNewUser name: {}", dto.getName());
         User user = modelMapper.map(dto, User.class);
@@ -59,6 +93,11 @@ public class DtoConverter {
         return user;
     }
 
+    /**
+     * Конвертор класса SpotDto в класс Spot
+     * @param dto класс DTO создаваемого спота
+     * @return новый экземпляр класса спота
+     */
     public Spot dtoToNewSpot(SpotDto dto) throws NoSuchElementException {
         logger.atInfo().log("dtoToNewSpot name: {}", dto.getName());
         Spot spot = modelMapper.map(dto, Spot.class);
@@ -85,6 +124,11 @@ public class DtoConverter {
         return spot;
     }
 
+    /**
+     * Конвертор класса Spot в класс SpotDto
+     * @param spot класс спота
+     * @return класс DTO спота
+     */
     public SpotDto spotToDto(Spot spot) {
         logger.atInfo().log("spotToDto id: {}, name: {}", spot.getId(), spot.getName());
         SpotDto dto = new SpotDto();
@@ -113,11 +157,13 @@ public class DtoConverter {
         return dto;
     }
 
+    /**
+     * Конвертор класса ImageInfo в класс ImageInfoDto
+     * @param imageInfo класс информации об изображении
+     * @return класс DTO информации об изображении
+     */
     public ImageInfoDto imageInfoToDto(ImageInfo imageInfo) throws NullPointerException {
         logger.atInfo().log("imageInfoToDto id: {}, genName: {}", imageInfo.getId(), imageInfo.getGenName());
-//        ImageInfoDto dto = new ImageInfoDto();
-//        dto.setSize(imageInfo.getSize());
-//        dto.setUploadDate(imageInfo.getUploadDate());
         ImageInfoDto dto = modelMapper.map(imageInfo, ImageInfoDto.class);
 
         if(imageInfo.getPhotographedUser() != null) {
@@ -135,21 +181,41 @@ public class DtoConverter {
         return dto;
     }
 
+    /**
+     * Конвертор класса SportType в класс SportTypeDto
+     * @param sportType класс типа спорта
+     * @return класс DTO типа спорта
+     */
     public SportTypeDto sportTypeToDto(SportType sportType) {
         logger.atInfo().log("sportTypeToDto id={}", sportType.getId());
         return modelMapper.map(sportType, SportTypeDto.class);
     }
 
+    /**
+     * Конвертор класса SpotType в класс SpotTypeDto
+     * @param spotType класс типа спота
+     * @return класс DTO типа спота
+     */
     public SpotTypeDto spotTypeToDto(SpotType spotType) {
         logger.atInfo().log("spotTypeToDto id={}", spotType.getId());
         return modelMapper.map(spotType, SpotTypeDto.class);
     }
 
+    /**
+     * Конвертор класса SpaceType в класс SpaceTypeDto
+     * @param spaceType класс типа помещения
+     * @return класс DTO типа помещения
+     */
     public SpaceTypeDto spaceTypeToDto(SpaceType spaceType) {
         logger.atInfo().log("spaceTypeToDto id={}", spaceType.getId());
         return modelMapper.map(spaceType, SpaceTypeDto.class);
     }
 
+    /**
+     * Конвертор класса Comment в класс CommentDto
+     * @param comment класс комментария
+     * @return класс DTO комментария
+     */
     public CommentDto commentToDto(Comment comment) {
         logger.atInfo().log("commentToDto id={}", comment.getId());
         CommentDto dto = modelMapper.map(comment, CommentDto.class);
@@ -158,6 +224,11 @@ public class DtoConverter {
         return dto;
     }
 
+    /**
+     * Конвертор класса SpotUser в класс SpotUserDto
+     * @param spotUser класс данных между спотами и пользователями
+     * @return класс DTO данных между спотами и пользователями
+     */
     public SpotUserDto spotUserToDto(SpotUser spotUser) {
         logger.atInfo().log("spotUserToDto spot_id={}, user_id={}",
                 spotUser.getPostedSpot().getId(), spotUser.getUserActor().getId());
@@ -166,5 +237,4 @@ public class DtoConverter {
         dto.setUserId(spotUser.getUserActor().getId());
         return dto;
     }
-
 }
