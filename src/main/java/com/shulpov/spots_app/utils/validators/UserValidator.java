@@ -11,21 +11,42 @@ import org.springframework.validation.Validator;
 
 import java.util.Date;
 
+/**
+ * Класс, проверяющий экземпляры класса пользователя на валидность. Класс-@Component.
+ * @author Victor Shulpov "vshulpov@gmail.com"
+ * @version 1.0
+ * @since 1.0
+ */
 @Component
 public class UserValidator implements Validator {
+    /** Сервис пользователей */
     private final UserService userService;
     private final Logger logger = LoggerFactory.getLogger(UserValidator.class);
 
+    /**
+     * Конструктор компонента
+     * @param userService сервис пользователей
+     */
     @Autowired
     public UserValidator(UserService userService) {
         this.userService = userService;
     }
 
+    /**
+     * Метод, проверяющий на совпадение класса валидируемый объект
+     * @param aClass валидируемый класс
+     * @return true, если валидируемый класс соотвествует валидатору, иначе - false
+     */
     @Override
     public boolean supports(Class<?> aClass) {
         return User.class.equals(aClass);
     }
 
+    /**
+     *
+     * @param target валидируемый класс
+     * @param errors список ошибок, относящийся к валидируему классу
+     */
     @Override
     public void validate(Object target, Errors errors) {
         User user = (User) target;
