@@ -11,24 +11,40 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Класс,отвечающий за загрузку/скачивание/удаление изображений в/из директории на сервере. Класс-@Component.
+ * @author Victor Shulpov "vshulpov@gmail.com"
+ * @version 1.0
+ * @since 1.0
+ */
 @Component
 public class ImageManager implements FileManager {
 
-    //загрузка файла на диск
+    /**
+     * Загрузка файла на диск
+     * @param bytes файл, переданный в виде массива байт
+     * @param dirPath абсолютный путь до загружаемого файла
+     * @param genName имя загружаемого файла
+     * @throws IOException исключение, связанное с проблемой потоков ввода/вывода при работе с изображениями
+     * (например, закончилось место на диске)
+     */
     @Override
     public void upload(byte[] bytes, String dirPath, String genName) throws IOException {
         Path path = getAbsolutePath(dirPath, genName);
         Path file = Files.createFile(path);
-        FileOutputStream stream = null;
-        try {
-            stream = new FileOutputStream(file.toString());
+        try (FileOutputStream stream = new FileOutputStream(file.toString())) {
             stream.write(bytes);
-        } finally {
-            stream.close();
         }
     }
 
-    //скачивание файла с диска
+    /**
+     * Скачивание изображения с диска
+     * @param dirPath абсолютный путь до изображения
+     * @param genName название изображения
+     * @return ресурс (изображение)
+     * @throws IOException исключение, связанное с проблемой потоков ввода/вывода при работе с изображениями
+     * (например, закончилось место на диске)
+     */
     @Override
     public Resource download(String dirPath, String genName) throws IOException {
         Path path = getAbsolutePath(dirPath, genName);
@@ -40,15 +56,27 @@ public class ImageManager implements FileManager {
         }
     }
 
-    //удаление файла с диска
+    /**
+     * Удаление файла с диска
+     * @param dirPath абсолютный путь до изображения
+     * @param genName название изображения
+     * @throws IOException исключение, связанное с проблемой потоков ввода/вывода при работе с изображениями
+     * (например, закончилось место на диске)
+     */
     @Override
     public void delete(String dirPath, String genName) throws IOException {
         Path path = getAbsolutePath(dirPath, genName);
         Files.delete(path);
     }
 
-    public Path getAbsolutePath(String directoryPath, String genName) {
-        String absPath =  Paths.get(new File("").getAbsolutePath(), directoryPath).toString();
+    /**
+     * Получение абсолютного пути, включающего в себя название файла
+     * @param dirPath абсолютный путь до изображения
+     * @param genName название изображения
+     * @return экземпляр объекта класса Path (путь до изображения включительно)
+     */
+    public Path getAbsolutePath(String dirPath, String genName) {
+        String absPath =  Paths.get(new File("").getAbsolutePath(), dirPath).toString();
         return Paths.get(absPath, genName);
     }
 }

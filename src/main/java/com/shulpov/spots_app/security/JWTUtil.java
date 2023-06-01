@@ -66,7 +66,6 @@ public class JWTUtil {
                 .withExpiresAt(expirationDate)
                 //Подпись, секретный ключ для шифрования и алгоритм шифрования
                 .sign(Algorithm.HMAC256(secretJWT));
-
     }
 
     /**
