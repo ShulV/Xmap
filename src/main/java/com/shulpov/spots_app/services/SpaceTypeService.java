@@ -30,22 +30,6 @@ public class SpaceTypeService {
         return spaceTypeRepo.findAll();
     }
 
-//    //Получить все типы помещений по их id
-//    public List<SpaceType> getByIds(List<Integer> ids) {
-//        logger.atInfo().log("findByIds ids:{}", ids.toString());
-//        List<SpaceType> spaceTypes = new ArrayList<>();
-//        ids.forEach(id -> {
-//            Optional<SpaceType> spaceTypeOpt = spaceTypeRepo.findById(id);
-//            if (spaceTypeOpt.isPresent()) {
-//                spaceTypes.add(spaceTypeOpt.get());
-//                logger.atInfo().log("id={} exists", id);
-//            } else {
-//                logger.atError().log("id={} doesn't exist: ID SPACE TYPE LIST ERROR", id);
-//            }
-//        });
-//        return spaceTypes;
-//    }
-
     //Получить тип помещения по id
     public Optional<SpaceType> getById(Integer id) {
         return spaceTypeRepo.findById(id);

@@ -34,23 +34,6 @@ public class ImageInfo {
     @JoinColumn(name = "spot_id", referencedColumnName = "id")
     private Spot photographedSpot;
 
-//    //to data transfer object
-//    public ImageInfoDto toDto() throws Exception {
-//        ImageInfoDto imageInfoDto = new ImageInfoDto();
-//        String url;
-//        if(this.photographedSpot != null && this.photographedUser == null) {
-//            url = ImageUtil.getSpotImageDownloadUrl(this.id);
-//        } else if(this.photographedUser != null && this.photographedSpot == null) {
-//            url = ImageUtil.getUserImageDownloadUrl(this.id);
-//        } else {
-//            throw new Exception("Invalid imageInfo object");
-//        }
-//        imageInfoDto.setUrl(url);
-//        imageInfoDto.setSize(this.size);
-//        imageInfoDto.setUploadDate(this.uploadDate);
-//        return imageInfoDto;
-//    }
-
     public Long getId() {
         return id;
     }
