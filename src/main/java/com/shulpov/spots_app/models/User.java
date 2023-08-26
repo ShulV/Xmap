@@ -52,6 +52,10 @@ public class User {
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
 
+    @ManyToOne
+    @JoinColumn(name = "city_id", referencedColumnName = "id")
+    private City city;
+
     @OneToMany(mappedBy = "photographedUser",
             fetch = FetchType.EAGER,
             cascade = {CascadeType.PERSIST,CascadeType.MERGE })
@@ -74,6 +78,8 @@ public class User {
 
     @OneToMany(mappedBy = "userActor")
     private List<SpotUser> spotUserList;
+
+
 
     public User() {
     }
@@ -204,5 +210,13 @@ public class User {
 
     public void setSpotUserList(List<SpotUser> spotUserList) {
         this.spotUserList = spotUserList;
+    }
+
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
     }
 }

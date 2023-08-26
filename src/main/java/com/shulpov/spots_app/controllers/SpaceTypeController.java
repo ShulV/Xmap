@@ -25,12 +25,13 @@ public class SpaceTypeController {
     private final SpaceTypeService spaceTypeService;
 
     private final DtoConverter dtoConverter;
-    private final Logger logger = LoggerFactory.getLogger(SpaceTypeController.class);
+    private final Logger logger;
 
     @Autowired
     public SpaceTypeController(SpaceTypeService spaceTypeService, @Lazy DtoConverter dtoConverter) {
         this.spaceTypeService = spaceTypeService;
         this.dtoConverter = dtoConverter;
+        this.logger = LoggerFactory.getLogger(SpaceTypeController.class);
     }
 
     //Получить все типы помещений

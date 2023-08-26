@@ -1,10 +1,11 @@
 package com.shulpov.spots_app.dto;
 
-public class SpotTypeDto {
+import com.shulpov.spots_app.models.Region;
 
+public class CityDto {
     private Integer id;
-
     private String name;
+
 
     public Integer getId() {
         return id;
@@ -21,4 +22,6 @@ public class SpotTypeDto {
     public void setName(String name) {
         this.name = name;
     }
+
+
 }

@@ -1,10 +1,9 @@
 package com.shulpov.spots_app.dto;
 
-public class SpotTypeDto {
-
+public class CountryDto {
     private Integer id;
-
     private String name;
+
 
     public Integer getId() {
         return id;
@@ -21,4 +20,5 @@ public class SpotTypeDto {
     public void setName(String name) {
         this.name = name;
     }
+
 }

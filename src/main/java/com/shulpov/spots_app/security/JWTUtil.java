@@ -41,7 +41,7 @@ public class JWTUtil {
      */
     public String generateToken(User user) {
         logger.atInfo().log("generateToken user: id={} name={} email={} phoneNumber={} birthday={}" +
-                " regDate={} role={}",
+                        " regDate={} role={}",
                 user.getId(),
                 user.getName(),
                 user.getEmail(),

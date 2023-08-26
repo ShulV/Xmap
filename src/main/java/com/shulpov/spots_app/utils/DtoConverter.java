@@ -237,4 +237,34 @@ public class DtoConverter {
         dto.setUserId(spotUser.getUserActor().getId());
         return dto;
     }
+
+    /**
+     * Конвертор класса Country в класс CountryDto
+     * @param country класс страны
+     * @return класс DTO класса страны
+     */
+    public CountryDto countryToDto(Country country) {
+        // TODO дописать логгер
+        return modelMapper.map(country, CountryDto.class);
+    }
+
+    /**
+     * Конвертор класса Region в класс RegionDto
+     * @param region класс региона
+     * @return класс DTO класса региона
+     */
+    public RegionDto regionToDto(Region region) {
+        // TODO дописать логгер
+        return modelMapper.map(region, RegionDto.class);
+    }
+
+    /**
+     * Конвертор класса City в класс CityDto
+     * @param city класс города
+     * @return класс DTO класса города
+     */
+    public CityDto cityToDto(City city) {
+        // TODO дописать логгер
+        return modelMapper.map(city, CityDto.class);
+    }
 }

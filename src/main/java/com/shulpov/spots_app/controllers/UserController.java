@@ -6,13 +6,13 @@ import com.shulpov.spots_app.models.User;
 import com.shulpov.spots_app.services.UserService;
 import com.shulpov.spots_app.utils.DtoConverter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.security.auth.message.AuthException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
