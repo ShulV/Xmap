@@ -1,12 +1,15 @@
 package com.shulpov.spots_app.services;
 
 import com.shulpov.spots_app.models.City;
+import com.shulpov.spots_app.models.Country;
+import com.shulpov.spots_app.models.Region;
 import com.shulpov.spots_app.repo.CityRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.webjars.NotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,8 +22,14 @@ public class CityService {
 
     private final Logger logger = LoggerFactory.getLogger(CityService.class);
 
-    public CityService(CityRepo cityRepo) {
+    private final RegionService regionService;
+
+    private final CountryService countryService;
+
+    public CityService(CityRepo cityRepo, RegionService regionService, CountryService countryService) {
         this.cityRepo = cityRepo;
+        this.regionService = regionService;
+        this.countryService = countryService;
     }
 
     public List<City> getAll() {
@@ -33,4 +42,25 @@ public class CityService {
         logger.atInfo().log("getById id={}", id);
         return cityRepo.findById(id);
     }
+
+    public List<City> getByRegionId(Integer id) {
+        logger.atInfo().log("getByRegionId id={}", id);
+        Optional<Region> optRegion = regionService.getById(id);
+        if (optRegion.isPresent()) {
+            return cityRepo.findByRegion(optRegion.get());
+        } else {
+            throw new NotFoundException("Region not found");
+        }
+    }
+
+    public List<City> getByCountryId(Integer id) {
+        logger.atInfo().log("getByCountryId id={}", id);
+        Optional<Country> optCountry = countryService.getById(id);
+        if (optCountry.isPresent()) {
+            return cityRepo.findByRegion_Country(optCountry.get());
+        } else {
+            throw new NotFoundException("Country not found");
+        }
+    }
+
 }

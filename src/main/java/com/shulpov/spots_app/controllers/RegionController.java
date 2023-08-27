@@ -1,15 +1,22 @@
 package com.shulpov.spots_app.controllers;
 
+import com.shulpov.spots_app.dto.CityDto;
 import com.shulpov.spots_app.dto.RegionDto;
+import com.shulpov.spots_app.models.City;
+import com.shulpov.spots_app.models.Region;
 import com.shulpov.spots_app.services.RegionService;
 import com.shulpov.spots_app.utils.DtoConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.webjars.NotFoundException;
 
 import java.util.List;
 
@@ -37,4 +44,19 @@ public class RegionController {
         logger.atInfo().log("/get-all");
         return regionService.getAll().stream().map(dtoConverter::regionToDto).toList();
     }
+
+    @GetMapping("/get-by-country-id/{id}")
+    public ResponseEntity<?> getByCountryId(@PathVariable("id") Integer id){
+        try {
+            List<Region> regions = regionService.getByCountryId(id);
+            List<RegionDto> regionDtoList = regions.stream().map(dtoConverter::regionToDto).toList();
+            return ResponseEntity.ok(regionDtoList);
+        } catch (NotFoundException e) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(e.getMessage());
+        }
+    }
+
+
 }
