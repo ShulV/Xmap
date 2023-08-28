@@ -9,6 +9,7 @@ import com.shulpov.spots_app.services.SpotService;
 import com.shulpov.spots_app.services.SpotUserService;
 import com.shulpov.spots_app.services.UserService;
 import com.shulpov.spots_app.utils.DtoConverter;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.security.auth.message.AuthException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,10 @@ public class SpotUserController {
     }
 
     //Проверить спот на существование
+    @Operation(
+            summary = "Проверить спот на существование",
+            description = "Позволяет проверить есть определенный спот в базе данных"
+    )
     private Spot checkSpot(Long spotId) {
         Optional<Spot> spotOpt = spotService.findById(spotId);
         if(spotOpt.isEmpty()) {
@@ -53,6 +58,10 @@ public class SpotUserController {
     }
 
     //Проверить юзера на существование
+    @Operation(
+            summary = "Проверка юзера на существование",
+            description = "Позволяет проверить есть ли определенный юзер в базе данных"
+    )
     private User checkUser(Principal principal) throws AuthException {
         Optional<User> userOpt = userService.findByName(principal.getName());
         if(userOpt.isEmpty()) {
@@ -62,6 +71,10 @@ public class SpotUserController {
     }
 
     //Изменить состояние лайка спота для авторизированного пользователя
+    @Operation(
+            summary = "Изменить состояние лайка",
+            description = "Позволяет изменить состояние лайка спота для авторизированного пользователя"
+    )
     @PatchMapping("/change-like-state/{spotId}")
     public Map<String, Object> changeLikeState(@PathVariable Long spotId, Principal principal) throws AuthException {
         User user = checkUser(principal);
@@ -70,6 +83,10 @@ public class SpotUserController {
     }
 
     //Изменить состояние добавления спота в избранные для авторизированного пользователя
+    @Operation(
+            summary = "Изменение состояния добавления спота в избранные",
+            description = "Позволяет изменить состояние добавления спота в избранные для авторизированного пользователя"
+    )
     @PatchMapping("/change-favorite-state/{spotId}")
     public Map<String, Object> changeFavoriteState(@PathVariable Long spotId, Principal principal) throws AuthException {
         User user = checkUser(principal);
@@ -78,6 +95,10 @@ public class SpotUserController {
     }
 
     //Получить количество лайков у спота
+    @Operation(
+            summary = "Получение количества лайков у спота",
+            description = "Позволяет получить количество лайков у спота"
+    )
     @GetMapping("/get-like-number/{spotId}")
     public Integer getLikeNumber(@PathVariable Long spotId) {
         Spot spot = checkSpot(spotId);
@@ -85,6 +106,10 @@ public class SpotUserController {
     }
 
     //Получить количество добавлений в избранное у спота
+    @Operation(
+            summary = "Получение количества добавлений в избранное у спота",
+            description = "Позволяет получить количество добавлений в избранное у спота"
+    )
     @GetMapping("/get-favorite-number/{spotId}")
     public Integer getFavoriteNumber(@PathVariable Long spotId) {
         Spot spot = checkSpot(spotId);
@@ -92,6 +117,10 @@ public class SpotUserController {
     }
 
     //Получить информацию, добавлен ли спот у текущего пользователя в избранные и поставил ли он лайк
+    @Operation(
+            summary = "Получение информации о споте у текущего пользователя",
+            description = "Позволяет получить информацию, добавлен ли спот у текущего пользователя в избранные и поставил ли он лайк"
+    )
     @GetMapping("/get-info/{spotId}")
     public SpotUserDto getInfo(@PathVariable Long spotId, Principal principal) throws AuthException {
         User user = checkUser(principal);
@@ -101,6 +130,10 @@ public class SpotUserController {
     }
 
     //Получить избранные споты текущего пользователя
+    @Operation(
+            summary = "Получение избранных спотов тукущего пользователя",
+            description = "Позволяет получить избранные споты текущего пользователя"
+    )
     @GetMapping("/get-favorite-spots")
     public List<SpotDto> getFavoriteSpots(Principal principal) throws AuthException {
         User user = checkUser(principal);

@@ -7,6 +7,7 @@ import com.shulpov.spots_app.models.User;
 import com.shulpov.spots_app.services.SpotService;
 import com.shulpov.spots_app.services.UserService;
 import com.shulpov.spots_app.utils.DtoConverter;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.security.auth.message.AuthException;
 import org.slf4j.Logger;
@@ -39,7 +40,12 @@ public class SpotController {
         this.dtoConverter = dtoConverter;
     }
 
+
     //Получить все споты
+    @Operation(
+            summary = "Получение всех спотов",
+            description = "Позволяет пользователю получить все споты"
+    )
     @GetMapping("/get-all")
     public List<SpotDto> getAllSpots() {
         logger.atInfo().log("/get-all");
@@ -47,6 +53,10 @@ public class SpotController {
     }
 
     //Добавить спот (отправить на модерацию)
+    @Operation(
+            summary = "Добавление спота",
+            description = "Позволяет пользователю добавить спот (отправить на модерацию)"
+    )
     @PostMapping("/send-to-moderation")
     public Map<String, Object> sendToModeration(@RequestParam("files") MultipartFile[] files,
                                                 @RequestParam("spotDto") String jsonSpotDto,
@@ -70,6 +80,10 @@ public class SpotController {
     }
 
     //Получить все споты в определенном радиусе
+    @Operation(
+            summary = "Получение всех спотов в определенном радиусе",
+            description = "Позволяет пользователю получить все споты, находящиеся в определенном радиусе"
+    )
     @GetMapping("/get-in-radius")
     public List<SpotDto> getAllSpots(@RequestParam Double lat,
                                      @RequestParam Double lon,

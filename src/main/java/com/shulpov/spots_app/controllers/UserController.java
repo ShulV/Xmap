@@ -5,6 +5,7 @@ import com.shulpov.spots_app.models.PersonDetails;
 import com.shulpov.spots_app.models.User;
 import com.shulpov.spots_app.services.UserService;
 import com.shulpov.spots_app.utils.DtoConverter;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.slf4j.Logger;
@@ -40,6 +41,10 @@ public class UserController {
     }
 
     //Получить полную информацию о пользователе
+    @Operation(
+            summary = "Получение полной информации о пользователе",
+            description = "Позволяет получить полную информацию о пользователе"
+    )
     @GetMapping("/get-user")
     public ResponseEntity<UserDto> getAuthUser() {
         logger.atInfo().log("/get-user");
@@ -67,6 +72,10 @@ public class UserController {
         return response;
     }
 
+    @Operation(
+            summary = "Удаление своего пользователя",
+            description = "Позволяет удалить своего пользователя по токену"
+    )
     //Удалить своего пользователя (по токену)
     @DeleteMapping("/delete-user")
     public Map<String, Object> deleteUser() {

@@ -42,6 +42,10 @@ public class CityController {
         return cityService.getAll().stream().map(dtoConverter::cityToDto).toList();
     }
 
+    @Operation(
+            summary = "Получение списка всех городов по региону",
+            description = "Позволяет пользователю получить перечень всех городов, находящихся в определенном регионе по ее id"
+    )
     @GetMapping("/get-by-region-id/{id}")
     public ResponseEntity<?> getByRegionId(@PathVariable("id") Integer id){
         try {
@@ -55,6 +59,10 @@ public class CityController {
         }
     }
 
+    @Operation(
+            summary = "Получение списка всех городов по стране",
+            description = "Позволяет пользователю получить перечень всех городов, находящихся в определенной стране по ее id"
+    )
     @GetMapping("/get-by-country-id/{id}")
     public ResponseEntity<?> getByCountryId(@PathVariable("id") Integer id) {
         try {

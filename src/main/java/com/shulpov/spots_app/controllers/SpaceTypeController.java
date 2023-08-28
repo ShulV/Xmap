@@ -4,6 +4,7 @@ import com.shulpov.spots_app.dto.SpaceTypeDto;
 import com.shulpov.spots_app.models.SpaceType;
 import com.shulpov.spots_app.services.SpaceTypeService;
 import com.shulpov.spots_app.utils.DtoConverter;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,13 +36,22 @@ public class SpaceTypeController {
     }
 
     //Получить все типы помещений
+    @Operation(
+            summary = "Получение всех типов помещений",
+            description = "Позволяет пользователю получить все типы помещений"
+    )
     @GetMapping("/get-all")
     public List<SpaceTypeDto> getAllSpaceTypes() {
         logger.atInfo().log("/get-all");
         return spaceTypeService.getAll().stream().map(dtoConverter::spaceTypeToDto).toList();
     }
 
+
     //Получить тип помещения по id
+    @Operation(
+            summary = "Получение конкретного типа помещения",
+            description = "Позволяет пользователю получить тип помещения по id"
+    )
     @GetMapping("/{id}")
     public SpaceType getSpaceType(@PathVariable(name = "id")  Integer id) throws NoSuchElementException {
         logger.atInfo().log("get-by-id: /{}", id);

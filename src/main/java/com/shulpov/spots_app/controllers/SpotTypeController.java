@@ -4,6 +4,7 @@ import com.shulpov.spots_app.dto.SpotTypeDto;
 import com.shulpov.spots_app.models.SpotType;
 import com.shulpov.spots_app.services.SpotTypeService;
 import com.shulpov.spots_app.utils.DtoConverter;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,10 @@ public class SpotTypeController {
     }
 
     //Получить все типы спотов
+    @Operation(
+            summary = "Получение всех типов спотов",
+            description = "Позволяет пользователю получить все типы спотов"
+    )
     @GetMapping("/get-all")
     public List<SpotTypeDto> getAllSpots() {
         logger.atInfo().log("/get-all");
@@ -40,6 +45,10 @@ public class SpotTypeController {
     }
 
     //Получить тип спота по id
+    @Operation(
+            summary = "Получение конкретного типа спота",
+            description = "Позволяет пользователю получить тип спота по его id"
+    )
     @GetMapping("/{id}")
     public SpotType getSpotType(@PathVariable(name = "id")  Integer id) throws NoSuchElementException {
         logger.atInfo().log("get-by-id: /{}", id);

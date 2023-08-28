@@ -4,6 +4,7 @@ import com.shulpov.spots_app.dto.SportTypeDto;
 import com.shulpov.spots_app.models.SportType;
 import com.shulpov.spots_app.services.SportTypeService;
 import com.shulpov.spots_app.utils.DtoConverter;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,10 @@ public class SportTypeController {
     }
 
     //Получить все типы спорта
+    @Operation(
+            summary = "Получение всех типов спорта",
+            description = "Позволяет пользователю получить все типы спотов"
+    )
     @GetMapping("/get-all")
     public List<SportTypeDto> getAllSportTypes() {
         logger.atInfo().log("/get-all");
@@ -41,6 +46,10 @@ public class SportTypeController {
     }
 
     //Получить тип спорта по id
+    @Operation(
+            summary = "Получение конкретного типа спорта",
+            description = "Позволяет пользователю получить тип спорта по id"
+    )
     @GetMapping("/{id}")
     public SportType getSportType(@PathVariable(name = "id")  Integer id) throws NoSuchElementException {
         logger.atInfo().log("get-by-id: /{}", id);

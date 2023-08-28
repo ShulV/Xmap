@@ -45,6 +45,10 @@ public class RegionController {
         return regionService.getAll().stream().map(dtoConverter::regionToDto).toList();
     }
 
+    @Operation(
+            summary = "Получение списка всех регионов по стране",
+            description = "Позволяет пользователю получить перечень всех регионов, находящихся в определенной стране по ее id"
+    )
     @GetMapping("/get-by-country-id/{id}")
     public ResponseEntity<?> getByCountryId(@PathVariable("id") Integer id){
         try {
