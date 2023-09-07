@@ -1,12 +1,12 @@
 package com.shulpov.spots_app.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
+import lombok.Builder;
 import java.util.List;
 
 @Entity
 @Table(name = "region")
+@Builder
 public class Region {
 
     @Id
@@ -14,9 +14,9 @@ public class Region {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "name")
     private String name;
 
-    private String crt_date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", referencedColumnName = "id")
@@ -25,6 +25,15 @@ public class Region {
     @OneToMany(mappedBy = "region")
     private List<City> cities;
 
+    public Region() {
+    }
+
+    public Region(Integer id, String name, Country country, List<City> cities) {
+        this.id = id;
+        this.name = name;
+        this.country = country;
+        this.cities = cities;
+    }
 
     public Integer getId() {
         return id;
@@ -40,14 +49,6 @@ public class Region {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getCrt_date() {
-        return crt_date;
-    }
-
-    public void setCrt_date(String crt_date) {
-        this.crt_date = crt_date;
     }
 
     public Country getCountry() {

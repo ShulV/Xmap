@@ -37,9 +37,10 @@ public class CityController {
             description = "Позволяет пользователю получить перечень всех имеющихся городов"
     )
     @GetMapping("/get-all")
-    public List<CityDto> getAll() {
+    public ResponseEntity<?> getAll() {
         logger.atInfo().log("/get-all");
-        return cityService.getAll().stream().map(dtoConverter::cityToDto).toList();
+        List<CityDto> cityDtoList = cityService.getAll().stream().map(dtoConverter::cityToDto).toList();
+        return ResponseEntity.ok(cityDtoList);
     }
 
     @Operation(
