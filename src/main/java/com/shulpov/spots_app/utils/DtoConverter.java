@@ -3,12 +3,15 @@ package com.shulpov.spots_app.utils;
 import com.shulpov.spots_app.dto.*;
 import com.shulpov.spots_app.models.*;
 import com.shulpov.spots_app.services.*;
+import com.shulpov.spots_app.user.Role;
+import com.shulpov.spots_app.user.User;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.FieldError;
 
 import java.util.Date;
 import java.util.List;
@@ -28,10 +31,6 @@ public class DtoConverter {
 
     /** Компонент маппинга классов */
     private final  ModelMapper modelMapper;
-
-    /** Сервис ролей */
-    private final  RoleService roleService;
-
     /** Сервис типов помещений */
     private final  SpaceTypeService spaceTypeService;
     /** Сервис типов спотов */
@@ -44,7 +43,6 @@ public class DtoConverter {
     /**
      * Конструктор компонента
      * @param modelMapper компонент маппинга классов
-     * @param roleService сервис ролей
      * @param spaceTypeService сервис типов помещений
      * @param spotTypeService сервис типов спотов
      * @param sportTypeService сервис типов спорта
@@ -52,11 +50,10 @@ public class DtoConverter {
      */
 
     @Autowired
-    public DtoConverter(@Lazy ModelMapper modelMapper, @Lazy RoleService roleService,
-                        @Lazy SpaceTypeService spaceTypeService, @Lazy SpotTypeService spotTypeService,
-                        @Lazy SportTypeService sportTypeService, SpotUserService spotUserService) {
+    public DtoConverter(@Lazy ModelMapper modelMapper, @Lazy SpaceTypeService spaceTypeService,
+                        @Lazy SpotTypeService spotTypeService, @Lazy SportTypeService sportTypeService,
+                        SpotUserService spotUserService) {
         this.modelMapper = modelMapper;
-        this.roleService = roleService;
         this.spaceTypeService = spaceTypeService;
         this.spotTypeService = spotTypeService;
         this.sportTypeService = sportTypeService;
@@ -89,7 +86,7 @@ public class DtoConverter {
         logger.atInfo().log("dtoToNewUser name: {}", dto.getName());
         User user = modelMapper.map(dto, User.class);
         user.setRegDate(new Date(System.currentTimeMillis()));
-        user.setRole(roleService.getUserRole());
+        user.setRole(Role.USER);
         return user;
     }
 
@@ -236,5 +233,11 @@ public class DtoConverter {
         dto.setSpotId(spotUser.getPostedSpot().getId());
         dto.setUserId(spotUser.getUserActor().getId());
         return dto;
+    }
+
+    public FieldErrorDto fieldErrorToDto(FieldError fieldError) {
+        logger.atInfo().log("fieldErrorToDto rejectedValue={}, message={}",
+                fieldError.getRejectedValue(), fieldError.getDefaultMessage());
+        return modelMapper.map(fieldError, FieldErrorDto.class);
     }
 }

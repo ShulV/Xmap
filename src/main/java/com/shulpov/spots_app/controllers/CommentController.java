@@ -2,8 +2,7 @@ package com.shulpov.spots_app.controllers;
 
 import com.shulpov.spots_app.dto.CommentDto;
 import com.shulpov.spots_app.models.Comment;
-import com.shulpov.spots_app.models.PersonDetails;
-import com.shulpov.spots_app.models.User;
+import com.shulpov.spots_app.user.User;
 import com.shulpov.spots_app.services.CommentService;
 import com.shulpov.spots_app.services.UserService;
 import com.shulpov.spots_app.utils.DtoConverter;
@@ -15,8 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +53,7 @@ public class CommentController {
                                            BindingResult bindingResult,
                                            Principal principal) throws AuthException {
         logger.atInfo().log("/add-comment-by-spot-id/{}", spotId);
-        Optional<User> userOpt = userService.findByName(principal.getName());
+        Optional<User> userOpt = userService.findByEmail(principal.getName());
         if(userOpt.isPresent()) {
             Comment newComment = commentService.save(comment, userOpt.get(), spotId);
             logger.atInfo().log("new comment");
@@ -75,7 +72,7 @@ public class CommentController {
     @DeleteMapping("/delete-by-id/{commentId}")
     public Map<Object, Object> deleteById(@PathVariable Long commentId, Principal principal) throws AuthException {
         logger.atInfo().log("/delete-by-id/{}", commentId);
-        Optional<User> userOpt = userService.findByName(principal.getName());
+        Optional<User> userOpt = userService.findByEmail(principal.getName());
         if(userOpt.isPresent()) {
             boolean commentExists = userOpt.get().getComments().stream()
                     .filter(c-> Objects.equals(c.getId(), commentId)).toList()

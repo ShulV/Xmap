@@ -1,6 +1,6 @@
 package com.shulpov.spots_app.utils.validators;
 
-import com.shulpov.spots_app.models.User;
+import com.shulpov.spots_app.user.User;
 import com.shulpov.spots_app.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

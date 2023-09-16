@@ -1,6 +1,7 @@
 package com.shulpov.spots_app.models;
 
 import com.shulpov.spots_app.models.pk.UserSpotPK;
+import com.shulpov.spots_app.user.User;
 import jakarta.persistence.*;
 
 @Entity

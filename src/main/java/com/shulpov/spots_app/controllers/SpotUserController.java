@@ -4,7 +4,7 @@ import com.shulpov.spots_app.dto.SpotDto;
 import com.shulpov.spots_app.dto.SpotUserDto;
 import com.shulpov.spots_app.models.Spot;
 import com.shulpov.spots_app.models.SpotUser;
-import com.shulpov.spots_app.models.User;
+import com.shulpov.spots_app.user.User;
 import com.shulpov.spots_app.services.SpotService;
 import com.shulpov.spots_app.services.SpotUserService;
 import com.shulpov.spots_app.services.UserService;
@@ -54,7 +54,7 @@ public class SpotUserController {
 
     //Проверить юзера на существование
     private User checkUser(Principal principal) throws AuthException {
-        Optional<User> userOpt = userService.findByName(principal.getName());
+        Optional<User> userOpt = userService.findByEmail(principal.getName());
         if(userOpt.isEmpty()) {
             throw new AuthException("No principal");
         }

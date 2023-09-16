@@ -1,13 +1,14 @@
 package com.shulpov.spots_app;
 
+import com.shulpov.spots_app.user.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.net.*;
 import java.util.Arrays;
@@ -16,6 +17,12 @@ import java.util.Arrays;
 public class SpotsApplication {
 
 	private static final Logger logger = LoggerFactory.getLogger(SpotsApplication.class);
+
+	private final UserRepository userRepository;
+
+	public SpotsApplication(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpotsApplication.class, args);
@@ -43,10 +50,5 @@ public class SpotsApplication {
 		}
 	}
 
-	@Bean
-	public ModelMapper modelMapper() {
-		ModelMapper modelMapper = new ModelMapper();
-		modelMapper.getConfiguration().setAmbiguityIgnored(true);
-		return modelMapper;
-	}
+
 }

@@ -1,7 +1,6 @@
 package com.shulpov.spots_app.models;
 
-import com.shulpov.spots_app.dto.ImageInfoDto;
-import com.shulpov.spots_app.utils.ImageUtil;
+import com.shulpov.spots_app.user.User;
 import jakarta.persistence.*;
 
 import java.util.Date;

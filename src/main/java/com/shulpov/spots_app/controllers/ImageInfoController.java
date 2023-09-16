@@ -1,7 +1,7 @@
 package com.shulpov.spots_app.controllers;
 
 import com.shulpov.spots_app.models.ImageInfo;
-import com.shulpov.spots_app.models.User;
+import com.shulpov.spots_app.user.User;
 import com.shulpov.spots_app.services.ImageInfoService;
 import com.shulpov.spots_app.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,9 +45,9 @@ public class ImageInfoController {
     )
     @PostMapping("/upload-user-image")
     public ResponseEntity<Map<String, Long>> uploadUserImage(@RequestParam MultipartFile file, Principal principal) {
-        logger.atInfo().log("/upload-user-image filename={} size={} principle.name={}",
+        logger.atInfo().log("/upload-user-image filename={} size={} email={}",
                 file.getOriginalFilename(), file.getSize(), principal.getName());
-        Optional<User> user = userService.findByName(principal.getName());
+        Optional<User> user = userService.findByEmail(principal.getName());
         if(user.isPresent()) {
             try {
                 ImageInfo imageInfo = imageInfoService.uploadUserImage(file, user.get());
@@ -72,9 +71,9 @@ public class ImageInfoController {
     @PostMapping("/upload-spot-image/{id}")
     public ResponseEntity<Map<String, Long>> uploadSpotImage(
             @PathVariable(name = "id") Long spotId, @RequestParam MultipartFile file, Principal principal) {
-        logger.atInfo().log("/upload-spot-image filename={} size={} principle.name={}",
+        logger.atInfo().log("/upload-spot-image filename={} size={} email={}",
                 file.getOriginalFilename(), file.getSize(), principal.getName());
-        Optional<User> user = userService.findByName(principal.getName());
+        Optional<User> user = userService.findByEmail(principal.getName());
         if(user.isPresent()) {
             try {
                 ImageInfo imageInfo = imageInfoService.uploadSpotImage(file, spotId);
@@ -138,7 +137,7 @@ public class ImageInfoController {
     public ResponseEntity<Map<String, Object>> deleteUserImage(@PathVariable("id") Long id, Principal principal) {
         logger.atInfo().log("/delete-user-image/{}", id);
         try {
-            Optional<User> user = userService.findByName(principal.getName());
+            Optional<User> user = userService.findByEmail(principal.getName());
             if(user.isPresent() && imageInfoService.userHasImageWithId(user.get(), id)) {
                 logger.atInfo().log("/delete-user-image/{}: user exists and userHasImageWithId=true", id);
                 Long delUserId = imageInfoService.deleteUserImage(id);

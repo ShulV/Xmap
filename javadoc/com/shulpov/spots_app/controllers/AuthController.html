@@ -92,7 +92,7 @@ loadScripts(document, 'script');</script>
 <h1 title="Class AuthController" class="title">Class AuthController</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/18/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">com.shulpov.spots_app.controllers.AuthController</div>
+<div class="inheritance">com.shulpov.spots_app.auth.AuthenticationController</div>
 </div>
 <section class="class-description" id="class-description">
 <hr>
@@ -111,9 +111,9 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.shulpov.spots_app.security.JWTUtil,com.shulpov.spots_app.utils.validators.UserValidator,com.shulpov.spots_app.services.RegistrationService,com.shulpov.spots_app.services.RoleService,com.shulpov.spots_app.services.UserService,org.springframework.security.authentication.AuthenticationManager,com.shulpov.spots_app.utils.DtoConverter)" class="member-name-link">AuthController</a><wbr>(<a href="../security/JWTUtil.html" title="class in com.shulpov.spots_app.security">JWTUtil</a>&nbsp;jwtUtil,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.shulpov.spots_app.security.JWTUtil,com.shulpov.spots_app.utils.validators.UserValidator,com.shulpov.spots_app.services.RegistrationService,com.shulpov.spots_app.services.RoleService,com.shulpov.spots_app.services.UserService,org.springframework.security.authentication.AuthenticationManager,com.shulpov.spots_app.utils.DtoConverter)" class="member-name-link">AuthController</a><wbr>(<a href="../security/JWTUtil.html" title="class in com.shulpov.spots_app.security">JWTUtil</a>&nbsp;jwtService,
  <a href="../utils/validators/UserValidator.html" title="class in com.shulpov.spots_app.utils.validators">UserValidator</a>&nbsp;userValidator,
- <a href="../services/RegistrationService.html" title="class in com.shulpov.spots_app.services">RegistrationService</a>&nbsp;registrationService,
+ <a href="../services/RegistrationService.html" title="class in com.shulpov.spots_app.services">RegistrationService</a>&nbsp;authenticationService,
  <a href="../services/RoleService.html" title="class in com.shulpov.spots_app.services">RoleService</a>&nbsp;roleService,
  <a href="../services/UserService.html" title="class in com.shulpov.spots_app.services">UserService</a>&nbsp;userService,
  org.springframework.security.authentication.AuthenticationManager&nbsp;authenticationManager,
@@ -162,10 +162,10 @@ loadScripts(document, 'script');</script>
 <h3>AuthController</h3>
 <div class="member-signature"><span class="annotations">@Autowired
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">AuthController</span><wbr><span class="parameters">(@Lazy
- <a href="../security/JWTUtil.html" title="class in com.shulpov.spots_app.security">JWTUtil</a>&nbsp;jwtUtil,
+ <a href="../security/JWTUtil.html" title="class in com.shulpov.spots_app.security">JWTUtil</a>&nbsp;jwtService,
  @Lazy
  <a href="../utils/validators/UserValidator.html" title="class in com.shulpov.spots_app.utils.validators">UserValidator</a>&nbsp;userValidator,
- <a href="../services/RegistrationService.html" title="class in com.shulpov.spots_app.services">RegistrationService</a>&nbsp;registrationService,
+ <a href="../services/RegistrationService.html" title="class in com.shulpov.spots_app.services">RegistrationService</a>&nbsp;authenticationService,
  @Lazy
  <a href="../services/RoleService.html" title="class in com.shulpov.spots_app.services">RoleService</a>&nbsp;roleService,
  @Lazy

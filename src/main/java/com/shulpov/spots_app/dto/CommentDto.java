@@ -1,6 +1,5 @@
 package com.shulpov.spots_app.dto;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.Size;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
 

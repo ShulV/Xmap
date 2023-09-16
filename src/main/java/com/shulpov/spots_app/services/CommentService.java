@@ -2,7 +2,7 @@ package com.shulpov.spots_app.services;
 
 import com.shulpov.spots_app.models.Comment;
 import com.shulpov.spots_app.models.Spot;
-import com.shulpov.spots_app.models.User;
+import com.shulpov.spots_app.user.User;
 import com.shulpov.spots_app.repo.CommentRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

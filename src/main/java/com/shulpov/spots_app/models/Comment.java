@@ -1,5 +1,6 @@
 package com.shulpov.spots_app.models;
 
+import com.shulpov.spots_app.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;

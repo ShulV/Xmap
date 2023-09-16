@@ -94,7 +94,7 @@ loadScripts(document, 'script');</script>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/18/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">org.springframework.web.filter.GenericFilterBean
 <div class="inheritance">org.springframework.web.filter.OncePerRequestFilter
-<div class="inheritance">com.shulpov.spots_app.config.JWTFilter</div>
+<div class="inheritance">com.shulpov.spots_app.config.JwtAuthenticationFilter</div>
 </div>
 </div>
 </div>
@@ -127,8 +127,8 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.shulpov.spots_app.security.JWTUtil,com.shulpov.spots_app.services.PersonDetailsService)" class="member-name-link">JWTFilter</a><wbr>(<a href="../security/JWTUtil.html" title="class in com.shulpov.spots_app.security">JWTUtil</a>&nbsp;jwtUtil,
- <a href="../services/PersonDetailsService.html" title="class in com.shulpov.spots_app.services">PersonDetailsService</a>&nbsp;personDetailsService)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.shulpov.spots_app.security.JWTUtil,com.shulpov.spots_app.services.PersonDetailsService)" class="member-name-link">JWTFilter</a><wbr>(<a href="../security/JWTUtil.html" title="class in com.shulpov.spots_app.security">JWTUtil</a>&nbsp;jwtService,
+ <a href="../services/PersonDetailsService.html" title="class in com.shulpov.spots_app.services">PersonDetailsService</a>&nbsp;customUserDetailsService)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -175,8 +175,8 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="&lt;init&gt;(com.shulpov.spots_app.security.JWTUtil,com.shulpov.spots_app.services.PersonDetailsService)">
 <h3>JWTFilter</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">JWTFilter</span><wbr><span class="parameters">(<a href="../security/JWTUtil.html" title="class in com.shulpov.spots_app.security">JWTUtil</a>&nbsp;jwtUtil,
- <a href="../services/PersonDetailsService.html" title="class in com.shulpov.spots_app.services">PersonDetailsService</a>&nbsp;personDetailsService)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">JWTFilter</span><wbr><span class="parameters">(<a href="../security/JWTUtil.html" title="class in com.shulpov.spots_app.security">JWTUtil</a>&nbsp;jwtService,
+ <a href="../services/PersonDetailsService.html" title="class in com.shulpov.spots_app.services">PersonDetailsService</a>&nbsp;customUserDetailsService)</span></div>
 </section>
 </li>
 </ul>

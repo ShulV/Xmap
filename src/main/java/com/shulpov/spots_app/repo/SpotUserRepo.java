@@ -2,8 +2,7 @@ package com.shulpov.spots_app.repo;
 
 import com.shulpov.spots_app.models.Spot;
 import com.shulpov.spots_app.models.SpotUser;
-import com.shulpov.spots_app.models.User;
-import com.shulpov.spots_app.models.pk.UserSpotPK;
+import com.shulpov.spots_app.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

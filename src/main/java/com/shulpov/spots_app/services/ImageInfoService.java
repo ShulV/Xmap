@@ -3,7 +3,7 @@ package com.shulpov.spots_app.services;
 import com.shulpov.spots_app.file_manager.FileManager;
 import com.shulpov.spots_app.models.ImageInfo;
 import com.shulpov.spots_app.models.Spot;
-import com.shulpov.spots_app.models.User;
+import com.shulpov.spots_app.user.User;
 import com.shulpov.spots_app.repo.ImageInfoRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

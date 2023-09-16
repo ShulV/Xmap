@@ -3,7 +3,7 @@ package com.shulpov.spots_app.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shulpov.spots_app.dto.SpotDto;
 import com.shulpov.spots_app.models.Spot;
-import com.shulpov.spots_app.models.User;
+import com.shulpov.spots_app.user.User;
 import com.shulpov.spots_app.services.SpotService;
 import com.shulpov.spots_app.services.UserService;
 import com.shulpov.spots_app.utils.DtoConverter;
@@ -56,8 +56,8 @@ public class SpotController {
         SpotDto spotDto = objectMapper.readValue(jsonSpotDto, SpotDto.class);
         Spot spot = dtoConverter.dtoToNewSpot(spotDto);
 
-        String name = principal.getName();
-        Optional<User> creatorUserOpt = userService.findByName(name);
+        String email = principal.getName();
+        Optional<User> creatorUserOpt = userService.findByEmail(email);
 
         if(creatorUserOpt.isPresent()) {
             spot.setCreatorUser(creatorUserOpt.get());

@@ -1,23 +1,20 @@
 package com.shulpov.spots_app.controllers;
 
 import com.shulpov.spots_app.dto.UserDto;
-import com.shulpov.spots_app.models.PersonDetails;
-import com.shulpov.spots_app.models.User;
+import com.shulpov.spots_app.user.User;
 import com.shulpov.spots_app.services.UserService;
 import com.shulpov.spots_app.utils.DtoConverter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.security.auth.message.AuthException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,26 +40,26 @@ public class UserController {
     @GetMapping("/get-user")
     public ResponseEntity<UserDto> getAuthUser() {
         logger.atInfo().log("/get-user");
-        String username;
+        String email;
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
-            username = personDetails.getUsername();
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            email = userDetails.getUsername();
         } catch (UsernameNotFoundException e) {
-            logger.atInfo().log("/get-user username={} not found");
+            logger.atInfo().log("/get-user email={} not found");
             ResponseEntity<UserDto> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             return response;
         }
-        Optional<User> userOpt = userService.findByName(username);
+        Optional<User> userOpt = userService.findByEmail(email);
 
         if(userOpt.isPresent()) {
             logger.atInfo().log("/user-get-info principle exists");
             User user = userOpt.get();
 
-            return new ResponseEntity(dtoConverter.userToDto(user), HttpStatus.OK);
+            return new ResponseEntity<>(dtoConverter.userToDto(user), HttpStatus.OK);
         }
 
-        logger.atInfo().log("/get-user username={} not found", username);
+        logger.atInfo().log("/get-user email={} not found", email);
         ResponseEntity<UserDto> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return response;
     }
@@ -72,19 +69,18 @@ public class UserController {
     public Map<String, Object> deleteUser() {
         logger.atInfo().log("/delete-user");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
-        String username = personDetails.getUsername();
-        Optional<User> userOpt = userService.findByName(username);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String email = userDetails.getUsername();
+        Optional<User> userOpt = userService.findByEmail(email);
         if(userOpt.isPresent()) {
             logger.atInfo().log("/delete-user principle exists " +
-                            "user: id={} name={} email={} phone={} birthday={} regDate={} role={}",
+                            "user: id={} name={} email={} phone={} birthday={} regDate={}",
                     userOpt.get().getId(),
                     userOpt.get().getName(),
                     userOpt.get().getEmail(),
                     userOpt.get().getPhoneNumber(),
                     userOpt.get().getBirthday(),
-                    userOpt.get().getRegDate(),
-                    userOpt.get().getRoleCodeName());
+                    userOpt.get().getRegDate());
             Long id = userOpt.get().getId();
             if(Boolean.TRUE.equals(userService.deleteById(id))) {
                 logger.atInfo().log("account was deleted id={}", id);
@@ -95,7 +91,7 @@ public class UserController {
             }
 
         }
-        logger.atError().log("/delete-user username={} not found", username);
+        logger.atError().log("/delete-user email={} not found", email);
         return Map.of("error", "Пользователь не найден");
     }
 }
