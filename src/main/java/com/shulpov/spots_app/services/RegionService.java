@@ -39,7 +39,7 @@ public class RegionService {
         return regionRepo.findById(id);
     }
 
-    public List<Region> getByCountryId(Integer id) {
+    public List<Region> getByCountryId(Integer id) throws NotFoundException {
         logger.atInfo().log("getByCountryId id={}", id);
         Optional<Country> optCountry = countryService.getById(id);
         if (optCountry.isPresent()) {

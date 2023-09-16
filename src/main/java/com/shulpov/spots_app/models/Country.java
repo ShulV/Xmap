@@ -2,11 +2,15 @@ package com.shulpov.spots_app.models;
 
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
-@Table(name = "country")
+@Table(name = "countries")
 @Builder
 public class Country {
 
@@ -29,30 +33,6 @@ public class Country {
     public Country(Integer id, String name, List<Region> regions) {
         this.id = id;
         this.name = name;
-        this.regions = regions;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Region> getRegions() {
-        return regions;
-    }
-
-    public void setRegions(List<Region> regions) {
         this.regions = regions;
     }
 }

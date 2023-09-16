@@ -1,24 +1,36 @@
 package com.shulpov.spots_app.models;
 
-
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-
+/**
+ * Класс, представляющий город.
+ */
+@Getter
+@Setter
 @Entity
-@Table(name = "city")
+@Table(name = "cities")
 @Builder
 public class City {
 
+    /**
+     * Уникальный идентификатор города.
+     */
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    /**
+     * Название города.
+     */
     @Column(name = "name")
     private String name;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id", referencedColumnName = "id")
@@ -38,46 +50,6 @@ public class City {
         this.name = name;
         this.region = region;
         this.users = users;
-        this.spots = spots;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Region getRegion() {
-        return region;
-    }
-
-    public void setRegion(Region region) {
-        this.region = region;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
-    public List<Spot> getSpots() {
-        return spots;
-    }
-
-    public void setSpots(List<Spot> spots) {
         this.spots = spots;
     }
 }

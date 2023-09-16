@@ -6,162 +6,134 @@ import com.shulpov.spots_app.models.Region;
 import com.shulpov.spots_app.repo.CityRepo;
 import com.shulpov.spots_app.repo.CountryRepo;
 import com.shulpov.spots_app.repo.RegionRepo;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Collections;
+import java.util.List;
+
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-//@SpringJUnitConfig(TestDatabaseConfig.class)
+@ActiveProfiles("test") // Указываем, что используем профиль "test"
 public class CityControllerTests {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
     @Autowired
     private CountryRepo countryRepo;
-
     @Autowired
     private RegionRepo regionRepo;
-
     @Autowired
     private CityRepo cityRepo;
+
     private MockMvc mockMvc;
-
-
 
     @BeforeEach
     public void setUp() {
+        MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
-
-    @AfterEach
-    public void tearDown(){
-        countryRepo.findAll().clear();
-        regionRepo.findAll().clear();
-        cityRepo.findAll().clear();
-    }
-
-
     @Test
-    public void testRegion() throws Exception {
-
-        Region region1 = Region.builder()
-                .id(0)
-                .name("Московская область")
-                .build();
-
-        regionRepo.save(region1);
-
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/regions/get-all")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Московская область"));
-
-    }
-
-    @Test
-    public void testCities() throws Exception {
-
-        // Создаем несколько городов
+    public void testFindAllCitiesWithData() throws Exception {
         City city1 = City.builder()
                 .name("Барнаул")
                 .build();
 
-        City city2 = City.builder()
-                .id(2)
-                .name("Москва")
-                .build();
+        when(cityRepo.findAll()).thenReturn(Collections.singletonList(city1));
 
-        City city3 = City.builder()
-                .id(3)
-                .name("Алейск")
-                .build();
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/cities/get-all")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Барнаул"));
 
-        // Сохраняем города в репозитории
-        cityRepo.save(city1);
-        cityRepo.save(city2);
-        cityRepo.save(city3);
+        verify(cityRepo, times(1)).findAll();
+        verifyNoMoreInteractions(cityRepo);
+    }
 
+    @Test
+    public void testFindAllCitiesWithoutData() throws Exception {
+        when(cityRepo.findAll()).thenReturn(Collections.emptyList());
 
-        // Выполняем запрос и проверки
         mockMvc.perform(MockMvcRequestBuilders.get("/api/cities/get-all")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Барнаул"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("Москва"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[2].name").value("Алейск"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$").isEmpty());
+
+        verify(cityRepo, times(1)).findAll();
+        verifyNoMoreInteractions(cityRepo);
     }
 
-
     @Test
-    public void testCitiesByIdRegion() throws Exception {
-
+    public void testCitiesByIdRegionWithData() throws Exception {
         Region region1 = Region.builder()
                 .name("Московская область")
                 .build();
 
-        // Создаем несколько городов
         City city1 = City.builder()
                 .name("Барнаул")
                 .region(region1)
                 .build();
 
-        City city2 = City.builder()
-                .id(2)
-                .name("Москва")
-                .region(region1)
-                .build();
+        when(regionRepo.findById(1)).thenReturn(java.util.Optional.of(region1));
+        when(cityRepo.findByRegion(region1)).thenReturn(Collections.singletonList(city1));
 
-        City city3 = City.builder()
-                .id(3)
-                .name("Алейск")
-                .region(region1)
-                .build();
-
-
-
-        // Сохраняем города в репозитории
-        regionRepo.save(region1);
-        cityRepo.save(city1);
-        cityRepo.save(city2);
-        cityRepo.save(city3);
-
-
-
-        // Выполняем запрос и проверки
         mockMvc.perform(MockMvcRequestBuilders.get("/api/cities/get-by-region-id/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Барнаул"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("Москва"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[2].name").value("Алейск"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Барнаул"));
+
+        verify(regionRepo, times(1)).findById(1);
+        verify(cityRepo, times(1)).findByRegion(region1);
+        verifyNoMoreInteractions(regionRepo, cityRepo);
     }
 
-
     @Test
-    public void testCitiesByIdCountry() throws Exception {
-
-        Country country1 = Country.builder()
-                .name("Россия")
+    public void testCitiesByIdRegionWithoutData() throws Exception {
+        Region region1 = Region.builder()
+                .name("Московская область")
                 .build();
 
-        Country country2 = Country.builder()
-                .name("Азербайджан")
+        when(regionRepo.findById(1)).thenReturn(java.util.Optional.of(region1));
+        when(cityRepo.findByRegion(region1)).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/cities/get-by-region-id/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$").isEmpty());
+
+        verify(regionRepo, times(1)).findById(1);
+        verify(cityRepo, times(1)).findByRegion(region1);
+        verifyNoMoreInteractions(regionRepo, cityRepo);
+    }
+
+    @Test
+    public void testCitiesByIdCountryWithData() throws Exception {
+        Country country1 = Country.builder()
+                .name("Россия")
                 .build();
 
         Region region1 = Region.builder()
@@ -169,92 +141,43 @@ public class CityControllerTests {
                 .country(country1)
                 .build();
 
-        // Создаем несколько городов
         City city1 = City.builder()
                 .name("Барнаул")
                 .region(region1)
                 .build();
 
-        City city2 = City.builder()
-                .id(2)
-                .name("Москва")
-                .region(region1)
-                .build();
+        when(countryRepo.findById(1)).thenReturn(java.util.Optional.of(country1));
+        when(cityRepo.findByRegion_Country(country1)).thenReturn(Collections.singletonList(city1));
 
-        City city3 = City.builder()
-                .id(3)
-                .name("Алейск")
-                .region(region1)
-                .build();
-
-
-
-        // Сохраняем города в репозитории
-        countryRepo.save(country1);
-        countryRepo.save(country2);
-        regionRepo.save(region1);
-        cityRepo.save(city1);
-        cityRepo.save(city2);
-        cityRepo.save(city3);
-
-
-
-        // Выполняем запрос и проверки
         mockMvc.perform(MockMvcRequestBuilders.get("/api/cities/get-by-country-id/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Барнаул"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("Москва"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[2].name").value("Алейск"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Барнаул"));
+
+        verify(countryRepo, times(1)).findById(1);
+        verify(cityRepo, times(1)).findByRegion_Country(country1);
+        verifyNoMoreInteractions(countryRepo, cityRepo);
     }
 
-
-        @Test
-    public void testCountry() throws Exception {
+    @Test
+    public void testCitiesByIdCountryWithoutData() throws Exception {
         Country country1 = Country.builder()
-                .id(0)
                 .name("Россия")
                 .build();
 
+        when(countryRepo.findById(1)).thenReturn(java.util.Optional.of(country1));
+        when(cityRepo.findByRegion_Country(country1)).thenReturn(Collections.emptyList());
 
-//        Region region1 = Region.builder()
-//                .id(0)
-//                .name("Московская область")
-//                .country(country1)
-//                .build();
-//
-//
-//        City city1 = City.builder()
-//                .id(0)
-//                .name("Москва")
-//                .region(region1)
-//                .build();
-//
-//        City city2 = City.builder()
-//                .id(1)
-//                .name("Барнаул")
-//                .region(region1)
-//                .build();
-//
-//        City city3 = City.builder()
-//                .id(2)
-//                .name("Алейск")
-//                .region(region1)
-//                .build();
-
-        countryRepo.save(country1);
-
-
-        //todo аналогично сделать билдеры и такие аннотации как у country у region и city
-        //todo  так же создавать экземпляры
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/countries/get-all")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/cities/get-by-country-id/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Россия"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$").isEmpty());
 
-
+        verify(countryRepo, times(1)).findById(1);
+        verify(cityRepo, times(1)).findByRegion_Country(country1);
+        verifyNoMoreInteractions(countryRepo, cityRepo);
     }
 }

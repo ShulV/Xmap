@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.webjars.NotFoundException;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/regions")
@@ -58,7 +59,7 @@ public class RegionController {
         } catch (NotFoundException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(e.getMessage());
+                    .body(Map.of("message", "Страна с id=" + id + " не найдена"));
         }
     }
 
