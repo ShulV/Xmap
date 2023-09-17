@@ -1,5 +1,6 @@
 package com.shulpov.spots_app.controllers;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shulpov.spots_app.dto.SpotDto;
 import com.shulpov.spots_app.models.Spot;
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,12 +57,20 @@ public class SpotController {
             description = "Позволяет пользователю добавить спот (отправить на модерацию)"
     )
     @PostMapping("/send-to-moderation")
-    public Map<String, Object> sendToModeration(@RequestParam("files") MultipartFile[] files,
-                                                @RequestParam("spotDto") String jsonSpotDto,
-                                                Principal principal) throws IOException, AuthException {
+    public ResponseEntity<Map<String, Object>> sendToModeration(@RequestParam("files") MultipartFile[] files,
+                                           @RequestParam("spotDto") String jsonSpotDto,
+                                           Principal principal) throws IOException, AuthException {
         logger.atInfo().log("/send-to-moderation");
         ObjectMapper objectMapper = new ObjectMapper();
-        SpotDto spotDto = objectMapper.readValue(jsonSpotDto, SpotDto.class);
+        SpotDto spotDto;
+        try {
+            spotDto = objectMapper.readValue(jsonSpotDto, SpotDto.class);
+        } catch (JsonMappingException e) {
+            logger.atError().log("Cannot map json to SpotDto.class: jsonSpotDto='{}' e='{}'",
+                    jsonSpotDto, e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("errorMessage", "Incorrect spotDto in request param"));
+        }
+
         Spot spot = dtoConverter.dtoToNewSpot(spotDto);
 
         String email = principal.getName();
@@ -73,7 +83,7 @@ public class SpotController {
             throw new AuthException("No user principle for spot creating");
         }
         Spot newSpot = spotService.saveWithAvatars(files, spot);
-        return Map.of("id", newSpot.getId());
+        return ResponseEntity.ok().body(Map.of("id", newSpot.getId(), "message", "Спот успешно отправлен, модератор должен его подтвердить"));
     }
 
     @Operation(
