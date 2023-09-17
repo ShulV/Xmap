@@ -1,0 +1,1873 @@
+{
+	"info": {
+		"_postman_id": "7742518a-147e-4fa7-a640-7f6dd4aac322",
+		"name": "Spot Map Collection (diploma)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27231298"
+	},
+	"item": [
+		{
+			"name": "auth|user",
+			"item": [
+				{
+					"name": "register user ANY",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Парсим JSON-ответ от сервера\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"// Сохраняем access_token в переменной среды \"jwt_token\"\r",
+									"pm.collectionVariables.set(\"jwt_token\", jsonData.access_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"user-agent": true,
+							"accept": true,
+							"accept-encoding": true,
+							"connection": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{test_username}}\",\r\n    \"email\": \"{{test_email}}\",\r\n    \"phoneNumber\": \"{{test_phone_number}}\",\r\n    \"birthday\": \"{{test_birthday}}\",\r\n    \"password\": \"{{test_password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/v1/auth/register",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login user ANY",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Парсим JSON-ответ от сервера\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"// Сохраняем access_token в переменной среды \"jwt_token\"\r",
+									"pm.collectionVariables.set(\"jwt_token\", jsonData.access_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"connection": true,
+							"accept-encoding": true,
+							"accept": true,
+							"user-agent": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"{{test_email}}\",\r\n    \"password\": \"{{test_password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/v1/auth/authenticate",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user by token USER+",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"user-agent": true,
+							"accept": true,
+							"accept-encoding": true,
+							"connection": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/delete-user",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"delete-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user by token USER+",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept-encoding": true,
+							"connection": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/get-user",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"get-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh token USER+",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Парсим JSON-ответ от сервера\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"// Сохраняем access_token в переменной среды \"jwt_token\"\r",
+									"pm.collectionVariables.set(\"jwt_token\", jsonData.access_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/v1/auth/refresh-token",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "user image",
+			"item": [
+				{
+					"name": "upload user image USER+",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Id key exists\", function () {  \r",
+									"    var jsonData = pm.response.json(); \r",
+									"    pm.expect(jsonData).to.has.property(\"id\");\r",
+									"\r",
+									"    pm.collectionVariables.set(\"created_user_image_id\", jsonData.id);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"connection": true,
+							"accept-encoding": true,
+							"accept": true,
+							"user-agent": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"contentType": "",
+									"type": "file",
+									"src": "/C:/Users/Victor/Downloads/10-12spring.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{api_url}}/image-service/upload-user-image",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"image-service",
+								"upload-user-image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "download user image ANY",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"user-agent": true,
+							"accept": true,
+							"accept-encoding": true,
+							"connection": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/image-service/download-user-image/{{created_user_image_id}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"image-service",
+								"download-user-image",
+								"{{created_user_image_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user image USER+",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"user-agent": true,
+							"accept": true,
+							"accept-encoding": true,
+							"connection": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/image-service/delete-user-image/{{created_user_image_id}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"image-service",
+								"delete-user-image",
+								"{{created_user_image_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "spots",
+			"item": [
+				{
+					"name": "get all spots ANY",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"accept": true,
+							"user-agent": true,
+							"accept-encoding": true,
+							"connection": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api_url}}/spots/get-all",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"spots",
+								"get-all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "send to moderation USER+",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Id key exists\", function () {  \r",
+									"    var jsonData = pm.response.json(); \r",
+									"    pm.expect(jsonData).to.has.property(\"id\");\r",
+									"\r",
+									"    pm.collectionVariables.set(\"created_spot_id\", jsonData.id);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true,
+							"accept-encoding": true,
+							"connection": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "files",
+									"contentType": "",
+									"type": "file",
+									"src": [
+										"/C:/Users/Daniel/Pictures/курсач/Снимок экрана 2022-12-16 151248.png",
+										"/C:/Users/Daniel/Pictures/курсач/Снимок экрана 2023-01-13 134019.png"
+									]
+								},
+								{
+									"key": "spotDto",
+									"value": "{{json_for_spot_2_creating}}",
+									"contentType": "application/json",
+									"type": "text"
+								},
+								{
+									"key": "spotDto",
+									"value": "{{json_for_spot_1_creating}}",
+									"contentType": "application/json",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{api_url}}/spots/send-to-moderation",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"spots",
+								"send-to-moderation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get spots in radius USER+",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"user-agent": true,
+							"accept-encoding": true,
+							"connection": true,
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/spots/get-in-radius?lat={{test_barnaul_lat}}&lon={{test_barnaul_lon}}&radius={{test_radius_for_spot_search}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"spots",
+								"get-in-radius"
+							],
+							"query": [
+								{
+									"key": "lat",
+									"value": "{{test_barnaul_lat}}"
+								},
+								{
+									"key": "lon",
+									"value": "{{test_barnaul_lon}}"
+								},
+								{
+									"key": "radius",
+									"value": "{{test_radius_for_spot_search}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "comments",
+			"item": [
+				{
+					"name": "add comment USER+",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Id key exists\", function () {  \r",
+									"    var jsonData = pm.response.json(); \r",
+									"    pm.expect(jsonData).to.has.property(\"id\");\r",
+									"\r",
+									"    pm.collectionVariables.set(\"created_comment_id\", jsonData.id);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"user-agent": true,
+							"accept": true,
+							"accept-encoding": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\": \"Текст коммента 1.....{{$randomProduct}}.....\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/comments/add-comment-by-spot-id/{{created_spot_id}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"comments",
+								"add-comment-by-spot-id",
+								"{{created_spot_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get spot comments ANY",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true,
+							"accept-encoding": true,
+							"connection": true,
+							"user-agent": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/comments/get-by-spot-id/{{created_spot_id}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"comments",
+								"get-by-spot-id",
+								"{{created_spot_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete comment by id USER+",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept-encoding": true,
+							"connection": true,
+							"user-agent": true,
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/comments/delete-by-id/{{created_comment_id}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"comments",
+								"delete-by-id",
+								"{{created_comment_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "spot image",
+			"item": [
+				{
+					"name": "upload spot image MODER+",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Id key exists\", function () {  \r",
+									"    var jsonData = pm.response.json(); \r",
+									"    pm.expect(jsonData).to.has.property(\"id\");\r",
+									"\r",
+									"    pm.collectionVariables.set(\"created_spot_image_id\", jsonData.id);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"user-agent": true,
+							"accept": true,
+							"accept-encoding": true,
+							"connection": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/Victor/Downloads/10-12spring.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{api_url}}/image-service/upload-spot-image/{{created_spot_id}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"image-service",
+								"upload-spot-image",
+								"{{created_spot_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "download spot image ANY",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true,
+							"accept-encoding": true,
+							"connection": true,
+							"user-agent": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/image-service/download-spot-image/",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"image-service",
+								"download-spot-image",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "likes/ratings/favorites",
+			"item": [
+				{
+					"name": "change favorite state USER+",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept-encoding": true,
+							"connection": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/spots-users/change-favorite-state/{{created_spot_id}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"spots-users",
+								"change-favorite-state",
+								"{{created_spot_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change like state USER+",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/spots-users/change-like-state/{{created_spot_id}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"spots-users",
+								"change-like-state",
+								"{{created_spot_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get like number ANY",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"connection": true,
+							"accept-encoding": true,
+							"accept": true,
+							"user-agent": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api_url}}/spots-users/get-like-number/{{created_spot_id}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"spots-users",
+								"get-like-number",
+								"{{created_spot_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get favorite number ANY",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"connection": true,
+							"accept-encoding": true,
+							"accept": true,
+							"user-agent": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/spots-users/get-favorite-number/{{created_spot_id}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"spots-users",
+								"get-favorite-number",
+								"{{created_spot_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get info by spot ANY",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"connection": true,
+							"accept-encoding": true,
+							"accept": true,
+							"user-agent": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/spots-users/get-info/{{created_spot_id}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"spots-users",
+								"get-info",
+								"{{created_spot_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get favorite spots USER+",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true,
+							"accept-encoding": true,
+							"user-agent": true,
+							"connection": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_url}}/spots-users/get-favorite-spots",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"spots-users",
+								"get-favorite-spots"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "reference_info ANY",
+			"item": [
+				{
+					"name": "space type",
+					"item": [
+						{
+							"name": "get all space types ANY",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Space types are right\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    var expectedJson = [\r",
+											"    {\r",
+											"        \"id\": 1,\r",
+											"        \"name\": \"крытое помещение\"\r",
+											"    },\r",
+											"    {\r",
+											"        \"id\": 2,\r",
+											"        \"name\": \"под навесом\"\r",
+											"    },\r",
+											"    {\r",
+											"        \"id\": 3,\r",
+											"        \"name\": \"под открытым небом\"\r",
+											"    }\r",
+											"];\r",
+											"\r",
+											"    pm.expect(jsonData).to.eql(expectedJson);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"user-agent": true,
+									"accept": true,
+									"accept-encoding": true,
+									"connection": true
+								}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/space-types/get-all",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"space-types",
+										"get-all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get by id ANY",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"connection": true,
+									"accept-encoding": true,
+									"accept": true,
+									"user-agent": true
+								}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/space-types/{{space_type_id}}",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"space-types",
+										"{{space_type_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "noauth"
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "sport type",
+					"item": [
+						{
+							"name": "get all sport types ANY",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Sport types are right\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    var expectedJson = [\r",
+											"    {\r",
+											"        \"id\": 1,\r",
+											"        \"name\": \"bmx-фристайл\",\r",
+											"        \"transportName\": \"bmx\"\r",
+											"    },\r",
+											"    {\r",
+											"        \"id\": 2,\r",
+											"        \"name\": \"скейтбординг\",\r",
+											"        \"transportName\": \"скейтборд\"\r",
+											"    },\r",
+											"    {\r",
+											"        \"id\": 3,\r",
+											"        \"name\": \"самокат-фристайл\",\r",
+											"        \"transportName\": \"самокат\"\r",
+											"    },\r",
+											"    {\r",
+											"        \"id\": 4,\r",
+											"        \"name\": \"горный велоспорт\",\r",
+											"        \"transportName\": \"MTB\"\r",
+											"    },\r",
+											"    {\r",
+											"        \"id\": 5,\r",
+											"        \"name\": \"роллер-спорт\",\r",
+											"        \"transportName\": \"ролики\"\r",
+											"    },\r",
+											"    {\r",
+											"        \"id\": 6,\r",
+											"        \"name\": \"лыжный спорт\",\r",
+											"        \"transportName\": \"лыжи\"\r",
+											"    },\r",
+											"    {\r",
+											"        \"id\": 7,\r",
+											"        \"name\": \"сноубординг\",\r",
+											"        \"transportName\": \"сноуборд\"\r",
+											"    }\r",
+											"];\r",
+											"\r",
+											"    pm.expect(jsonData).to.eql(expectedJson);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"user-agent": true,
+									"accept": true,
+									"accept-encoding": true,
+									"connection": true
+								}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/sport-types/get-all",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"sport-types",
+										"get-all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get by id ANY",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"user-agent": true,
+									"accept": true,
+									"accept-encoding": true,
+									"connection": true
+								}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/sport-types/{{sport_type_id}}",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"sport-types",
+										"{{sport_type_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "noauth"
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "spot type",
+					"item": [
+						{
+							"name": "get all spot types ANY",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Spot types are right\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    var expectedJson = [\r",
+											"    {\r",
+											"        \"id\": 1,\r",
+											"        \"name\": \"скейтпарк\"\r",
+											"    },\r",
+											"    {\r",
+											"        \"id\": 2,\r",
+											"        \"name\": \"стрит\"\r",
+											"    },\r",
+											"    {\r",
+											"        \"id\": 3,\r",
+											"        \"name\": \"дёрты\"\r",
+											"    },\r",
+											"    {\r",
+											"        \"id\": 4,\r",
+											"        \"name\": \"вёрт\"\r",
+											"    },\r",
+											"    {\r",
+											"        \"id\": 5,\r",
+											"        \"name\": \"bmx-рейсинг\"\r",
+											"    },\r",
+											"    {\r",
+											"        \"id\": 6,\r",
+											"        \"name\": \"флэтленд\"\r",
+											"    }\r",
+											"];\r",
+											"\r",
+											"    pm.expect(jsonData).to.eql(expectedJson);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept-encoding": true,
+									"accept": true,
+									"user-agent": true,
+									"connection": true
+								}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/spot-types/get-all",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"spot-types",
+										"get-all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get by id ANY",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"user-agent": true,
+									"accept": true,
+									"accept-encoding": true,
+									"connection": true
+								}
+							},
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/spot-types/{{spot_type_id}}",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"spot-types",
+										"{{spot_type_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "noauth"
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "city/region/country",
+			"item": [
+				{
+					"name": "cities",
+					"item": [
+						{
+							"name": "get all cities",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/cities/get-all",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"cities",
+										"get-all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get cities by country id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/cities/get-by-country-id/1",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"cities",
+										"get-by-country-id",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get cities by region id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/cities/get-by-region-id/1",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"cities",
+										"get-by-region-id",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "countries",
+					"item": [
+						{
+							"name": "get all countries",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/countries/get-all",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"countries",
+										"get-all"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "regions",
+					"item": [
+						{
+							"name": "get all regions",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/regions/get-all",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"regions",
+										"get-all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get regions by country id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/regions/get-by-country-id/1",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"regions",
+										"get-by-country-id",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "api_url",
+			"value": "localhost:8089/api"
+		},
+		{
+			"key": "jwt_token",
+			"value": "12345"
+		},
+		{
+			"key": "test_username",
+			"value": "user1_name1",
+			"type": "string"
+		},
+		{
+			"key": "test_email",
+			"value": "user11@mail.ru",
+			"type": "string"
+		},
+		{
+			"key": "test_phone_number",
+			"value": "89998887755",
+			"type": "string"
+		},
+		{
+			"key": "test_password",
+			"value": "Qwerty",
+			"type": "string"
+		},
+		{
+			"key": "test_birthday",
+			"value": "2001-07-14",
+			"type": "string"
+		},
+		{
+			"key": "remote_api_url",
+			"value": "185.249.227.104:8080/api",
+			"type": "string"
+		},
+		{
+			"key": "local_api_url",
+			"value": "localhost:8089/api",
+			"type": "string"
+		},
+		{
+			"key": "base_url",
+			"value": "localhost:8089",
+			"type": "string"
+		},
+		{
+			"key": "created_user_image_id",
+			"value": ""
+		},
+		{
+			"key": "created_user_id",
+			"value": ""
+		},
+		{
+			"key": "authenticated_user_id",
+			"value": ""
+		},
+		{
+			"key": "created_spot_image_id",
+			"value": ""
+		},
+		{
+			"key": "sport_type_id",
+			"value": "1"
+		},
+		{
+			"key": "spot_type_id",
+			"value": "1"
+		},
+		{
+			"key": "space_type_id",
+			"value": "1"
+		},
+		{
+			"key": "json_for_spot_1_creating",
+			"value": "{         \"name\": \"СУПЕР СПОТ 1\",         \"latitude\": 211.12,         \"longitude\": 19.3,         \"description\": \"описание 999\",         \"spotTypeIds\": [             2         ],         \"sportTypeIds\": [             1,             2,             5         ],         \"spaceTypeId\": 1     }"
+		},
+		{
+			"key": "json_for_spot_2_creating",
+			"value": "{         \"name\": \"Какой-то СПОТ 2\",         \"latitude\": 151.12,         \"longitude\": 11.3,         \"description\": \"описание СПОТА 2\",         \"spotTypeIds\": [             2         ],         \"sportTypeIds\": [             1,             3,         ],         \"spaceTypeId\": 1     }"
+		},
+		{
+			"key": "created_spot_id",
+			"value": "1"
+		},
+		{
+			"key": "test_lat",
+			"value": "53.34"
+		},
+		{
+			"key": "test_barnaul_lat",
+			"value": "53.34"
+		},
+		{
+			"key": "test_barnaul_lon",
+			"value": "83.69"
+		},
+		{
+			"key": "test_radius_for_spot_search",
+			"value": "1000"
+		},
+		{
+			"key": "created_comment_id",
+			"value": ""
+		}
+	]
+}
