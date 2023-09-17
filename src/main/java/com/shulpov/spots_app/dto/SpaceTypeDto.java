@@ -3,7 +3,7 @@ package com.shulpov.spots_app.dto;
 public class SpaceTypeDto {
     private Integer id;
 
-    String name;
+    private String name;
 
     public Integer getId() {
         return id;

@@ -4,7 +4,7 @@ public class SpotTypeDto {
 
     private Integer id;
 
-    String name;
+    private String name;
 
     public Integer getId() {
         return id;

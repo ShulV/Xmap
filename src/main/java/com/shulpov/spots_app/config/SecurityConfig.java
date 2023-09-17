@@ -33,28 +33,31 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                    //отключаем межасайтовую подделку форм, т.к. у нас REST API и здесь такой проблемы нет
-                    .csrf().disable()
-                    .authorizeHttpRequests()
-                    //разрешить неаутентифицир. пользователям обращаться
-                    .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                    .requestMatchers(
-                            "/api/v1/auth/**",
-                            "/api/spot-types/**",
-                            "/api/sport-types/**",
-                            "/api/space-types/**",
-                            "/api/spots/get-all",
-                            "/api/spots/get-in-radius",
-                            "/api/comments/get-by-spot-id/**",
-                            "/api/spots-users/get-like-number/**",
-                            "/api/spots-users/get-favorite-number/**",
-                            "/api/spots-users/get-info/**",
-                            "/api/image-service/download-user-image/**",
-                            "/api/image-service/download-spot-image/**",
-                            "/v3/api-docs/**",
-                            "/swagger-ui/**",
-                            "/error").permitAll()
-                    .anyRequest().hasAnyRole("USER", "MODERATOR", "ADMIN")
+                //отключаем межасайтовую подделку форм, т.к. у нас REST API и здесь такой проблемы нет
+                .csrf().disable()
+                .authorizeHttpRequests()
+                //разрешить неаутентифицир. пользователям обращаться
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers(
+                        "/api/v1/auth/**",
+                        "/api/spot-types/**",
+                        "/api/sport-types/**",
+                        "/api/space-types/**",
+                        "/api/spots/get-all",
+                        "/api/spots/get-in-radius",
+                        "/api/countries/**",
+                        "/api/cities/**",
+                        "/api/regions/**",
+                        "/api/comments/get-by-spot-id/**",
+                        "/api/spots-users/get-like-number/**",
+                        "/api/spots-users/get-favorite-number/**",
+                        "/api/spots-users/get-info/**",
+                        "/api/image-service/download-user-image/**",
+                        "/api/image-service/download-spot-image/**",
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**",
+                        "/error").permitAll()
+                .anyRequest().hasAnyRole("USER", "MODERATOR", "ADMIN")
                 .and()
                     //не сохранять сессии автоматически (т.к. мы используем JWT)
                     .sessionManagement()

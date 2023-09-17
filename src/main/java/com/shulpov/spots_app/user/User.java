@@ -91,6 +91,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "userActor")
     private List<SpotUser> spotUserList;
 
+    @ManyToOne
+    @JoinColumn(name = "city_id", referencedColumnName = "id")
+    private City city;
+
     /**
      * @return
      */

@@ -3,9 +3,9 @@ package com.shulpov.spots_app.dto;
 public class SportTypeDto {
     private Integer id;
 
-    String name;
+    private String name;
 
-    String transportName;
+    private String transportName;
 
     public Integer getId() {
         return id;

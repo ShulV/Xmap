@@ -76,6 +76,10 @@ public class Spot {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User creatorUser;
 
+    @ManyToOne
+    @JoinColumn(name = "city_id", referencedColumnName = "id")
+    private City city;
+
     @OneToMany(mappedBy = "commentedSpot")
     private List<Comment> comments;
 
@@ -213,5 +217,13 @@ public class Spot {
 
     public void setSpotUserList(List<SpotUser> spotUserList) {
         this.spotUserList = spotUserList;
+    }
+
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
     }
 }

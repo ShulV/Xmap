@@ -235,9 +235,51 @@ public class DtoConverter {
         return dto;
     }
 
+    /**
+     * Преобразует объект FieldError (ошибка валидации поля) в объект FieldErrorDto.
+     *
+     * @param fieldError Объект FieldError, представляющий ошибку валидации поля.
+     * @return Объект FieldErrorDto, содержащий информацию об ошибке в удобном для передачи формате.
+     *
+     * Пример использования:
+     * <pre>
+     * FieldError fieldError = new FieldError("user", "username", "Имя пользователя уже занято");
+     * FieldErrorDto fieldErrorDto = fieldErrorToDto(fieldError);
+     * </pre>
+     */
     public FieldErrorDto fieldErrorToDto(FieldError fieldError) {
         logger.atInfo().log("fieldErrorToDto rejectedValue={}, message={}",
                 fieldError.getRejectedValue(), fieldError.getDefaultMessage());
         return modelMapper.map(fieldError, FieldErrorDto.class);
+    }
+
+    /**
+     * Конвертор класса Country в класс CountryDto
+     * @param country класс страны
+     * @return класс DTO класса страны
+     */
+    public CountryDto countryToDto(Country country) {
+        // TODO дописать логгер
+        return modelMapper.map(country, CountryDto.class);
+    }
+
+    /**
+     * Конвертор класса Region в класс RegionDto
+     * @param region класс региона
+     * @return класс DTO класса региона
+     */
+    public RegionDto regionToDto(Region region) {
+        // TODO дописать логгер
+        return modelMapper.map(region, RegionDto.class);
+    }
+
+    /**
+     * Конвертор класса City в класс CityDto
+     * @param city класс города
+     * @return класс DTO класса города
+     */
+    public CityDto cityToDto(City city) {
+        // TODO дописать логгер
+        return modelMapper.map(city, CityDto.class);
     }
 }
