@@ -16,6 +16,8 @@
 	<properties>
 		<java.version>17</java.version>
 <!--		<slf4j.version>2.0.7</slf4j.version>-->
+		<slf4j.version>2.0.7</slf4j.version>
+		<snakeyaml.version>2.0</snakeyaml.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -130,8 +132,13 @@
 
 
 
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
 	<build>
 		<plugins>

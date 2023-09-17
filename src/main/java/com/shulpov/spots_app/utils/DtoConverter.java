@@ -240,7 +240,6 @@ public class DtoConverter {
      *
      * @param fieldError Объект FieldError, представляющий ошибку валидации поля.
      * @return Объект FieldErrorDto, содержащий информацию об ошибке в удобном для передачи формате.
-     *
      * Пример использования:
      * <pre>
      * FieldError fieldError = new FieldError("user", "username", "Имя пользователя уже занято");
