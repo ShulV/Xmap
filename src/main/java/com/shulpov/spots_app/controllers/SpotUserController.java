@@ -26,7 +26,7 @@ import java.util.Optional;
 @RequestMapping("/api/spots-users")
 @Tag(name="Контроллер промежуточной таблицы отношения пользователей к местам для катания",
         description="Позволяет изменять состояние лайка и добавления в избранные, " +
-                "получать количество их количество для спота")
+                "получать их количество для спота")
 
 public class SpotUserController {
     private final SpotUserService spotUserService;
@@ -46,7 +46,7 @@ public class SpotUserController {
 
     @Operation(
             summary = "Проверить спот на существование",
-            description = "Позволяет проверить есть определенный спот в базе данных"
+            description = "Позволяет проверить, есть ли определенный спот в базе данных"
     )
     private Spot checkSpot(Long spotId) {
         Optional<Spot> spotOpt = spotService.findById(spotId);
@@ -95,9 +95,9 @@ public class SpotUserController {
             description = "Позволяет получить количество лайков у спота"
     )
     @GetMapping("/get-like-number/{spotId}")
-    public Integer getLikeNumber(@PathVariable Long spotId) {
+    public Map<String, Integer> getLikeNumber(@PathVariable Long spotId) {
         Spot spot = checkSpot(spotId);
-        return spotUserService.getLikeNumber(spot);
+        return Map.of("likeNumber", spotUserService.getLikeNumber(spot));
     }
 
     @Operation(
@@ -105,9 +105,9 @@ public class SpotUserController {
             description = "Позволяет получить количество добавлений в избранное у спота"
     )
     @GetMapping("/get-favorite-number/{spotId}")
-    public Integer getFavoriteNumber(@PathVariable Long spotId) {
+    public Map<String, Integer> getFavoriteNumber(@PathVariable Long spotId) {
         Spot spot = checkSpot(spotId);
-        return spotUserService.getFavoriteNumber(spot);
+        return Map.of("favoriteNumber", spotUserService.getFavoriteNumber(spot));
     }
 
     @Operation(

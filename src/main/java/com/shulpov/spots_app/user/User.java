@@ -1,6 +1,6 @@
 package com.shulpov.spots_app.user;
 
-import com.shulpov.spots_app.token.Token;
+import com.shulpov.spots_app.auth.token.Token;
 import com.shulpov.spots_app.models.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
