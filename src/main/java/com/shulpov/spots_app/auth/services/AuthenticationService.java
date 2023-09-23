@@ -1,6 +1,5 @@
 package com.shulpov.spots_app.auth.services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shulpov.spots_app.auth.requests.AuthenticationRequest;
 import com.shulpov.spots_app.auth.requests.RegisterRequest;
 import com.shulpov.spots_app.auth.responses.AuthenticationResponse;
@@ -12,16 +11,16 @@ import com.shulpov.spots_app.user.User;
 import com.shulpov.spots_app.user.UserRepository;
 import com.shulpov.spots_app.utils.validators.UserValidator;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
-import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -105,15 +104,14 @@ public class AuthenticationService {
         tokenRepository.saveAll(validUserTokens);
     }
 
-    public void refreshToken(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws IOException {
+    public ResponseEntity<AuthenticationResponse> refreshToken(
+            HttpServletRequest request
+    ) throws AuthenticationCredentialsNotFoundException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
         final String userEmail;
         if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            return;
+            throw new AuthenticationCredentialsNotFoundException("Bearer token not found");
         }
         refreshToken = authHeader.substring(7);
         userEmail = jwtService.extractEmail(refreshToken);
@@ -125,13 +123,15 @@ public class AuthenticationService {
                 revokeAllUserTokens(user);
                 saveUserToken(user, accessToken);
                 //todo это перенесется в кастомный response, который будет возвращаться в зависимости от ошибки
-                var authResponse = AuthenticationResponse.builder()
+                AuthenticationResponse authResponse = AuthenticationResponse.builder()
                         .accessToken(accessToken)
                         .refreshToken(refreshToken)
                         .build();
-                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
+                return ResponseEntity.ok(authResponse);
             }
+            throw new AuthenticationCredentialsNotFoundException("Token is not valid");
         }
+        throw new AuthenticationCredentialsNotFoundException("Email in token not found");
     }
 }
 
