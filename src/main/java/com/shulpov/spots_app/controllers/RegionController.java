@@ -40,8 +40,7 @@ public class RegionController {
     )
     @GetMapping("/get-all")
     public ResponseEntity<?> getAll() {
-        // todo добавить логгер
-        //logger.atInfo().log("/get-all");
+        logger.atInfo().log("/get-all");
         try {
             List<RegionDto> regionDtopList = regionService.getAll().stream().map(dtoConverter::regionToDto).toList();
             return ResponseEntity.ok(regionDtopList);

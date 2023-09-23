@@ -35,14 +35,23 @@ public class RegionControllerTests {
     }
 
     @Test
-    public void testGetRegionByCountry() throws Exception {
-//        mockMvc.perform(MockMvcRequestBuilders.get("/api/regions/get-all")
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(MockMvcResultMatchers.status().isOk())
-//                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Москва и Московская обл."))
-//                .andExpect(MockMvcResultMatchers.jsonPath("[1610].name").value("Яманаси"))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1611));
+    public void testGetRegionByCountryCorrectIndex() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/regions/get-by-country-id/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Винницкая обл."))
+                .andExpect(MockMvcResultMatchers.jsonPath("[24].name").value("Черновицкая обл."))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(25));
+    }
+
+    @Test
+    public void testGetRegionByCountryWrongIndex() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/regions/get-by-country-id/100000")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorMessage").value("Country with id=100000 not found"));
+
     }
 
 }
