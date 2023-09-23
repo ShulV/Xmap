@@ -38,7 +38,8 @@ public class SpotUserService {
             spotUser.setLiked(!spotUser.getLiked());
             SpotUser newSpotUser = spotUserRepo.save(spotUser);
             return Map.of("spotId", newSpotUser.getPostedSpot().getId(),
-                    "userId", newSpotUser.getUserActor().getId());
+                    "userId", newSpotUser.getUserActor().getId(),
+                    "isLiked", newSpotUser.getLiked());
         } else {
             logger.atInfo().log("changeLikeState spot_id={} user_id={} create new instance", spot.getId(), user.getId());
             SpotUser spotUser = new SpotUser();
@@ -49,7 +50,8 @@ public class SpotUserService {
             spotUser.setFavorite(false);
             SpotUser newSpotUser = spotUserRepo.save(spotUser);
             return Map.of("spotId", newSpotUser.getPostedSpot().getId(),
-                    "userId", newSpotUser.getUserActor().getId());
+                    "userId", newSpotUser.getUserActor().getId(),
+                    "isLiked", newSpotUser.getLiked());
         }
     }
 
@@ -64,7 +66,8 @@ public class SpotUserService {
             spotUser.setFavorite(!spotUser.getFavorite());
             SpotUser newSpotUser = spotUserRepo.save(spotUser);
             return Map.of("spotId", newSpotUser.getPostedSpot().getId(),
-                    "userId", newSpotUser.getUserActor().getId());
+                    "userId", newSpotUser.getUserActor().getId(),
+                    "isFavorite", newSpotUser.getFavorite());
         } else {
             logger.atInfo().log("changeFavoriteState spot_id={} user_id={} create new instance", spot.getId(), user.getId());
             SpotUser spotUser = new SpotUser();
@@ -75,7 +78,8 @@ public class SpotUserService {
             spotUser.setLiked(false);
             SpotUser newSpotUser = spotUserRepo.save(spotUser);
             return Map.of("spotId", newSpotUser.getPostedSpot().getId(),
-                    "userId", newSpotUser.getUserActor().getId());
+                    "userId", newSpotUser.getUserActor().getId(),
+                    "isFavorite", newSpotUser.getFavorite());
         }
     }
 
