@@ -38,7 +38,7 @@ public class CountryController {
     )
     @GetMapping("/get-all")
     public ResponseEntity<?> getAll() {
-        logger.atInfo().log("/get-all");
+        logger.atInfo().log("Getting all countries");
         try {
             List<CountryDto> countryDtoList = countryService.getAll().stream().map(dtoConverter::countryToDto).toList();
             return ResponseEntity.ok(countryDtoList);

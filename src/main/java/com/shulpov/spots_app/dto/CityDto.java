@@ -1,27 +1,11 @@
 package com.shulpov.spots_app.dto;
 
-import com.shulpov.spots_app.models.Region;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class CityDto {
     private Integer id;
     private String name;
-
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
 }

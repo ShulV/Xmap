@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/regions")
+@RequestMapping(value = "/api/regions", produces = "application/json")
 @Tag(name="Контроллер регионов (справочник)", description="Выдает регионы")
 public class RegionController {
 
@@ -40,7 +40,7 @@ public class RegionController {
     )
     @GetMapping("/get-all")
     public ResponseEntity<?> getAll() {
-        logger.atInfo().log("/get-all");
+        logger.atInfo().log("Getting all regions");
         try {
             List<RegionDto> regionDtopList = regionService.getAll().stream().map(dtoConverter::regionToDto).toList();
             return ResponseEntity.ok(regionDtopList);
@@ -57,6 +57,7 @@ public class RegionController {
     )
     @GetMapping("/get-by-country-id/{id}")
     public ResponseEntity<?> getByCountryId(@PathVariable("id") Integer id){
+        logger.atInfo().log("Getting all regions by country id = {}", id);
         try {
             List<Region> regions = regionService.getByCountryId(id);
             List<RegionDto> regionDtoList = regions.stream().map(dtoConverter::regionToDto).toList();
