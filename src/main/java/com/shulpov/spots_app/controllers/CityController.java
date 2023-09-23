@@ -16,9 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.webjars.NotFoundException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api/cities")
+@RequestMapping(value ="/api/cities", produces = "application/json")
 @Tag(name="Контроллер городов (справочник)", description="Выдает города")
 public class CityController {
     private final CityService cityService;
@@ -38,9 +39,15 @@ public class CityController {
     )
     @GetMapping("/get-all")
     public ResponseEntity<?> getAll() {
-        logger.atInfo().log("/get-all");
-        List<CityDto> cityDtoList = cityService.getAll().stream().map(dtoConverter::cityToDto).toList();
-        return ResponseEntity.ok(cityDtoList);
+        logger.atInfo().log("Getting all cities");
+        try {
+            List<CityDto> cityDtoList = cityService.getAll().stream().map(dtoConverter::cityToDto).toList();
+            return ResponseEntity.ok(cityDtoList);
+        } catch (NotFoundException e) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("errorMessage", "There is no data in the table"));
+        }
     }
 
     @Operation(
@@ -49,6 +56,7 @@ public class CityController {
     )
     @GetMapping("/get-by-region-id/{id}")
     public ResponseEntity<?> getByRegionId(@PathVariable("id") Integer id){
+        logger.atInfo().log("Getting all cities by region id = {}", id);
         try {
             List<City> cities = cityService.getByRegionId(id);
             List<CityDto> cityDtoList = cities.stream().map(dtoConverter::cityToDto).toList();
@@ -56,7 +64,7 @@ public class CityController {
         } catch (NotFoundException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(e.getMessage());
+                    .body(Map.of("errorMessage", "Region with id=" + id + " not found"));
         }
     }
 
@@ -66,6 +74,7 @@ public class CityController {
     )
     @GetMapping("/get-by-country-id/{id}")
     public ResponseEntity<?> getByCountryId(@PathVariable("id") Integer id) {
+        logger.atInfo().log("Getting all cities by region id = {}", id);
         try {
             List<City> cities = cityService.getByCountryId(id);
             List<CityDto> cityDtoList = cities.stream().map(dtoConverter::cityToDto).toList();
@@ -73,7 +82,7 @@ public class CityController {
         } catch (NotFoundException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(e.getMessage());
+                    .body(Map.of("errorMessage", "Country with id=" + id + " not found"));
         }
     }
 }

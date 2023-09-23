@@ -31,7 +31,6 @@ import java.util.Optional;
 public class CommentController {
     private final CommentService commentService;
     private final UserService userService;
-
     private final Logger logger = LoggerFactory.getLogger(CommentController.class);
     private final DtoConverter dtoConverter;
 

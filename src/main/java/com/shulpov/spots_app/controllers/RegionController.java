@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/regions")
+@RequestMapping(value = "/api/regions", produces = "application/json")
 @Tag(name="Контроллер регионов (справочник)", description="Выдает регионы")
 public class RegionController {
 
@@ -39,9 +39,16 @@ public class RegionController {
             description = "Позволяет пользователю получить перечень всех имеющихся регионов"
     )
     @GetMapping("/get-all")
-    public List<RegionDto> getAll() {
-        logger.atInfo().log("/get-all");
-        return regionService.getAll().stream().map(dtoConverter::regionToDto).toList();
+    public ResponseEntity<?> getAll() {
+        logger.atInfo().log("Getting all regions");
+        try {
+            List<RegionDto> regionDtopList = regionService.getAll().stream().map(dtoConverter::regionToDto).toList();
+            return ResponseEntity.ok(regionDtopList);
+        } catch (NotFoundException e) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("errorMessage", "There is no data in the table"));
+        }
     }
 
     @Operation(
@@ -50,6 +57,7 @@ public class RegionController {
     )
     @GetMapping("/get-by-country-id/{id}")
     public ResponseEntity<?> getByCountryId(@PathVariable("id") Integer id){
+        logger.atInfo().log("Getting all regions by country id = {}", id);
         try {
             List<Region> regions = regionService.getByCountryId(id);
             List<RegionDto> regionDtoList = regions.stream().map(dtoConverter::regionToDto).toList();
@@ -57,7 +65,7 @@ public class RegionController {
         } catch (NotFoundException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "Страна с id=" + id + " не найдена"));
+                    .body(Map.of("errorMessage", "Country with id=" + id + " not found"));
         }
     }
 
