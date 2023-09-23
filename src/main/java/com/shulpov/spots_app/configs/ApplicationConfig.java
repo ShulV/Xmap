@@ -1,4 +1,4 @@
-package com.shulpov.spots_app.config;
+package com.shulpov.spots_app.configs;
 
 import com.shulpov.spots_app.user.UserRepository;
 import lombok.RequiredArgsConstructor;

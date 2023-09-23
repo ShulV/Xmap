@@ -1,5 +1,6 @@
-package com.shulpov.spots_app.config;
+package com.shulpov.spots_app.configs;
 
+import com.shulpov.spots_app.auth.filters.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -56,6 +57,7 @@ public class SecurityConfig {
                         "/api/image-service/download-spot-image/**",
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
+                        "/swagger-ui.html",
                         "/error").permitAll()
                 .anyRequest().hasAnyRole("USER", "MODERATOR", "ADMIN")
                 .and()

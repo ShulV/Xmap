@@ -1,4 +1,4 @@
-package com.shulpov.spots_app.auth;
+package com.shulpov.spots_app.auth.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

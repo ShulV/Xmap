@@ -1,9 +1,11 @@
-package com.shulpov.spots_app.auth;
+package com.shulpov.spots_app.auth.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 /**
  * @author Shulpov Victor
@@ -13,7 +15,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
+public class RegisterRequest {
+    private String name;
     private String email;
-    private String  password;
+    private String phoneNumber;
+    private Date birthday;
+    private String password;
 }

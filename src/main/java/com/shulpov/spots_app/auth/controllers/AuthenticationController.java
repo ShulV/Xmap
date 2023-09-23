@@ -1,5 +1,9 @@
-package com.shulpov.spots_app.auth;
+package com.shulpov.spots_app.auth.controllers;
 
+import com.shulpov.spots_app.auth.requests.AuthenticationRequest;
+import com.shulpov.spots_app.auth.requests.RegisterRequest;
+import com.shulpov.spots_app.auth.responses.AuthenticationResponse;
+import com.shulpov.spots_app.auth.services.AuthenticationService;
 import com.shulpov.spots_app.dto.FieldErrorDto;
 import com.shulpov.spots_app.utils.DtoConverter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +37,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(
-            @RequestBody RegisterRequest request,  BindingResult errors
+            @RequestBody RegisterRequest request, BindingResult errors
     ) {
         AuthenticationResponse response = service.register(request, errors);
         if(errors.hasErrors()) {

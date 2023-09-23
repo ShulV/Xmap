@@ -1,4 +1,4 @@
-package com.shulpov.spots_app.config;
+package com.shulpov.spots_app.configs;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;

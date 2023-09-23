@@ -1,4 +1,4 @@
-package com.shulpov.spots_app.config;
+package com.shulpov.spots_app.configs;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

@@ -1,7 +1,7 @@
-package com.shulpov.spots_app.config;
+package com.shulpov.spots_app.auth.filters;
 
-import com.shulpov.spots_app.auth.JwtService;
-import com.shulpov.spots_app.token.TokenRepository;
+import com.shulpov.spots_app.auth.services.JwtService;
+import com.shulpov.spots_app.auth.token.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package com.shulpov.spots_app.token;
+package com.shulpov.spots_app.auth.token;
 
 import com.shulpov.spots_app.user.User;
 import jakarta.persistence.*;

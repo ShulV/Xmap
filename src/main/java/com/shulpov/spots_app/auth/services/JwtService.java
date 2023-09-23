@@ -1,4 +1,4 @@
-package com.shulpov.spots_app.auth;
+package com.shulpov.spots_app.auth.services;
 
 import java.security.Key;
 import java.util.Date;

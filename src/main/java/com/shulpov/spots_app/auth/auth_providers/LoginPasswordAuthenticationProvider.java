@@ -1,4 +1,4 @@
-package com.shulpov.spots_app.auth;
+package com.shulpov.spots_app.auth.auth_providers;
 
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;

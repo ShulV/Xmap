@@ -1,9 +1,12 @@
-package com.shulpov.spots_app.auth;
+package com.shulpov.spots_app.auth.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shulpov.spots_app.token.Token;
-import com.shulpov.spots_app.token.TokenRepository;
-import com.shulpov.spots_app.token.TokenType;
+import com.shulpov.spots_app.auth.requests.AuthenticationRequest;
+import com.shulpov.spots_app.auth.requests.RegisterRequest;
+import com.shulpov.spots_app.auth.responses.AuthenticationResponse;
+import com.shulpov.spots_app.auth.token.Token;
+import com.shulpov.spots_app.auth.token.TokenRepository;
+import com.shulpov.spots_app.auth.token.TokenType;
 import com.shulpov.spots_app.user.Role;
 import com.shulpov.spots_app.user.User;
 import com.shulpov.spots_app.user.UserRepository;
