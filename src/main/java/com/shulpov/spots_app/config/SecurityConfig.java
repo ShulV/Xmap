@@ -56,6 +56,7 @@ public class SecurityConfig {
                         "/api/image-service/download-spot-image/**",
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
+                        "/swagger-ui.html",
                         "/error").permitAll()
                 .anyRequest().hasAnyRole("USER", "MODERATOR", "ADMIN")
                 .and()

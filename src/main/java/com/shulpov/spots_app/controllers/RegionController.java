@@ -39,9 +39,17 @@ public class RegionController {
             description = "Позволяет пользователю получить перечень всех имеющихся регионов"
     )
     @GetMapping("/get-all")
-    public List<RegionDto> getAll() {
-        logger.atInfo().log("/get-all");
-        return regionService.getAll().stream().map(dtoConverter::regionToDto).toList();
+    public ResponseEntity<?> getAll() {
+        // todo добавить логгер
+        //logger.atInfo().log("/get-all");
+        try {
+            List<RegionDto> regionDtopList = regionService.getAll().stream().map(dtoConverter::regionToDto).toList();
+            return ResponseEntity.ok(regionDtopList);
+        } catch (NotFoundException e) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("errorMessage", "There is no data in the table"));
+        }
     }
 
     @Operation(
@@ -57,7 +65,7 @@ public class RegionController {
         } catch (NotFoundException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "Страна с id=" + id + " не найдена"));
+                    .body(Map.of("errorMessage", "Country with id=" + id + " not found"));
         }
     }
 

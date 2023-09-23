@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.webjars.NotFoundException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/cities")
@@ -38,9 +39,15 @@ public class CityController {
     )
     @GetMapping("/get-all")
     public ResponseEntity<?> getAll() {
-        logger.atInfo().log("/get-all");
-        List<CityDto> cityDtoList = cityService.getAll().stream().map(dtoConverter::cityToDto).toList();
-        return ResponseEntity.ok(cityDtoList);
+        try {
+            logger.atInfo().log("/get-all");
+            List<CityDto> cityDtoList = cityService.getAll().stream().map(dtoConverter::cityToDto).toList();
+            return ResponseEntity.ok(cityDtoList);
+        } catch (NotFoundException e) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("errorMessage", "There is no data in the table"));
+        }
     }
 
     @Operation(
@@ -56,7 +63,7 @@ public class CityController {
         } catch (NotFoundException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(e.getMessage());
+                    .body(Map.of("errorMessage", "Region with id=" + id + " not found"));
         }
     }
 
@@ -73,7 +80,7 @@ public class CityController {
         } catch (NotFoundException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(e.getMessage());
+                    .body(Map.of("errorMessage", "Country with id=" + id + " not found"));
         }
     }
 }
