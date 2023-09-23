@@ -11,7 +11,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +31,32 @@ public class JwtService {
     private long jwtExpiration;
     @Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshExpiration;
+
+    /**
+     * Получить access token из запроса (из заголовка)
+     * @param request запрос
+     * @return access token
+     */
+    public String getAccessTokenFromRequest(HttpServletRequest request) throws AuthenticationCredentialsNotFoundException {
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
+            throw new AuthenticationCredentialsNotFoundException("Bearer token (access) not found");
+        }
+        return authHeader.substring(7);
+    }
+
+    /**
+     * Получить refresh token из запроса (из заголовка)
+     * @param request запрос
+     * @return refresh token
+     */
+    public String getRefreshTokenFromRequest(HttpServletRequest request) throws AuthenticationCredentialsNotFoundException {
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authHeader == null ||!authHeader.startsWith("Refresh ")) {
+            throw new AuthenticationCredentialsNotFoundException("Refresh token not found");
+        }
+        return authHeader.substring(8);
+    }
 
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);

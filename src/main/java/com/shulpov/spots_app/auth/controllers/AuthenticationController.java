@@ -75,7 +75,7 @@ public class AuthenticationController {
     ) {
         try {
             return service.refreshToken(request);
-        } catch (AuthenticationCredentialsNotFoundException | NoSuchElementException e) {
+        } catch (AuthenticationCredentialsNotFoundException | NoSuchElementException | BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("errorMessage", e.getMessage()));
         }
     }
