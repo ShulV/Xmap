@@ -3,10 +3,6 @@ package com.shulpov.spots_app.user;
 import com.shulpov.spots_app.auth.token.Token;
 import com.shulpov.spots_app.models.*;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,34 +28,22 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(name = "name")
-    @NotEmpty(message = "Имя не должен быть пустым")
-    @Size(min = 2, max = 30, message = "Длина имени должна быть от 2 до 30 символов")
     private String name;
 
     @Column(name = "email")
-    @NotNull(message = "Email не должен быть пустой")
-    @Email(message = "Email должен быть валидным")
-    @Size(min = 5, max = 50, message = "Длина почты должна быть от 5 до 50 символов")
     private String email;
 
     @Column(name = "pass_hash")
     private String passHash;
 
     @Column(name = "phone_number")
-    @NotEmpty(message = "Номер не должен быть пустым")
     private String phoneNumber;
 
     @Column(name = "birthday")
-    @NotNull(message = "Дата дня рождения не должна быть пустой")
     private Date birthday;
 
     @Column(name = "reg_date")
     private Date regDate;
-
-    @Transient
-    @NotNull(message = "Пароль не должен быть пустой")
-    @Size(min = 6, max = 50, message = "Длина пароля должна быть от 6 до 50 символов")
-    private String password;
 
     @Enumerated(EnumType.STRING)
     private Role role;

@@ -1,12 +1,15 @@
 package com.shulpov.spots_app.auth.controllers;
 
+import com.shulpov.spots_app.auth.exceptions.RegisterErrorException;
 import com.shulpov.spots_app.auth.requests.AuthenticationRequest;
 import com.shulpov.spots_app.auth.requests.RegisterRequest;
-import com.shulpov.spots_app.auth.responses.AuthenticationResponse;
+import com.shulpov.spots_app.auth.responses.RegisterErrorResponse;
+import com.shulpov.spots_app.auth.responses.RegisterResponse;
 import com.shulpov.spots_app.auth.services.AuthenticationService;
 import com.shulpov.spots_app.dto.FieldErrorDto;
 import com.shulpov.spots_app.utils.DtoConverter;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,10 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -38,21 +38,31 @@ public class AuthenticationController {
     @Autowired
     private final DtoConverter dtoConverter;
 
-    @PostMapping(value="/register", consumes="application/json", produces = "application/json")
+    /**
+     * Регистрация пользователя
+     * @param request данные пользователя, необходимые для регистрации (JSON)
+     * @param errors ошибки валидации (передавать их не нужно)
+     * @return RegisterResponse
+     */
+    @PostMapping(value="/register")
     public ResponseEntity<?> register(
-            @RequestBody RegisterRequest request, BindingResult errors
+            @Valid @RequestBody RegisterRequest request, BindingResult errors
     ) {
-        AuthenticationResponse response = service.register(request, errors);
-        if(errors.hasErrors()) {
-            List<FieldErrorDto> fieldErrors = errors.getFieldErrors()
-                    .stream().map(dtoConverter::fieldErrorToDto)
-                    .toList();
-            return ResponseEntity.badRequest()
-                    .body(fieldErrors);
-        } else {
-            return ResponseEntity.ok()
-                    .body(response);
-        }
+        RegisterResponse response = service.register(request, errors);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    /**
+     * Обработчик ошибки регистрации
+     * @param e исключение, содержащее текст ошибки и подробное описание ошибок полей
+     * @return RegisterErrorResponse
+     */
+    @ExceptionHandler
+    private ResponseEntity<RegisterErrorResponse> handleRegisterErrorException(RegisterErrorException e) {
+        RegisterErrorResponse response = new RegisterErrorResponse(e.getMessage());
+        List<FieldErrorDto> errorDtoList = e.getErrors().stream().map(dtoConverter::fieldErrorToDto).toList();
+        response.setErrorDtoList(errorDtoList);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @PostMapping(value="/authenticate", consumes="application/json", produces = "application/json")

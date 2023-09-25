@@ -1,7 +1,7 @@
 package com.shulpov.spots_app.utils.validators;
 
-import com.shulpov.spots_app.user.User;
 import com.shulpov.spots_app.services.UserService;
+import com.shulpov.spots_app.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +19,9 @@ import java.util.Date;
  */
 @Component
 public class UserValidator implements Validator {
-    /** Сервис пользователей */
     private final UserService userService;
     private final Logger logger = LoggerFactory.getLogger(UserValidator.class);
 
-    /**
-     * Конструктор компонента
-     * @param userService сервис пользователей
-     */
     @Autowired
     public UserValidator(UserService userService) {
         this.userService = userService;
@@ -72,11 +67,20 @@ public class UserValidator implements Validator {
             errors.rejectValue("phoneNumber", "", "Пользователь с таким телефоном уже существует");
         }
 
-        boolean birthdayLessToday = user.getBirthday().before(new Date(System.currentTimeMillis()));
+        Date birthday = user.getBirthday();
+        boolean birthdayLessToday = birthday.before(new Date(System.currentTimeMillis()));
         if(!birthdayLessToday) {
             logger.atInfo().log("validate birthday is in future birthday={}", user.getBirthday());
             // поле, код ошибки, сообщение ошибки
             errors.rejectValue("birthday", "", "День рождения ещё не наступил");
+        }
+
+        // 100 лет назад в миллисекундах
+        long oneHundredYearsAgoMillis = new Date().getTime() - 100L * 365 * 24 * 60 * 60 * 1000;
+        if(birthday.before(new Date(oneHundredYearsAgoMillis))) {
+            logger.atInfo().log("validate user.birthday={} after 100 years ago", user.getBirthday());
+            // поле, код ошибки, сообщение ошибки
+            errors.rejectValue("birthday", "", "Дата рождения не может больше 100 лет назад");
         }
     }
 }

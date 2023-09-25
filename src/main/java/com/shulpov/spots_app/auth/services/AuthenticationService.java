@@ -1,8 +1,10 @@
 package com.shulpov.spots_app.auth.services;
 
+import com.shulpov.spots_app.auth.exceptions.RegisterErrorException;
 import com.shulpov.spots_app.auth.requests.AuthenticationRequest;
 import com.shulpov.spots_app.auth.requests.RegisterRequest;
 import com.shulpov.spots_app.auth.responses.AuthenticationResponse;
+import com.shulpov.spots_app.auth.responses.RegisterResponse;
 import com.shulpov.spots_app.auth.token.Token;
 import com.shulpov.spots_app.auth.token.TokenRepository;
 import com.shulpov.spots_app.auth.token.TokenType;
@@ -19,6 +21,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
 import java.util.Date;
@@ -37,26 +40,27 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final UserValidator userValidator;
 
-    public AuthenticationResponse register(RegisterRequest request, BindingResult errors) {
+    @Transactional
+    public RegisterResponse register(RegisterRequest request, BindingResult errors) {
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
                 .phoneNumber(request.getPhoneNumber())
                 .birthday(request.getBirthday())
-                .password(request.getPassword())
                 .passHash(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
                 .regDate(new Date())
                 .build();
         userValidator.validate(user, errors);
         if(errors.hasErrors()) {
-            return new AuthenticationResponse();
+            throw new RegisterErrorException("Регистрация не удалась.", errors.getFieldErrors());
         }
         User savedUser = userRepository.save(user);
         String jwtToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);
-        return AuthenticationResponse.builder()
+        return RegisterResponse.builder()
+                .userId(user.getId())
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .build();
