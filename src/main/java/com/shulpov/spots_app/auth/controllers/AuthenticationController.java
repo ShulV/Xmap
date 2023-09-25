@@ -5,6 +5,7 @@ import com.shulpov.spots_app.auth.requests.AuthenticationRequest;
 import com.shulpov.spots_app.auth.requests.RegisterRequest;
 import com.shulpov.spots_app.auth.responses.RegisterErrorResponse;
 import com.shulpov.spots_app.auth.responses.RegisterResponse;
+import com.shulpov.spots_app.auth.responses.RegisterResponse;
 import com.shulpov.spots_app.auth.services.AuthenticationService;
 import com.shulpov.spots_app.dto.FieldErrorDto;
 import com.shulpov.spots_app.utils.DtoConverter;
@@ -45,7 +46,7 @@ public class AuthenticationController {
      * @return RegisterResponse
      */
     @PostMapping(value="/register")
-    public ResponseEntity<?> register(
+    public ResponseEntity<RegisterResponse> register(
             @Valid @RequestBody RegisterRequest request, BindingResult errors
     ) {
         RegisterResponse response = service.register(request, errors);
