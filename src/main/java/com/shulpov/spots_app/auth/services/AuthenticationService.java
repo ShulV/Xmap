@@ -11,13 +11,14 @@ import com.shulpov.spots_app.auth.token.TokenType;
 import com.shulpov.spots_app.user.Role;
 import com.shulpov.spots_app.user.User;
 import com.shulpov.spots_app.user.UserRepository;
-import com.shulpov.spots_app.utils.validators.UserValidator;
+import com.shulpov.spots_app.auth.validators.UserValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,6 @@ import java.util.Date;
 /**
  * @author Shulpov Victor
  */
-
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -66,13 +66,20 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    /**
+     * //todo
+     * @param request
+     * @return
+     */
+    public AuthenticationResponse authenticate(AuthenticationRequest request) throws BadCredentialsException {
+        //throws BadCredentialsException
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
                         request.getPassword()
                 )
         );
+        //authenticated
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
@@ -80,11 +87,17 @@ public class AuthenticationService {
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
         return AuthenticationResponse.builder()
+                .userId(user.getId())
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .build();
     }
 
+    /**
+     * //todo
+     * @param user
+     * @param jwtToken
+     */
     private void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
                 .user(user)
@@ -97,6 +110,10 @@ public class AuthenticationService {
         tokenRepository.save(token);
     }
 
+    /**
+     * //todo
+     * @param user
+     */
     private void revokeAllUserTokens(User user) {
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
         if (validUserTokens.isEmpty())
@@ -108,6 +125,12 @@ public class AuthenticationService {
         tokenRepository.saveAll(validUserTokens);
     }
 
+    /**
+     * //todo
+     * @param request
+     * @return
+     * @throws AuthenticationCredentialsNotFoundException
+     */
     public ResponseEntity<AuthenticationResponse> refreshToken(
             HttpServletRequest request
     ) throws AuthenticationCredentialsNotFoundException {

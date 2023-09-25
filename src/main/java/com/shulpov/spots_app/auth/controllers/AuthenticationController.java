@@ -3,10 +3,12 @@ package com.shulpov.spots_app.auth.controllers;
 import com.shulpov.spots_app.auth.exceptions.RegisterErrorException;
 import com.shulpov.spots_app.auth.requests.AuthenticationRequest;
 import com.shulpov.spots_app.auth.requests.RegisterRequest;
+import com.shulpov.spots_app.auth.responses.AuthenticationResponse;
 import com.shulpov.spots_app.auth.responses.RegisterErrorResponse;
 import com.shulpov.spots_app.auth.responses.RegisterResponse;
 import com.shulpov.spots_app.auth.services.AuthenticationService;
 import com.shulpov.spots_app.dto.FieldErrorDto;
+import com.shulpov.spots_app.responses.ErrorMessageResponse;
 import com.shulpov.spots_app.utils.DtoConverter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -42,10 +44,10 @@ public class AuthenticationController {
      * Регистрация пользователя
      * @param request данные пользователя, необходимые для регистрации (JSON)
      * @param errors ошибки валидации (передавать их не нужно)
-     * @return RegisterResponse
+     * @return RegisterResponse (userId, accessToken, refreshToken)
      */
     @PostMapping(value="/register")
-    public ResponseEntity<?> register(
+    public ResponseEntity<RegisterResponse> register(
             @Valid @RequestBody RegisterRequest request, BindingResult errors
     ) {
         RegisterResponse response = service.register(request, errors);
@@ -65,18 +67,26 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @PostMapping(value="/authenticate", consumes="application/json", produces = "application/json")
-    public ResponseEntity<?> authenticate(
-            @RequestBody AuthenticationRequest request
-    ) {
-        //todo запилить свой auth provider, сделай response'ы удачные и не очень
-        //todo (сделать аналогично register())
-        //todo валидация количества попыток
-        try {
-            return ResponseEntity.ok(service.authenticate(request));
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("errorMessage", e.getMessage()));
-        }
+    /**
+     * Аутентификация по паролю и логину
+     * @param request пароль и логин пользователя (JSON)
+     * @return AuthenticationResponse (userId, accessToken, refreshToken)
+     */
+    @PostMapping(value="/authenticate")
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+        return ResponseEntity.ok(service.authenticate(request));
+    }
+
+    /**
+     * Обработчик ошибки аутентификации (для неверных логина или пароля)
+     * @param e исключение, содержащее текст ошибки
+     * @return ErrorMessageResponse
+     */
+    @ExceptionHandler
+    private ResponseEntity<ErrorMessageResponse> handleBadCredentialsException(BadCredentialsException e) {
+        ErrorMessageResponse response = new ErrorMessageResponse();
+        response.setErrorMessage(e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
     @PostMapping(value="/refresh-token", produces = "application/json")
