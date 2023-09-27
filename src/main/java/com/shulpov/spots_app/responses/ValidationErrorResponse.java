@@ -1,4 +1,4 @@
-package com.shulpov.spots_app;
+package com.shulpov.spots_app.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.shulpov.spots_app.dto.FieldErrorDto;
@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.validation.FieldError;
 
 import java.util.List;
 
@@ -20,5 +19,5 @@ import java.util.List;
 @NoArgsConstructor
 public class ValidationErrorResponse {
     @JsonProperty("errors")
-    List<FieldErrorDto> errorDtoList;
+    private List<FieldErrorDto> errorDtoList;
 }

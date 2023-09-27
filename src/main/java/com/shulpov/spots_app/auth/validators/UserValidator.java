@@ -1,4 +1,4 @@
-package com.shulpov.spots_app.utils.validators;
+package com.shulpov.spots_app.auth.validators;
 
 import com.shulpov.spots_app.services.UserService;
 import com.shulpov.spots_app.user.User;

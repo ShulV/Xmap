@@ -1,4 +1,4 @@
-package com.shulpov.spots_app.auth.requests;
+package com.shulpov.spots_app.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -9,14 +9,11 @@ import lombok.NoArgsConstructor;
 /**
  * @author Shulpov Victor
  */
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
-    @JsonProperty("email")
-    private String email;
-    @JsonProperty("password")
-    private String  password;
+public class ErrorMessageResponse {
+    @JsonProperty("errorMessage")
+    private String errorMessage;
 }
