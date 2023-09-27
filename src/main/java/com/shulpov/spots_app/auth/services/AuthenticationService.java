@@ -40,6 +40,12 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final UserValidator userValidator;
 
+    /**
+     * Регистрация пользователя (с валидацией данных пользователя, с генерацией токенов для пользователя)
+     * @param request данные пользователя, указанные при регистрации
+     * @param errors ошибки валидации
+     * @return RegisterResponse
+     */
     @Transactional
     public RegisterResponse register(RegisterRequest request, BindingResult errors) {
         User user = User.builder()
@@ -58,6 +64,7 @@ public class AuthenticationService {
         User savedUser = userRepository.save(user);
         String jwtToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
+        //todo СОХРАНЯТЬ НАДО refreshToken, подумать над проверкой access'а (сделать иначе)
         saveUserToken(savedUser, jwtToken);
         return RegisterResponse.builder()
                 .userId(user.getId())
@@ -67,10 +74,11 @@ public class AuthenticationService {
     }
 
     /**
-     * //todo
-     * @param request
-     * @return
+     * Аутентификация пользователя по логину (почте) и паролю
+     * @param request учетные данные (логин и пароль)
+     * @return AuthenticationResponse
      */
+    @Transactional
     public AuthenticationResponse authenticate(AuthenticationRequest request) throws BadCredentialsException {
         //throws BadCredentialsException
         authenticationManager.authenticate(
@@ -106,7 +114,6 @@ public class AuthenticationService {
                 .expired(false)
                 .revoked(false)
                 .build();
-
         tokenRepository.save(token);
     }
 
