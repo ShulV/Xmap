@@ -1,5 +1,6 @@
 package com.shulpov.spots_app.configs;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shulpov.spots_app.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -29,6 +30,11 @@ public class ApplicationConfig {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setAmbiguityIgnored(true);
         return modelMapper;
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 
     //todo unused?
