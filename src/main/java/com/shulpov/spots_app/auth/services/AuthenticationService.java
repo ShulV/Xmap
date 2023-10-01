@@ -16,7 +16,6 @@ import com.shulpov.spots_app.user.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -123,7 +122,7 @@ public class AuthenticationService {
      * @return новые access и refresh токены, также id пользователя
      * @throws AuthenticationException ошибка аутентификации
      */
-    public ResponseEntity<AuthenticationResponse> refreshToken(
+    public AuthenticationResponse refreshToken(
             HttpServletRequest request
     ) throws AuthenticationException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -157,7 +156,7 @@ public class AuthenticationService {
             saveUserToken(user, newRefreshToken, TokenType.REFRESH);
             AuthenticationResponse response = createAuthResponse(user.getId(), newAccessToken, newRefreshToken);
             tokenService.deleteTokenByValue(refreshToken);
-            return ResponseEntity.ok(response);
+            return response;
         }
         throw new AuthenticationException("Email in refresh token claim is empty");
     }
