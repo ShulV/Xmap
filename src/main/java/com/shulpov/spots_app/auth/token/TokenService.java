@@ -3,6 +3,7 @@ package com.shulpov.spots_app.auth.token;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,5 +21,10 @@ public class TokenService {
     @Transactional
     public void deleteTokenByValue(String value) {
         tokenRepository.deleteByValue(value);
+    }
+
+    //пока что используется только для тестов
+    public List<Token> getAllTokens() {
+        return tokenRepository.findAll();
     }
 }
