@@ -126,25 +126,25 @@ public class AuthenticationService {
             HttpServletRequest request
     ) throws AuthenticationException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String refreshToken;
+        final String oldRefreshToken;
         //заголовка с refresh токеном нет
         if (authHeader == null || !authHeader.startsWith("Refresh ")) {
             throw new AuthenticationException("Refresh token not found");
         }
-        refreshToken = authHeader.substring(8);
+        oldRefreshToken = authHeader.substring(8);
 
         //проверка: не протух ли токен
-        if(jwtService.isTokenExpired(refreshToken)) {
+        if(jwtService.isTokenExpired(oldRefreshToken)) {
             throw new AuthenticationException("Refresh is expired");
         }
 
         //проверка: есть ли refresh токен в базе
-        Optional<Token> refreshTokenFromDB = tokenService.getTokenByValue(refreshToken);
+        Optional<Token> refreshTokenFromDB = tokenService.getTokenByValue(oldRefreshToken);
         if(refreshTokenFromDB.isEmpty()) {
             throw new AuthenticationException("Refresh not found in DB");
         }
 
-        final String userEmail = jwtService.extractEmail(refreshToken);
+        final String userEmail = jwtService.extractEmail(oldRefreshToken);
         if (userEmail != null) {
             Optional<User> userOpt = userRepository.findByEmail(userEmail);
             if(userOpt.isEmpty()) {
@@ -153,10 +153,9 @@ public class AuthenticationService {
             User user = userOpt.get();
             String newAccessToken = jwtService.generateAccessToken(user);
             String newRefreshToken = jwtService.generateRefreshToken(user);
+            tokenService.deleteTokenByValue(oldRefreshToken);
             saveUserToken(user, newRefreshToken, TokenType.REFRESH);
-            AuthenticationResponse response = createAuthResponse(user.getId(), newAccessToken, newRefreshToken);
-            tokenService.deleteTokenByValue(refreshToken);
-            return response;
+            return createAuthResponse(user.getId(), newAccessToken, newRefreshToken);
         }
         throw new AuthenticationException("Email in refresh token claim is empty");
     }
