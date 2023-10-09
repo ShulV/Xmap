@@ -5,11 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shulpov.spots_app.auth.responses.AuthenticationResponse;
 import com.shulpov.spots_app.auth.token.Token;
 import com.shulpov.spots_app.auth.token.TokenService;
+import com.shulpov.spots_app.responses.ErrorMessageResponse;
+import com.shulpov.spots_app.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -32,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AuthTests {
     private final MockMvc mockMvc;
     private final TokenService tokenService;
+    private final UserService userService;
     private final ObjectMapper objectMapper;
 
     // correct
@@ -45,9 +49,10 @@ class AuthTests {
     private final String incorrectPassword = "ha";
 
     @Autowired
-    public AuthTests(MockMvc mockMvc, TokenService tokenService, ObjectMapper objectMapper) {
+    public AuthTests(MockMvc mockMvc, TokenService tokenService, UserService userService, ObjectMapper objectMapper) {
         this.mockMvc = mockMvc;
         this.tokenService = tokenService;
+        this.userService = userService;
         this.objectMapper = objectMapper;
     }
 
@@ -194,8 +199,18 @@ class AuthTests {
         return response.getRefreshToken();
     }
 
+    private Long getUserIdFromResult(MvcResult result) throws UnsupportedEncodingException, JsonProcessingException {
+        String jsonResponse = result.getResponse().getContentAsString();
+        AuthenticationResponse response = objectMapper.readValue(jsonResponse, AuthenticationResponse.class);
+        return response.getUserId();
+    }
+
+    private ErrorMessageResponse getErrorMessageResponseFromResult(MvcResult result) throws UnsupportedEncodingException, JsonProcessingException {
+        String jsonResponse = result.getResponse().getContentAsString();
+        return objectMapper.readValue(jsonResponse, ErrorMessageResponse.class);
+    }
+
     //обновление токена сразу после регистрации
-    //TODO ТЕСТ МОЖЕТ УПАСТЬ, ПОЧЕМУ РАЗОБРАТЬСЯ! ИНОГДА В БД 0 ТОКЕНОВ ПРИ ПРОВЕРКЕ
     @Test
     @Transactional
     void testRefreshToken__refresh_after_register() throws Exception {
@@ -223,7 +238,29 @@ class AuthTests {
         assertEquals(tokenList.get(0).getValue(), refreshToken);
     }
 
-    //TODO тест refresh без регистрации
+    //обновление токена для удаленного аккаунта с еще свежим refreshToken'ом
+    @Test
+    @Rollback
+    void testRefreshToken__refresh_token_for_deleted_account_by_fresh_refresh() throws Exception {
+        //успешно регистрируем пользователя и вытаскиваем его id, accessToken и refreshToken
+        ResultActions resultRegister = performRegister(correctRegisterRequestBody);
+        MvcResult result = resultRegister.andReturn();
+        String refreshToken = getRefreshTokenFromResult(result);
+        Long userId = getUserIdFromResult(result);
+        //удаляем пользователя
+        userService.deleteById(userId);
+        //обновляем токен
+        ResultActions resultRefreshToken = performRefreshToken(refreshToken)
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized()) //401
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+        List<Token> tokenList = tokenService.getAllTokens();
+        //проверяем, что refreshToken не добавился в БД
+        assertEquals(0, tokenList.size());
+        result = resultRefreshToken.andReturn();
+        ErrorMessageResponse errorMessageResponse = getErrorMessageResponseFromResult(result);
+        assertEquals("Refresh not found in DB", errorMessageResponse.getErrorMessage());
+    }
+
     //     тест refresh с аутентификацией пару раз, чтобы токенов стало несколько в БД
     //     тест refresh с аутентификацией и refresh вызовами вперемешку
 }

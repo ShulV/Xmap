@@ -129,7 +129,7 @@ public class AuthenticationService {
         final String oldRefreshToken;
         //заголовка с refresh токеном нет
         if (authHeader == null || !authHeader.startsWith("Refresh ")) {
-            throw new AuthenticationException("Refresh token not found");
+            throw new AuthenticationException("Refresh token not found in headers");
         }
         oldRefreshToken = authHeader.substring(8);
 

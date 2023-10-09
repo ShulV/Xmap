@@ -51,8 +51,7 @@ public class UserController {
             email = userDetails.getUsername();
         } catch (UsernameNotFoundException e) {
             logger.atInfo().log("/get-user email={} not found");
-            ResponseEntity<UserDto> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            return response;
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Optional<User> userOpt = userService.findByEmail(email);
 
@@ -92,7 +91,7 @@ public class UserController {
                 logger.atInfo().log("account was deleted id={}", id);
                 return Map.of("id", id, "message", "Аккаунт пользователя удален");
             } else {
-                logger.atInfo().log("account doesn't exist id={}", id);
+                logger.atWarn().log("account doesn't exist id={}", id);
                 return Map.of("id", id, "message", "Аккаунт пользователя не удален, так как не существует");
             }
 

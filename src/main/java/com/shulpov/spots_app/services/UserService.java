@@ -2,6 +2,7 @@ package com.shulpov.spots_app.services;
 
 import com.shulpov.spots_app.user.User;
 import com.shulpov.spots_app.user.UserRepository;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,15 +52,20 @@ public class UserService {
         logger.atInfo().log("deleteById id={}", id);
         Optional<User> userOpt = findById(id);
         if(userOpt.isPresent()) {
-            userOpt.get().getImageInfos().forEach(imageInfo -> {
-                try {
-                    imageInfoService.deleteUserImage(imageInfo.getId());
-                } catch (IOException e) {
-                    logger.atInfo().log("deleteById id={}; imageInfo with id={} not deleted", id, imageInfo.getId());
-                    throw new RuntimeException(e);
-                }
-            });
-            userRepository.deleteById(id);
+            if(userOpt.get().getImageInfos() != null) {
+                userOpt.get().getImageInfos().forEach(imageInfo -> {
+                    try {
+                        imageInfoService.deleteUserImage(imageInfo.getId());
+                    } catch (IOException e) {
+                        logger.atError().log("deleteById id={}; imageInfo with id={} not deleted",
+                                id, imageInfo.getId(), e);
+                    }
+                });
+            }
+            User user = userOpt.get();
+            Hibernate.initialize(user.getTokens());
+            userRepository.delete(user);
+
             return true;
         }
         return false;
