@@ -7,16 +7,15 @@ import com.shulpov.spots_app.auth.responses.AuthenticationResponse;
 import com.shulpov.spots_app.auth.responses.RegisterResponse;
 import com.shulpov.spots_app.auth.token.Token;
 import com.shulpov.spots_app.auth.token.TokenRepository;
+import com.shulpov.spots_app.auth.token.TokenService;
 import com.shulpov.spots_app.auth.token.TokenType;
+import com.shulpov.spots_app.auth.validators.UserValidator;
 import com.shulpov.spots_app.user.Role;
 import com.shulpov.spots_app.user.User;
 import com.shulpov.spots_app.user.UserRepository;
-import com.shulpov.spots_app.auth.validators.UserValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,7 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
+import javax.naming.AuthenticationException;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * @author Shulpov Victor
@@ -37,6 +38,7 @@ public class AuthenticationService {
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
     private final UserValidator userValidator;
 
@@ -62,13 +64,12 @@ public class AuthenticationService {
             throw new RegisterErrorException("Регистрация не удалась.", errors.getFieldErrors());
         }
         User savedUser = userRepository.save(user);
-        String jwtToken = jwtService.generateToken(user);
+        String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
-        //todo СОХРАНЯТЬ НАДО refreshToken, подумать над проверкой access'а (сделать иначе)
-        saveUserToken(savedUser, jwtToken);
+        saveUserToken(savedUser, refreshToken, TokenType.REFRESH);
         return RegisterResponse.builder()
                 .userId(user.getId())
-                .accessToken(jwtToken)
+                .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
     }
@@ -80,92 +81,98 @@ public class AuthenticationService {
      */
     @Transactional
     public AuthenticationResponse authenticate(AuthenticationRequest request) throws BadCredentialsException {
+        String email = request.getEmail();
         //throws BadCredentialsException
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
+                        email,
                         request.getPassword()
                 )
         );
         //authenticated
-        var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-        revokeAllUserTokens(user);
-        saveUserToken(user, jwtToken);
-        return AuthenticationResponse.builder()
-                .userId(user.getId())
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .build();
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if(userOpt.isEmpty()) {
+            throw new BadCredentialsException("User with email='" + email + "' not found");
+        }
+        User user = userOpt.get();
+        String newAccessToken = jwtService.generateAccessToken(user);
+        String newRefreshToken = jwtService.generateRefreshToken(user);
+        saveUserToken(user, newRefreshToken, TokenType.REFRESH);
+        return createAuthResponse(user.getId(), newAccessToken, newRefreshToken);
     }
 
     /**
-     * //todo
-     * @param user
-     * @param jwtToken
+     * Сохранить токен пользователя в БД
+     * @param user пользователь
+     * @param jwtToken токен
+     * @param tokenType тип токена
      */
-    private void saveUserToken(User user, String jwtToken) {
+    private void saveUserToken(User user, String jwtToken, TokenType tokenType) {
         var token = Token.builder()
                 .user(user)
-                .token(jwtToken)
-                .tokenType(TokenType.BEARER)
-                .expired(false)
-                .revoked(false)
+                .value(jwtToken)
+                .tokenType(tokenType)
                 .build();
         tokenRepository.save(token);
     }
 
     /**
-     * //todo
-     * @param user
+     * Обновить токены с помощью долгосрочного refresh токена
+     * @param request объект http-запроса
+     * @return новые access и refresh токены, также id пользователя
+     * @throws AuthenticationException ошибка аутентификации
      */
-    private void revokeAllUserTokens(User user) {
-        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
-        if (validUserTokens.isEmpty())
-            return;
-        validUserTokens.forEach(token -> {
-            token.setExpired(true);
-            token.setRevoked(true);
-        });
-        tokenRepository.saveAll(validUserTokens);
+    public AuthenticationResponse refreshToken(
+            HttpServletRequest request
+    ) throws AuthenticationException {
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final String oldRefreshToken;
+        //заголовка с refresh токеном нет
+        if (authHeader == null || !authHeader.startsWith("Refresh ")) {
+            throw new AuthenticationException("Refresh token not found");
+        }
+        oldRefreshToken = authHeader.substring(8);
+
+        //проверка: не протух ли токен
+        if(jwtService.isTokenExpired(oldRefreshToken)) {
+            throw new AuthenticationException("Refresh is expired");
+        }
+
+        //проверка: есть ли refresh токен в базе
+        Optional<Token> refreshTokenFromDB = tokenService.getTokenByValue(oldRefreshToken);
+        if(refreshTokenFromDB.isEmpty()) {
+            throw new AuthenticationException("Refresh not found in DB");
+        }
+
+        final String userEmail = jwtService.extractEmail(oldRefreshToken);
+        if (userEmail != null) {
+            Optional<User> userOpt = userRepository.findByEmail(userEmail);
+            if(userOpt.isEmpty()) {
+                throw new AuthenticationException("User with email='" + userEmail + "' from refresh token claim not found");
+            }
+            User user = userOpt.get();
+            String newAccessToken = jwtService.generateAccessToken(user);
+            String newRefreshToken = jwtService.generateRefreshToken(user);
+            tokenService.deleteTokenByValue(oldRefreshToken);
+            saveUserToken(user, newRefreshToken, TokenType.REFRESH);
+            return createAuthResponse(user.getId(), newAccessToken, newRefreshToken);
+        }
+        throw new AuthenticationException("Email in refresh token claim is empty");
     }
 
     /**
-     * //todo
-     * @param request
-     * @return
-     * @throws AuthenticationCredentialsNotFoundException
+     * Создать объект ответа успешной аутентификации
+     * @param userId id пользователя
+     * @param accessToken краткосрочный токен для аутентификации запросов
+     * @param refreshToken долгосрочный токен для обновления токенов
+     * @return новые access и refresh токены, также id пользователя
      */
-    public ResponseEntity<AuthenticationResponse> refreshToken(
-            HttpServletRequest request
-    ) throws AuthenticationCredentialsNotFoundException {
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        final String refreshToken;
-        final String userEmail;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            throw new AuthenticationCredentialsNotFoundException("Bearer token not found");
-        }
-        refreshToken = authHeader.substring(7);
-        userEmail = jwtService.extractEmail(refreshToken);
-        if (userEmail != null) {
-            var user = userRepository.findByEmail(userEmail)
-                    .orElseThrow();
-            if (jwtService.isTokenValid(refreshToken, user)) {
-                var accessToken = jwtService.generateToken(user);
-                revokeAllUserTokens(user);
-                saveUserToken(user, accessToken);
-                //todo это перенесется в кастомный response, который будет возвращаться в зависимости от ошибки
-                AuthenticationResponse authResponse = AuthenticationResponse.builder()
-                        .accessToken(accessToken)
-                        .refreshToken(refreshToken)
-                        .build();
-                return ResponseEntity.ok(authResponse);
-            }
-            throw new AuthenticationCredentialsNotFoundException("Token is not valid");
-        }
-        throw new AuthenticationCredentialsNotFoundException("Email in token not found");
+    private AuthenticationResponse createAuthResponse(Long userId, String accessToken, String refreshToken) {
+        return AuthenticationResponse.builder()
+                .userId(userId)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 }
 

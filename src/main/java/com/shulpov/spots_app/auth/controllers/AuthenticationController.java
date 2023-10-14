@@ -6,7 +6,6 @@ import com.shulpov.spots_app.auth.requests.RegisterRequest;
 import com.shulpov.spots_app.auth.responses.AuthenticationResponse;
 import com.shulpov.spots_app.auth.responses.RegisterErrorResponse;
 import com.shulpov.spots_app.auth.responses.RegisterResponse;
-import com.shulpov.spots_app.auth.responses.RegisterResponse;
 import com.shulpov.spots_app.auth.services.AuthenticationService;
 import com.shulpov.spots_app.dto.FieldErrorDto;
 import com.shulpov.spots_app.responses.ErrorMessageResponse;
@@ -17,14 +16,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.AuthenticationException;
 import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
 
 /**
  * @author Shulpov Victor
@@ -90,15 +87,21 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
-    @PostMapping(value="/refresh-token", produces = "application/json")
-    public ResponseEntity<?> refreshToken(
-            HttpServletRequest request
-    ) {
-        try {
-            return service.refreshToken(request);
-        } catch (AuthenticationCredentialsNotFoundException | NoSuchElementException | BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("errorMessage", e.getMessage()));
-        }
+    /**
+     * Обновление access и refresh токенов
+     * @param request объект запроса
+     * @return ResponseEntity<AuthenticationResponse>
+     */
+    @PostMapping(value="/refresh-token")
+    public ResponseEntity<AuthenticationResponse> refreshToken(HttpServletRequest request) throws AuthenticationException {
+        return ResponseEntity.status(HttpStatus.OK).body(service.refreshToken(request));
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<ErrorMessageResponse> handleAuthenticationException(AuthenticationException e) {
+        ErrorMessageResponse response = new ErrorMessageResponse();
+        response.setErrorMessage(e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
 }
