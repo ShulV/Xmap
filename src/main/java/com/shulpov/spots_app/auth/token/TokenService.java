@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class TokenService {
     private final TokenRepository tokenRepository;
 
@@ -14,16 +15,20 @@ public class TokenService {
         this.tokenRepository = tokenRepository;
     }
 
+    public void save(Token token) {
+        tokenRepository.save(token);
+    }
+
+    @Transactional(readOnly = true)
     public Optional<Token> getTokenByValue(String token) {
         return tokenRepository.findByValue(token);
     }
 
-    @Transactional
     public void deleteTokenByValue(String value) {
         tokenRepository.deleteByValue(value);
     }
 
-    //пока что используется только для тестов
+    @Transactional(readOnly = true)
     public List<Token> getAllTokens() {
         return tokenRepository.findAll();
     }

@@ -5,22 +5,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shulpov.spots_app.auth.responses.AuthenticationResponse;
 import com.shulpov.spots_app.auth.token.Token;
 import com.shulpov.spots_app.auth.token.TokenService;
+import com.shulpov.spots_app.db_cleaner.DBCleaner;
 import com.shulpov.spots_app.responses.ErrorMessageResponse;
 import com.shulpov.spots_app.services.UserService;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,10 +36,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class AuthTests {
+    private final String cleanScriptPath = "sql/clean/clean_for_auth_tests.sql";
     private final MockMvc mockMvc;
     private final TokenService tokenService;
     private final UserService userService;
     private final ObjectMapper objectMapper;
+
+    private static DBCleaner dbCleaner;
 
     // correct
     private final String requestMapping = "/api/v1/auth";
@@ -54,6 +60,22 @@ class AuthTests {
         this.tokenService = tokenService;
         this.userService = userService;
         this.objectMapper = objectMapper;
+    }
+
+    @BeforeAll
+    public static void prepare() throws SQLException {
+        dbCleaner = new DBCleaner();
+        dbCleaner.setup();
+    }
+
+    @AfterEach
+    public void cleanByScript() throws SQLException {
+        dbCleaner.cleanupDatabase(cleanScriptPath);
+    }
+
+    @AfterAll
+    public static void finishTesting() {
+        dbCleaner.closeConnection();
     }
 
     //====================================================================================================
@@ -76,7 +98,6 @@ class AuthTests {
 
     //регистрация с корректными данными пользователя - успех
     @Test
-    @Transactional
     void testRegister__correct_data_register() throws Exception {
         //успешно регистрируем пользователя
         performRegister(correctRegisterRequestBody)
@@ -89,7 +110,6 @@ class AuthTests {
 
     //использование одних и тех же данных пользователя для регистрации - обработка ошибки
     @Test
-    @Transactional
     void testRegister__repeated_correct_data_register() throws Exception {
         //успешно регистрируем пользователя
         performRegister(correctRegisterRequestBody);
@@ -104,7 +124,6 @@ class AuthTests {
 
     //использование некорректных данных пользователя для регистрации - обработка ошибки
     @Test
-    @Transactional
     void testRegister__incorrect_data_register() throws Exception {
         //регистрируем пользователя, используя некорректные данные
         // incorrect
@@ -130,21 +149,19 @@ class AuthTests {
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON));
     }
-
+    //====================================================================================================
+    //====АУТЕНТИФИКАЦИЯ==================================================================================
+    //====================================================================================================
+    String correctAuthenticateRequestBody = "{\n" +
+            "    \"email\": \"" + correctEmail + "\",\n" +
+            "    \"password\": \"" + correctPassword + "\"\n" +
+            "}";
     //использование корректных данных пользователя для аутентификации
     @Test
-    @Transactional
     void testAuthenticate__correct_data_authenticate() throws Exception {
         //успешно регистрируем пользователя
         performRegister(correctRegisterRequestBody);
         //успешно аутентифицируем пользователя
-        //====================================================================================================
-        //====АУТЕНТИФИКАЦИЯ==================================================================================
-        //====================================================================================================
-        String correctAuthenticateRequestBody = "{\n" +
-                "    \"email\": \"" + correctEmail + "\",\n" +
-                "    \"password\": \"" + correctPassword + "\"\n" +
-                "}";
         performAuthenticate(correctAuthenticateRequestBody)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
@@ -155,7 +172,6 @@ class AuthTests {
 
     //использование существующего логина, но неправильного пароля
     @Test
-    @Transactional
     void testAuthenticate__incorrect_password_authenticate() throws Exception {
         //успешно регистрируем пользователя
         performRegister(correctRegisterRequestBody);
@@ -172,7 +188,6 @@ class AuthTests {
 
     //использование несуществующего логина
     @Test
-    @Transactional
     void testAuthenticate__non_exist_login_authenticate() throws Exception {
         //пытаемся аутентифицироваться с несуществующим логином
         String nonExistLoginAuthenticateRequestBody = "{\n" +
@@ -212,7 +227,6 @@ class AuthTests {
 
     //обновление токена сразу после регистрации
     @Test
-    @Transactional
     void testRefreshToken__refresh_after_register() throws Exception {
         //успешно регистрируем пользователя
         ResultActions resultRegister = performRegister(correctRegisterRequestBody);
@@ -240,7 +254,6 @@ class AuthTests {
 
     //обновление токена для удаленного аккаунта с еще свежим refreshToken'ом
     @Test
-    @Rollback
     void testRefreshToken__refresh_token_for_deleted_account_by_fresh_refresh() throws Exception {
         //успешно регистрируем пользователя и вытаскиваем его id, accessToken и refreshToken
         ResultActions resultRegister = performRegister(correctRegisterRequestBody);
@@ -261,6 +274,30 @@ class AuthTests {
         assertEquals("Refresh not found in DB", errorMessageResponse.getErrorMessage());
     }
 
-    //     тест refresh с аутентификацией пару раз, чтобы токенов стало несколько в БД
+
+    //тест refresh с регистрацией 1 раз и аутентификацией 2 раза, чтобы стало 3 токена в БД
+    @Test
+    void testRefreshToken__register_and_2_authenticate_and_check_DB_tokens() throws Exception {
+        //успешно регистрируем пользователя и вытаскиваем его id, accessToken и refreshToken
+        performRegister(correctRegisterRequestBody);
+        //успешно аутентифицируем пользователя 1 раз
+        performAuthenticate(correctAuthenticateRequestBody)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.access_token").isString())
+                .andExpect(jsonPath("$.refresh_token").isString());
+        //успешно аутентифицируем пользователя 2 раз
+        performAuthenticate(correctAuthenticateRequestBody)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.access_token").isString())
+                .andExpect(jsonPath("$.refresh_token").isString());
+        List<Token> tokenList = tokenService.getAllTokens();
+        //проверяем, что refreshToken'ы добавились в БД
+        assertEquals(3, tokenList.size());
+    }
+
     //     тест refresh с аутентификацией и refresh вызовами вперемешку
 }
