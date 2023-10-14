@@ -138,7 +138,16 @@
             <scope>test</scope>
         </dependency>
 
-    </dependencies>
+		<!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-maven-plugin -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
+
+
+
+
+	</dependencies>
 
 	<build>
 		<plugins>
