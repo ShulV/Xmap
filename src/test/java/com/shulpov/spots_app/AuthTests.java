@@ -107,7 +107,7 @@ class AuthTests {
 
     //регистрация с корректными данными пользователя - успех
     @Test
-    void correct_data_register_test() throws Exception {
+    void correctDataRegisterTest() throws Exception {
         //успешно регистрируем пользователя
         performRegister(correctRegisterRequestBody)
                 .andExpect(MockMvcResultMatchers.status().isCreated()) //201
@@ -119,7 +119,7 @@ class AuthTests {
 
     //использование одних и тех же данных пользователя для регистрации - обработка ошибки
     @Test
-    void repeated_correct_data_register_test() throws Exception {
+    void repeatedCorrectDataRegisterTest() throws Exception {
         //успешно регистрируем пользователя
         performRegister(correctRegisterRequestBody);
 
@@ -133,7 +133,7 @@ class AuthTests {
 
     //использование некорректных данных пользователя для регистрации - обработка ошибки
     @Test
-    void incorrect_data_register_test() throws Exception {
+    void incorrectDataRegisterTest() throws Exception {
         //регистрируем пользователя, используя некорректные данные
         // incorrect
         String incorrectName = "i";
@@ -171,7 +171,7 @@ class AuthTests {
             "}";
     //использование корректных данных пользователя для аутентификации
     @Test
-    void correct_data_authenticate_test() throws Exception {
+    void correctDataAuthenticateTest() throws Exception {
         //успешно регистрируем пользователя
         performRegister(correctRegisterRequestBody);
         //успешно аутентифицируем пользователя
@@ -185,7 +185,7 @@ class AuthTests {
 
     //использование существующего логина, но неправильного пароля
     @Test
-    void incorrect_password_authenticate_test() throws Exception {
+    void incorrectPasswordAuthenticateTest() throws Exception {
         //успешно регистрируем пользователя
         performRegister(correctRegisterRequestBody);
         //пытаемся аутентифицироваться с существующим логином, но неправильным паролем
@@ -201,7 +201,7 @@ class AuthTests {
 
     //использование несуществующего логина
     @Test
-    void non_exist_login_authenticate_test() throws Exception {
+    void nonExistLoginAuthenticateTest() throws Exception {
         //пытаемся аутентифицироваться с несуществующим логином
         String nonExistLoginAuthenticateRequestBody = "{\n" +
                 "    \"email\": \"" + incorrectEmail + "\",\n" +
@@ -240,7 +240,7 @@ class AuthTests {
 
     //обновление токена сразу после регистрации
     @Test
-    void refresh_after_register_test() throws Exception {
+    void refreshAfterRegisterTest() throws Exception {
         //успешно регистрируем пользователя
         ResultActions resultRegister = performRegister(correctRegisterRequestBody);
         List<Token> tokenList = tokenService.getAllTokens();
@@ -267,7 +267,7 @@ class AuthTests {
 
     //обновление токена для удаленного аккаунта с еще свежим refreshToken'ом
     @Test
-    void refresh_token_for_deleted_account_by_fresh_refresh_test() throws Exception {
+    void refreshTokenForDeletedAccountByFreshRefreshTest() throws Exception {
         //успешно регистрируем пользователя и вытаскиваем его id, accessToken и refreshToken
         ResultActions resultRegister = performRegister(correctRegisterRequestBody);
         MvcResult result = resultRegister.andReturn();
@@ -290,7 +290,7 @@ class AuthTests {
 
     //тест refresh с регистрацией 1 раз и аутентификацией 2 раза, чтобы стало 3 токена в БД
     @Test
-    void register_and_2_authenticate_and_check_db_tokens_test() throws Exception {
+    void registerAnd2AuthenticateAndCheckDbTokensTest() throws Exception {
         //успешно регистрируем пользователя и вытаскиваем его id, accessToken и refreshToken
         performRegister(correctRegisterRequestBody);
         //успешно аутентифицируем пользователя 1 раз
@@ -314,7 +314,7 @@ class AuthTests {
 
     //тест добавления/изменения refreshToken'ов в БД после регистраций/аутентификаций/рефрешей для 2 пользователей
     @Test
-    void register_authenticate_few_times_test() throws Exception {
+    void registerAuthenticateFewTimesTest() throws Exception {
         List<Token> tokenList;
         String refreshToken;
 
