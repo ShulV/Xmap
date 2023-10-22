@@ -47,8 +47,11 @@ class AuthTests {
     // correct
     private final String requestMapping = "/api/v1/auth";
     private final String correctName = "Ivan2023";
+    private final String correctName2 = "Victor2023";
     private final String correctEmail = "ivanov123@gmail.com";
+    private final String correctEmail2 = "victorov123@gmail.com";
     private final String correctPhoneNumber = "89138005544";
+    private final String correctPhoneNumber2 = "89138005533";
     private final String correctBirthday = "2001-11-28";
     private final String correctPassword = "hardPassword123";
     private final String incorrectEmail = "ivanov123gmail.com";
@@ -88,17 +91,23 @@ class AuthTests {
             "    \"birthday\": \"" + correctBirthday + "\",\n" +
             "    \"password\": \"" + correctPassword + "\"\n" +
             "}";
+    private final String correctRegisterRequestBody2 = "{\n" +
+            "    \"name\": \"" + correctName2 + "\",\n" +
+            "    \"email\": \"" + correctEmail2 + "\",\n" +
+            "    \"phoneNumber\": \"" + correctPhoneNumber2 + "\",\n" +
+            "    \"birthday\": \"" + correctBirthday + "\",\n" +
+            "    \"password\": \"" + correctPassword + "\"\n" +
+            "}";
 
     private ResultActions performRegister(String body) throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders.post(requestMapping + "/register")
                         .content(body)
                         .contentType(MediaType.APPLICATION_JSON));
-
     }
 
     //регистрация с корректными данными пользователя - успех
     @Test
-    void testRegister__correct_data_register() throws Exception {
+    void correct_data_register_test() throws Exception {
         //успешно регистрируем пользователя
         performRegister(correctRegisterRequestBody)
                 .andExpect(MockMvcResultMatchers.status().isCreated()) //201
@@ -110,7 +119,7 @@ class AuthTests {
 
     //использование одних и тех же данных пользователя для регистрации - обработка ошибки
     @Test
-    void testRegister__repeated_correct_data_register() throws Exception {
+    void repeated_correct_data_register_test() throws Exception {
         //успешно регистрируем пользователя
         performRegister(correctRegisterRequestBody);
 
@@ -124,7 +133,7 @@ class AuthTests {
 
     //использование некорректных данных пользователя для регистрации - обработка ошибки
     @Test
-    void testRegister__incorrect_data_register() throws Exception {
+    void incorrect_data_register_test() throws Exception {
         //регистрируем пользователя, используя некорректные данные
         // incorrect
         String incorrectName = "i";
@@ -156,9 +165,13 @@ class AuthTests {
             "    \"email\": \"" + correctEmail + "\",\n" +
             "    \"password\": \"" + correctPassword + "\"\n" +
             "}";
+    String correctAuthenticateRequestBody2 = "{\n" +
+            "    \"email\": \"" + correctEmail2 + "\",\n" +
+            "    \"password\": \"" + correctPassword + "\"\n" +
+            "}";
     //использование корректных данных пользователя для аутентификации
     @Test
-    void testAuthenticate__correct_data_authenticate() throws Exception {
+    void correct_data_authenticate_test() throws Exception {
         //успешно регистрируем пользователя
         performRegister(correctRegisterRequestBody);
         //успешно аутентифицируем пользователя
@@ -172,7 +185,7 @@ class AuthTests {
 
     //использование существующего логина, но неправильного пароля
     @Test
-    void testAuthenticate__incorrect_password_authenticate() throws Exception {
+    void incorrect_password_authenticate_test() throws Exception {
         //успешно регистрируем пользователя
         performRegister(correctRegisterRequestBody);
         //пытаемся аутентифицироваться с существующим логином, но неправильным паролем
@@ -188,7 +201,7 @@ class AuthTests {
 
     //использование несуществующего логина
     @Test
-    void testAuthenticate__non_exist_login_authenticate() throws Exception {
+    void non_exist_login_authenticate_test() throws Exception {
         //пытаемся аутентифицироваться с несуществующим логином
         String nonExistLoginAuthenticateRequestBody = "{\n" +
                 "    \"email\": \"" + incorrectEmail + "\",\n" +
@@ -227,7 +240,7 @@ class AuthTests {
 
     //обновление токена сразу после регистрации
     @Test
-    void testRefreshToken__refresh_after_register() throws Exception {
+    void refresh_after_register_test() throws Exception {
         //успешно регистрируем пользователя
         ResultActions resultRegister = performRegister(correctRegisterRequestBody);
         List<Token> tokenList = tokenService.getAllTokens();
@@ -254,7 +267,7 @@ class AuthTests {
 
     //обновление токена для удаленного аккаунта с еще свежим refreshToken'ом
     @Test
-    void testRefreshToken__refresh_token_for_deleted_account_by_fresh_refresh() throws Exception {
+    void refresh_token_for_deleted_account_by_fresh_refresh_test() throws Exception {
         //успешно регистрируем пользователя и вытаскиваем его id, accessToken и refreshToken
         ResultActions resultRegister = performRegister(correctRegisterRequestBody);
         MvcResult result = resultRegister.andReturn();
@@ -277,7 +290,7 @@ class AuthTests {
 
     //тест refresh с регистрацией 1 раз и аутентификацией 2 раза, чтобы стало 3 токена в БД
     @Test
-    void testRefreshToken__register_and_2_authenticate_and_check_DB_tokens() throws Exception {
+    void register_and_2_authenticate_and_check_db_tokens_test() throws Exception {
         //успешно регистрируем пользователя и вытаскиваем его id, accessToken и refreshToken
         performRegister(correctRegisterRequestBody);
         //успешно аутентифицируем пользователя 1 раз
@@ -299,5 +312,54 @@ class AuthTests {
         assertEquals(3, tokenList.size());
     }
 
-    //     тест refresh с аутентификацией и refresh вызовами вперемешку
+    //тест добавления/изменения refreshToken'ов в БД после регистраций/аутентификаций/рефрешей для 2 пользователей
+    @Test
+    void register_authenticate_few_times_test() throws Exception {
+        List<Token> tokenList;
+        String refreshToken;
+
+        //ПОЛЬЗОВАТЕЛЬ 1
+        //регистрация пользователя 1
+        MvcResult result1 = performRegister(correctRegisterRequestBody).andReturn();
+        tokenList = tokenService.getAllTokens();
+        assertEquals(1, tokenList.size());//1 (добавился 1 токен)
+
+        //аутентификация 1 пользователя 1
+        MvcResult result2 = performAuthenticate(correctAuthenticateRequestBody).andReturn();
+        refreshToken = getRefreshTokenFromResult(result2);
+        tokenList = tokenService.getAllTokens();
+        assertEquals(2, tokenList.size());//2 (добавился 1 токен)
+
+        //рефреш 1 пользователя 1
+        MvcResult result3 = performRefreshToken(refreshToken).andReturn();
+        tokenList = tokenService.getAllTokens();
+        assertEquals(2, tokenList.size());//2 (заменился 1 токен)
+
+        //аутентификация 2 пользователя 1
+        MvcResult result4 = performAuthenticate(correctAuthenticateRequestBody).andReturn();
+        tokenList = tokenService.getAllTokens();
+        assertEquals(3, tokenList.size());//3 (добавился 1 токен)
+
+        //ПОЛЬЗОВАТЕЛЬ 2
+        //регистрация пользователя 2
+        MvcResult result5 = performRegister(correctRegisterRequestBody2).andReturn();
+        tokenList = tokenService.getAllTokens();
+        assertEquals(4, tokenList.size());//4 (добавился 1 токен)
+
+        //аутентификация 1 пользователя 2
+        MvcResult result6 = performAuthenticate(correctAuthenticateRequestBody2).andReturn();
+        refreshToken = getRefreshTokenFromResult(result6);
+        tokenList = tokenService.getAllTokens();
+        assertEquals(5, tokenList.size());//5 (добавился 1 токен)
+
+        //рефреш 1 пользователя 2
+        MvcResult result7 = performRefreshToken(refreshToken).andReturn();
+        tokenList = tokenService.getAllTokens();
+        assertEquals(5, tokenList.size());//5 (заменился 1 токен)
+
+        //аутентификация 2 пользователя 2
+        MvcResult result8 = performAuthenticate(correctAuthenticateRequestBody2).andReturn();
+        tokenList = tokenService.getAllTokens();
+        assertEquals(6, tokenList.size());//6 (добавился 1 токен)
+    }
 }
