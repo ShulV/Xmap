@@ -33,6 +33,7 @@ import java.util.Optional;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthenticationService {
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
@@ -48,7 +49,6 @@ public class AuthenticationService {
      * @param errors ошибки валидации
      * @return RegisterResponse
      */
-    @Transactional
     public RegisterResponse register(RegisterRequest request, BindingResult errors) {
         User user = User.builder()
                 .name(request.getName())
@@ -79,7 +79,7 @@ public class AuthenticationService {
      * @param request учетные данные (логин и пароль)
      * @return AuthenticationResponse
      */
-    @Transactional
+
     public AuthenticationResponse authenticate(AuthenticationRequest request) throws BadCredentialsException {
         String email = request.getEmail();
         //throws BadCredentialsException
@@ -116,12 +116,6 @@ public class AuthenticationService {
         tokenRepository.save(token);
     }
 
-    /**
-     * Обновить токены с помощью долгосрочного refresh токена
-     * @param request объект http-запроса
-     * @return новые access и refresh токены, также id пользователя
-     * @throws AuthenticationException ошибка аутентификации
-     */
     public AuthenticationResponse refreshToken(
             HttpServletRequest request
     ) throws AuthenticationException {
@@ -129,7 +123,7 @@ public class AuthenticationService {
         final String oldRefreshToken;
         //заголовка с refresh токеном нет
         if (authHeader == null || !authHeader.startsWith("Refresh ")) {
-            throw new AuthenticationException("Refresh token not found");
+            throw new AuthenticationException("Refresh token not found in headers");
         }
         oldRefreshToken = authHeader.substring(8);
 
@@ -143,21 +137,16 @@ public class AuthenticationService {
         if(refreshTokenFromDB.isEmpty()) {
             throw new AuthenticationException("Refresh not found in DB");
         }
-
-        final String userEmail = jwtService.extractEmail(oldRefreshToken);
-        if (userEmail != null) {
-            Optional<User> userOpt = userRepository.findByEmail(userEmail);
-            if(userOpt.isEmpty()) {
-                throw new AuthenticationException("User with email='" + userEmail + "' from refresh token claim not found");
-            }
-            User user = userOpt.get();
-            String newAccessToken = jwtService.generateAccessToken(user);
-            String newRefreshToken = jwtService.generateRefreshToken(user);
-            tokenService.deleteTokenByValue(oldRefreshToken);
-            saveUserToken(user, newRefreshToken, TokenType.REFRESH);
-            return createAuthResponse(user.getId(), newAccessToken, newRefreshToken);
+        Token refreshToken = refreshTokenFromDB.get();
+        if(refreshToken.getUser() == null) {
+            throw new AuthenticationException("Token without user");//такого случаться вообще не должно!
         }
-        throw new AuthenticationException("Email in refresh token claim is empty");
+        User user = refreshToken.getUser();
+        String newAccessToken = jwtService.generateAccessToken(user);
+        String newRefreshToken = jwtService.generateRefreshToken(user);
+        refreshToken.setValue(newRefreshToken);
+        tokenService.save(refreshToken);
+        return createAuthResponse(user.getId(), newAccessToken, newRefreshToken);
     }
 
     /**
