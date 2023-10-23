@@ -4,6 +4,7 @@ import com.shulpov.spots_app.auth.exceptions.RegisterErrorException;
 import com.shulpov.spots_app.auth.requests.AuthenticationRequest;
 import com.shulpov.spots_app.auth.requests.RegisterRequest;
 import com.shulpov.spots_app.auth.responses.AuthenticationResponse;
+import com.shulpov.spots_app.auth.responses.LogoutMessageResponse;
 import com.shulpov.spots_app.auth.responses.RegisterErrorResponse;
 import com.shulpov.spots_app.auth.responses.RegisterResponse;
 import com.shulpov.spots_app.auth.services.AuthenticationService;
@@ -13,7 +14,6 @@ import com.shulpov.spots_app.utils.DtoConverter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -32,10 +32,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
-    @Autowired
     private final AuthenticationService service;
-
-    @Autowired
     private final DtoConverter dtoConverter;
 
     /**
@@ -76,6 +73,38 @@ public class AuthenticationController {
     }
 
     /**
+     * Обновление access и refresh токенов
+     * @param request объект запроса
+     * @return ResponseEntity<AuthenticationResponse>
+     */
+    @PostMapping(value="/refresh-token")
+    public ResponseEntity<AuthenticationResponse> refreshToken(HttpServletRequest request) throws AuthenticationException {
+        return ResponseEntity.status(HttpStatus.OK).body(service.refreshToken(request));
+    }
+
+    /**
+     * //TODO
+     * @param refreshToken
+     * @return
+     */
+    @DeleteMapping(value = "/logout")
+    public ResponseEntity<LogoutMessageResponse> logout(@RequestHeader(value = "Authorization") String refreshToken)
+            throws AuthenticationException {
+        return ResponseEntity.status(HttpStatus.OK).body(service.logout(refreshToken));
+    }
+
+    /**
+     * //TODO
+     * @param refreshToken
+     * @return
+     */
+    @DeleteMapping(value = "/logout-all")
+    public ResponseEntity<LogoutMessageResponse> logoutAll(@RequestHeader(value = "Authorization") String refreshToken)
+            throws AuthenticationException {
+        return ResponseEntity.status(HttpStatus.OK).body(service.logoutAll(refreshToken));
+    }
+
+    /**
      * Обработчик ошибки аутентификации (для неверных логина или пароля)
      * @param e исключение, содержащее текст ошибки
      * @return ErrorMessageResponse
@@ -88,20 +117,14 @@ public class AuthenticationController {
     }
 
     /**
-     * Обновление access и refresh токенов
-     * @param request объект запроса
-     * @return ResponseEntity<AuthenticationResponse>
+     * //TODO
+     * @param e
+     * @return
      */
-    @PostMapping(value="/refresh-token")
-    public ResponseEntity<AuthenticationResponse> refreshToken(HttpServletRequest request) throws AuthenticationException {
-        return ResponseEntity.status(HttpStatus.OK).body(service.refreshToken(request));
-    }
-
     @ExceptionHandler
     private ResponseEntity<ErrorMessageResponse> handleAuthenticationException(AuthenticationException e) {
         ErrorMessageResponse response = new ErrorMessageResponse();
         response.setErrorMessage(e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
-
 }

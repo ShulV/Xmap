@@ -4,6 +4,7 @@ import com.shulpov.spots_app.auth.exceptions.RegisterErrorException;
 import com.shulpov.spots_app.auth.requests.AuthenticationRequest;
 import com.shulpov.spots_app.auth.requests.RegisterRequest;
 import com.shulpov.spots_app.auth.responses.AuthenticationResponse;
+import com.shulpov.spots_app.auth.responses.LogoutMessageResponse;
 import com.shulpov.spots_app.auth.responses.RegisterResponse;
 import com.shulpov.spots_app.auth.token.Token;
 import com.shulpov.spots_app.auth.token.TokenRepository;
@@ -79,7 +80,6 @@ public class AuthenticationService {
      * @param request учетные данные (логин и пароль)
      * @return AuthenticationResponse
      */
-
     public AuthenticationResponse authenticate(AuthenticationRequest request) throws BadCredentialsException {
         String email = request.getEmail();
         //throws BadCredentialsException
@@ -116,16 +116,19 @@ public class AuthenticationService {
         tokenRepository.save(token);
     }
 
-    public AuthenticationResponse refreshToken(
-            HttpServletRequest request
-    ) throws AuthenticationException {
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+    /**
+     * //TODO
+     * @param authToken
+     * @return
+     * @throws AuthenticationException
+     */
+    private Token validateRefreshToken(String authToken) throws AuthenticationException {
         final String oldRefreshToken;
         //заголовка с refresh токеном нет
-        if (authHeader == null || !authHeader.startsWith("Refresh ")) {
+        if (authToken == null || !authToken.startsWith("Refresh ")) {
             throw new AuthenticationException("Refresh token not found in headers");
         }
-        oldRefreshToken = authHeader.substring(8);
+        oldRefreshToken = authToken.substring(8);
 
         //проверка: не протух ли токен
         if(jwtService.isTokenExpired(oldRefreshToken)) {
@@ -141,6 +144,18 @@ public class AuthenticationService {
         if(refreshToken.getUser() == null) {
             throw new AuthenticationException("Token without user");//такого случаться вообще не должно!
         }
+        return refreshToken;
+    }
+
+    /**
+     * //TODO
+     * @param request
+     * @return
+     * @throws AuthenticationException
+     */
+    public AuthenticationResponse refreshToken(HttpServletRequest request) throws AuthenticationException {
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        Token refreshToken = validateRefreshToken(authHeader);
         User user = refreshToken.getUser();
         String newAccessToken = jwtService.generateAccessToken(user);
         String newRefreshToken = jwtService.generateRefreshToken(user);
@@ -161,6 +176,37 @@ public class AuthenticationService {
                 .userId(userId)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .build();
+    }
+
+    /**
+     * //TODO
+     * @param refreshToken
+     * @return
+     */
+    public LogoutMessageResponse logout(String refreshToken) throws AuthenticationException {
+        Token token = validateRefreshToken(refreshToken);
+        tokenService.deleteToken(token);
+        return LogoutMessageResponse.builder()
+                .closedSessionNumber(1L)
+                .userId(token.getUser().getId())
+                .message("Successful logout")
+                .build();
+    }
+
+    /**
+     * //TODO
+     * @param refreshToken
+     * @return
+     */
+    public LogoutMessageResponse logoutAll(String refreshToken) throws AuthenticationException {
+        Token token = validateRefreshToken(refreshToken);
+        long count = tokenService.count();
+        tokenService.deleteAllTokens(token.getUser().getTokens());
+        return LogoutMessageResponse.builder()
+                .closedSessionNumber(count)
+                .userId(token.getUser().getId())
+                .message("Successful logout")
                 .build();
     }
 }

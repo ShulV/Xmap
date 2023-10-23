@@ -16,7 +16,7 @@ public class DBCleaner {
     private final String dbUsername;
     private final String dbPassword;
 
-    //TODO из properties вытащить не получилось, по-хорошему надо так сделать
+    //TODO РёР· properties РІС‹С‚Р°С‰РёС‚СЊ РЅРµ РїРѕР»СѓС‡РёР»РѕСЃСЊ, РїРѕ-С…РѕСЂРѕС€РµРјСѓ РЅР°РґРѕ С‚Р°Рє СЃРґРµР»Р°С‚СЊ
     public DBCleaner() {
         this.dbUrl = "jdbc:postgresql://localhost:5432/test_spot_map";
         this.dbUsername = "postgres";
@@ -26,11 +26,11 @@ public class DBCleaner {
     private static Connection connection;
 
     public void setup() throws SQLException {
-        // Инициализация и открытие соединения с базой данных
+        // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ Рё РѕС‚РєСЂС‹С‚РёРµ СЃРѕРµРґРёРЅРµРЅРёСЏ СЃ Р±Р°Р·РѕР№ РґР°РЅРЅС‹С…
         connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
     }
 
-    // Отдельный метод для закрытия соединения
+    // РћС‚РґРµР»СЊРЅС‹Р№ РјРµС‚РѕРґ РґР»СЏ Р·Р°РєСЂС‹С‚РёСЏ СЃРѕРµРґРёРЅРµРЅРёСЏ
     public void closeConnection() {
         if (connection != null) {
             try {
@@ -42,15 +42,16 @@ public class DBCleaner {
     }
 
     public void cleanupDatabase(String scriptFilePath) throws SQLException {
-        // Здесь выполним SQL-скрипт для очистки базы данных из файла
+        // Р—РґРµСЃСЊ РІС‹РїРѕР»РЅРёРј SQL-СЃРєСЂРёРїС‚ РґР»СЏ РѕС‡РёСЃС‚РєРё Р±Р°Р·С‹ РґР°РЅРЅС‹С… РёР· С„Р°Р№Р»Р°
         try {
             executeScript(scriptFilePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // Закрывать соединение будем после выполнения всех тестов!
+        // Р—Р°РєСЂС‹РІР°С‚СЊ СЃРѕРµРґРёРЅРµРЅРёРµ Р±СѓРґРµРј РїРѕСЃР»Рµ РІС‹РїРѕР»РЅРµРЅРёСЏ РІСЃРµС… С‚РµСЃС‚РѕРІ!
     }
 
+    // РњРµС‚РѕРґ РґР»СЏ Р·Р°РїСѓСЃРєР° СЃРєСЂРёРїС‚Р° РёР· С„Р°Р№Р»Р°
     public void executeScript(String scriptFilePath) throws IOException, SQLException {
         Resource resource = new ClassPathResource(scriptFilePath);
 
