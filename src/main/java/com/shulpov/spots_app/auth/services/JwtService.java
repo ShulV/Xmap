@@ -92,6 +92,7 @@ public class JwtService {
             UserDetails userDetails,
             long expiration
     ) {
+        extraClaims.put("creatingDate", System.currentTimeMillis());//для уникальности токенов (иначе возникали коллизии)
         return Jwts
                 .builder()
                 .setClaims(extraClaims)

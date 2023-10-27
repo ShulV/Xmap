@@ -315,52 +315,51 @@ class AuthTests {
     //тест добавления/изменения refreshToken'ов в БД после регистраций/аутентификаций/рефрешей для 2 пользователей
     @Test
     void registerAuthenticateFewTimesTest() throws Exception {
-        //TODO пофиксить/разобраться
-//        List<Token> tokenList;
-//        String refreshToken;
-//
-//        //ПОЛЬЗОВАТЕЛЬ 1
-//        //регистрация пользователя 1
-//        MvcResult result1 = performRegister(correctRegisterRequestBody).andReturn();
-//        tokenList = tokenService.getAllTokens();
-//        assertEquals(1, tokenList.size());//1 (добавился 1 токен)
-//
-//        //аутентификация 1 пользователя 1
-//        MvcResult result2 = performAuthenticate(correctAuthenticateRequestBody).andReturn();
-//        refreshToken = getRefreshTokenFromResult(result2);
-//        tokenList = tokenService.getAllTokens();
-//        assertEquals(2, tokenList.size());//2 (добавился 1 токен)
-//
-//        //рефреш 1 пользователя 1
-//        MvcResult result3 = performRefreshToken(refreshToken).andReturn();
-//        tokenList = tokenService.getAllTokens();
-//        assertEquals(2, tokenList.size());//2 (заменился 1 токен)
-//
-//        //аутентификация 2 пользователя 1
-//        MvcResult result4 = performAuthenticate(correctAuthenticateRequestBody).andReturn();
-//        tokenList = tokenService.getAllTokens();
-//        assertEquals(3, tokenList.size());//3 (добавился 1 токен)
-//
-//        //ПОЛЬЗОВАТЕЛЬ 2
-//        //регистрация пользователя 2
-//        MvcResult result5 = performRegister(correctRegisterRequestBody2).andReturn();
-//        tokenList = tokenService.getAllTokens();
-//        assertEquals(4, tokenList.size());//4 (добавился 1 токен)
-//
-//        //аутентификация 1 пользователя 2
-//        MvcResult result6 = performAuthenticate(correctAuthenticateRequestBody2).andReturn();
-//        refreshToken = getRefreshTokenFromResult(result6);
-//        tokenList = tokenService.getAllTokens();
-//        assertEquals(5, tokenList.size());//5 (добавился 1 токен)
-//
-//        //рефреш 1 пользователя 2
-//        MvcResult result7 = performRefreshToken(refreshToken).andReturn();
-//        tokenList = tokenService.getAllTokens();
-//        assertEquals(5, tokenList.size());//5 (заменился 1 токен)
-//
-//        //аутентификация 2 пользователя 2
-//        MvcResult result8 = performAuthenticate(correctAuthenticateRequestBody2).andReturn();
-//        tokenList = tokenService.getAllTokens();
-//        assertEquals(6, tokenList.size());//6 (добавился 1 токен)
+        List<Token> tokenList;
+        String refreshToken;
+
+        //ПОЛЬЗОВАТЕЛЬ 1
+        //регистрация пользователя 1
+        MvcResult result1 = performRegister(correctRegisterRequestBody).andReturn();
+        tokenList = tokenService.getAllTokens();
+        assertEquals(1, tokenList.size());//1 (добавился 1 токен)
+
+        //аутентификация 1 пользователя 1
+        MvcResult result2 = performAuthenticate(correctAuthenticateRequestBody).andReturn();
+        refreshToken = getRefreshTokenFromResult(result2);
+        tokenList = tokenService.getAllTokens();
+        assertEquals(2, tokenList.size());//2 (добавился 1 токен)
+
+        //рефреш 1 пользователя 1
+        MvcResult result3 = performRefreshToken(refreshToken).andReturn();
+        tokenList = tokenService.getAllTokens();
+        assertEquals(2, tokenList.size());//2 (заменился 1 токен)
+
+        //аутентификация 2 пользователя 1
+        MvcResult result4 = performAuthenticate(correctAuthenticateRequestBody).andReturn();
+        tokenList = tokenService.getAllTokens();
+        assertEquals(3, tokenList.size());//3 (добавился 1 токен)
+
+        //ПОЛЬЗОВАТЕЛЬ 2
+        //регистрация пользователя 2
+        MvcResult result5 = performRegister(correctRegisterRequestBody2).andReturn();
+        tokenList = tokenService.getAllTokens();
+        assertEquals(4, tokenList.size());//4 (добавился 1 токен)
+
+        //аутентификация 1 пользователя 2
+        MvcResult result6 = performAuthenticate(correctAuthenticateRequestBody2).andReturn();
+        refreshToken = getRefreshTokenFromResult(result6);
+        tokenList = tokenService.getAllTokens();
+        assertEquals(5, tokenList.size());//5 (добавился 1 токен)
+
+        //рефреш 1 пользователя 2
+        MvcResult result7 = performRefreshToken(refreshToken).andReturn();
+        tokenList = tokenService.getAllTokens();
+        assertEquals(5, tokenList.size());//5 (заменился 1 токен)
+
+        //аутентификация 2 пользователя 2
+        MvcResult result8 = performAuthenticate(correctAuthenticateRequestBody2).andReturn();
+        tokenList = tokenService.getAllTokens();
+        assertEquals(6, tokenList.size());//6 (добавился 1 токен)
     }
 }
