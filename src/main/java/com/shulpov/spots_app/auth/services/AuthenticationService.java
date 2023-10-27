@@ -14,6 +14,7 @@ import com.shulpov.spots_app.auth.validators.UserValidator;
 import com.shulpov.spots_app.user.Role;
 import com.shulpov.spots_app.user.User;
 import com.shulpov.spots_app.user.UserRepository;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -130,9 +131,13 @@ public class AuthenticationService {
         }
         oldRefreshToken = authToken.substring(8);
 
-        //проверка: не протух ли токен
-        if(jwtService.isTokenExpired(oldRefreshToken)) {
-            throw new AuthenticationException("Refresh is expired");
+        try {
+            //проверка: не протух ли токен
+            if(jwtService.isTokenExpired(oldRefreshToken)) {
+                throw new AuthenticationException("Refresh is expired");
+            }
+        } catch (JwtException e) {
+            throw new AuthenticationException("JWT token error");
         }
 
         //проверка: есть ли refresh токен в базе
