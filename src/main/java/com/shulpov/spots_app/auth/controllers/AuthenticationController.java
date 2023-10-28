@@ -70,7 +70,7 @@ public class AuthenticationController {
     )
     @PostMapping(value="/refresh-token")
     public ResponseEntity<AuthenticationResponse> refreshToken(
-            @Parameter(description = "Refresh-токен (JWT)", required = true)
+            @Parameter(description = "Refresh-токен (JWT). Передавать в виде: 'Refresh tokenValue'", required = true)
             @RequestHeader(value = "Authorization") String refreshToken)
             throws JwtException {
         return ResponseEntity.status(HttpStatus.OK).body(service.refreshToken(refreshToken));
@@ -82,7 +82,7 @@ public class AuthenticationController {
     )
     @DeleteMapping(value = "/logout")
     public ResponseEntity<LogoutMessageResponse> logout(
-            @Parameter(description = "Refresh-токен (JWT)", required = true)
+            @Parameter(description = "Refresh-токен (JWT). Передавать в виде: 'Refresh tokenValue'", required = true)
             @RequestHeader(value = "Authorization") String refreshToken)
             throws JwtException {
         return ResponseEntity.status(HttpStatus.OK).body(service.logout(refreshToken));
@@ -94,7 +94,7 @@ public class AuthenticationController {
     )
     @DeleteMapping(value = "/logout-all")
     public ResponseEntity<LogoutMessageResponse> logoutAll(
-            @Parameter(description = "Refresh-токен (JWT)", required = true)
+            @Parameter(description = "Refresh-токен (JWT). Передавать в виде: 'Refresh tokenValue'", required = true)
             @RequestHeader(value = "Authorization") String refreshToken)
             throws JwtException {
         return ResponseEntity.status(HttpStatus.OK).body(service.logoutAll(refreshToken));
