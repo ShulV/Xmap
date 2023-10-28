@@ -2,14 +2,12 @@ package com.shulpov.spots_app.configs;
 
 import com.shulpov.spots_app.auth.auth_providers.LoginPasswordAuthenticationProvider;
 import com.shulpov.spots_app.auth.filters.JwtAuthenticationFilter;
-import com.shulpov.spots_app.auth.logout.CustomLogoutHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -20,14 +18,11 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final LoginPasswordAuthenticationProvider loginPasswordAuthenticationProvider;
-    private final CustomLogoutHandler customLogoutHandler;
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
-                          LoginPasswordAuthenticationProvider loginPasswordAuthenticationProvider,
-                          CustomLogoutHandler customLogoutHandler) {
+                          LoginPasswordAuthenticationProvider loginPasswordAuthenticationProvider) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.loginPasswordAuthenticationProvider = loginPasswordAuthenticationProvider;
-        this.customLogoutHandler = customLogoutHandler;
     }
 
     @Bean
@@ -67,13 +62,6 @@ public class SecurityConfig {
                     .authenticationProvider(loginPasswordAuthenticationProvider)
                     //фильтр для проверки токенов всех запросов
                     .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                    //
-                    .logout()
-                    .logoutUrl("/api/v1/auth/logout")
-                    .addLogoutHandler(customLogoutHandler)
-                    .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
-                    //
-                .and()
                 .build();
     }
 }

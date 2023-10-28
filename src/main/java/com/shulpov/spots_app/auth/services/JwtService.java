@@ -1,8 +1,6 @@
 package com.shulpov.spots_app.auth.services;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,11 +56,11 @@ public class JwtService {
         return authHeader.substring(8);
     }
 
-    public String extractEmail(String token) {
+    public String extractEmail(String token) throws JwtException {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) throws JwtException {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
@@ -92,6 +90,7 @@ public class JwtService {
             UserDetails userDetails,
             long expiration
     ) {
+        extraClaims.put("creatingDate", System.currentTimeMillis());//для уникальности токенов (иначе возникали коллизии)
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
@@ -115,15 +114,15 @@ public class JwtService {
         }
     }
 
-    public boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) throws JwtException {
         return extractExpiration(token).before(new Date());
     }
 
-    private Date extractExpiration(String token) {
+    private Date extractExpiration(String token) throws JwtException {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    private Claims extractAllClaims(String token) {
+    private Claims extractAllClaims(String token) throws JwtException {
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignInKey())

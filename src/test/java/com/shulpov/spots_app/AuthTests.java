@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class AuthTests {
-    private final String cleanScriptPath = "sql/clean/clean_for_auth_tests.sql";
+    private final String cleanScriptPath = "/sql/clean/clean_for_auth_tests.sql";
     private final MockMvc mockMvc;
     private final TokenService tokenService;
     private final UserService userService;
@@ -56,6 +56,11 @@ class AuthTests {
     private final String correctPassword = "hardPassword123";
     private final String incorrectEmail = "ivanov123gmail.com";
     private final String incorrectPassword = "ha";
+
+    private final String validExpiredJwtToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2c2h1bHBvdkBnbWFpbC5jb20iLCJ" +
+            "pYXQiOjE2OTgxNTYxNjQsImV4cCI6MTY5ODc2MDk2NH0.V8x30-PXJXVghQv-i-3HssRB1Tt5y-im40MGeipwpd4";
+
+    private final String incorrectJwtToken = "fjeiorjfoirejfijeoirfjeiorjfoirejfirejgoiejhoijgij45iojt45oigjoi45jgoi45";
 
     @Autowired
     public AuthTests(MockMvc mockMvc, TokenService tokenService, UserService userService, ObjectMapper objectMapper) {
@@ -361,5 +366,146 @@ class AuthTests {
         MvcResult result8 = performAuthenticate(correctAuthenticateRequestBody2).andReturn();
         tokenList = tokenService.getAllTokens();
         assertEquals(6, tokenList.size());//6 (добавился 1 токен)
+    }
+    //====================================================================================================
+    //======LOGOUT========================================================================================
+    //====================================================================================================
+    private ResultActions performLogout(String refreshToken) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders.delete(requestMapping + "/logout")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Refresh " + refreshToken));
+    }
+
+    //логаут после регистрации
+    @Test
+    void successfulLogoutAfterRegisterTest() throws Exception {
+        //успешно регистрируем пользователя
+        MvcResult result = performRegister(correctRegisterRequestBody).andReturn();//1 токен в БД
+        //получаем refreshToken из результата запроса
+        String refreshToken = getRefreshTokenFromResult(result);
+        performLogout(refreshToken)
+                .andExpect(jsonPath("$.message").isString())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.closed_session_number", 1).isNumber());
+        List<Token> tokenList = tokenService.getAllTokens();
+        //проверяем, что refreshToken удалился
+        assertEquals(0, tokenList.size());
+    }
+
+    //логаут после регистрации и аутентификации
+    @Test
+    void successfulLogoutAfterRegisterAndAuthenticateTest() throws Exception {
+        //успешно регистрируем пользователя
+        MvcResult result = performRegister(correctRegisterRequestBody).andReturn();//1 токен в БД
+        //получаем refreshToken из результата запроса
+        String refreshToken = getRefreshTokenFromResult(result);
+        performAuthenticate(correctAuthenticateRequestBody);//2 токена в БД
+        performLogout(refreshToken)
+                .andExpect(jsonPath("$.message").isString())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.closed_session_number", 1).isNumber());
+        List<Token> tokenList = tokenService.getAllTokens();
+        //проверяем, что refreshToken удалился
+        assertEquals(1, tokenList.size());
+    }
+
+    //Логаут после регистрации с помощью испорченного refreshToken
+    @Test
+    void unsuccessfulLogoutByInvalidRefreshTokenTest() throws Exception {
+        performLogout(validExpiredJwtToken)
+                .andExpect(jsonPath("$.errorMessage", "Refresh not found in DB").isString());
+    }
+
+    //Логаут после регистрации с помощью испорченного refreshToken
+    @Test
+    void unsuccessfulLogoutByIncorrectRefreshTokenTest() throws Exception {
+        performLogout(incorrectJwtToken)
+                .andExpect(jsonPath("$.errorMessage", "JWT token error").isString());
+    }
+    //====================================================================================================
+    //======LOGOUT ALL========================================================================================
+    //====================================================================================================
+    private ResultActions performLogoutAll(String refreshToken) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders.delete(requestMapping + "/logout-all")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Refresh " + refreshToken));
+    }
+
+    //логаут всех (1) после одной регистрации
+    @Test
+    void successfulLogoutAllAfter1RegisterTest() throws Exception {
+        //успешно регистрируем пользователя
+        MvcResult result = performRegister(correctRegisterRequestBody).andReturn();//1 токен в БД
+        //получаем refreshToken из результата запроса
+        String refreshToken = getRefreshTokenFromResult(result);
+        performLogoutAll(refreshToken)
+                .andExpect(jsonPath("$.message").isString())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.closed_session_number", 1).isNumber());
+        List<Token> tokenList = tokenService.getAllTokens();
+        //проверяем, что refreshToken удалился
+        assertEquals(0, tokenList.size());
+    }
+
+    //логаут всех входов пользователя (1) после двух регистраций разных пользователей
+    @Test
+    void successfulLogoutAllAfter2RegisterTest() throws Exception {
+        //успешно регистрируем пользователя 1
+        performRegister(correctRegisterRequestBody);
+        //успешно регистрируем пользователя 2
+        MvcResult result = performRegister(correctRegisterRequestBody2).andReturn();//2 токена в БД
+        //получаем refreshToken из результата запроса
+        String refreshToken = getRefreshTokenFromResult(result);
+        performLogoutAll(refreshToken)
+                .andExpect(jsonPath("$.message").isString())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.closed_session_number", 1).isNumber());
+        List<Token> tokenList = tokenService.getAllTokens();
+        //проверяем, что refreshToken остался только 1 (1 пользователя)
+        assertEquals(1, tokenList.size());
+    }
+
+    //логаут всех входов пользователя (2) после регистрации и аутентификации
+    @Test
+    void successfulLogoutAllAfterRegisterAndAuthenticateTest() throws Exception {
+        //регистрируем пользователя 1
+        MvcResult result = performRegister(correctRegisterRequestBody).andReturn();//1 токена в БД
+        //получаем refreshToken из результата запроса
+        String refreshToken = getRefreshTokenFromResult(result);
+        //аутентифицируем пользователя 1
+        performAuthenticate(correctAuthenticateRequestBody);
+        //выходим из учетной записи
+        performLogoutAll(refreshToken)
+                .andExpect(jsonPath("$.message").isString())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.closed_session_number", 2).isNumber());
+        List<Token> tokenList = tokenService.getAllTokens();
+        //проверяем, что refreshToken удалились
+        assertEquals(0, tokenList.size());
+    }
+
+    //логаут всех входов пользователя (2) после регистрации и аутентификации для 2 пользователей
+    //(перед логаутом 4 токена в БД)
+    @Test
+    void successfulLogoutAllAfterRegisterAndAuthenticate2UsersTest() throws Exception {
+        //регистрируем пользователя 1
+        MvcResult result = performRegister(correctRegisterRequestBody).andReturn();//1 токена в БД
+        //получаем refreshToken из результата запроса
+        String refreshToken = getRefreshTokenFromResult(result);
+        //аутентифицируем пользователя 1
+        performAuthenticate(correctAuthenticateRequestBody);//2 токена в БД
+
+        //регистрируем пользователя 2
+        performRegister(correctRegisterRequestBody2);//3 токена в БД
+        performAuthenticate(correctAuthenticateRequestBody2);//4 токена в БД
+
+        //выходим из учетной записи 1 пользователя
+        performLogoutAll(refreshToken)
+                .andExpect(jsonPath("$.message").isString())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.closed_session_number", 2).isNumber());
+        List<Token> tokenList = tokenService.getAllTokens();
+        //проверяем, что refreshToken удалились только для 1 пользователя
+        assertEquals(2, tokenList.size());
     }
 }
