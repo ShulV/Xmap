@@ -2,9 +2,9 @@ package com.shulpov.spots_app;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shulpov.spots_app.auth.responses.AuthenticationResponse;
-import com.shulpov.spots_app.auth.token.Token;
-import com.shulpov.spots_app.auth.token.TokenService;
+import com.shulpov.spots_app.auth_management.responses.AuthenticationResponse;
+import com.shulpov.spots_app.auth_management.token.Token;
+import com.shulpov.spots_app.auth_management.token.TokenService;
 import com.shulpov.spots_app.db_cleaner.DBCleaner;
 import com.shulpov.spots_app.responses.ErrorMessageResponse;
 import com.shulpov.spots_app.services.UserService;

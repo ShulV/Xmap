@@ -9,6 +9,15 @@ import com.shulpov.spots_app.location.models.Country;
 import com.shulpov.spots_app.location.models.Region;
 import com.shulpov.spots_app.models.*;
 import com.shulpov.spots_app.services.*;
+import com.shulpov.spots_app.spot_references.dto.SpaceTypeDto;
+import com.shulpov.spots_app.spot_references.dto.SportTypeDto;
+import com.shulpov.spots_app.spot_references.dto.SpotTypeDto;
+import com.shulpov.spots_app.spot_references.models.SpaceType;
+import com.shulpov.spots_app.spot_references.models.SportType;
+import com.shulpov.spots_app.spot_references.models.SpotType;
+import com.shulpov.spots_app.spot_references.services.SpaceTypeService;
+import com.shulpov.spots_app.spot_references.services.SportTypeService;
+import com.shulpov.spots_app.spot_references.services.SpotTypeService;
 import com.shulpov.spots_app.user.Role;
 import com.shulpov.spots_app.user.User;
 import org.modelmapper.ModelMapper;
@@ -38,11 +47,11 @@ public class DtoConverter {
     /** Компонент маппинга классов */
     private final  ModelMapper modelMapper;
     /** Сервис типов помещений */
-    private final  SpaceTypeService spaceTypeService;
+    private final SpaceTypeService spaceTypeService;
     /** Сервис типов спотов */
-    private final  SpotTypeService spotTypeService;
+    private final SpotTypeService spotTypeService;
     /** Сервис типов спорта */
-    private final  SportTypeService sportTypeService;
+    private final SportTypeService sportTypeService;
     /** Сервис управления данными между пользователями и спотами */
     private final SpotUserService spotUserService;
 

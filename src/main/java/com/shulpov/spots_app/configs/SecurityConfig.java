@@ -1,7 +1,7 @@
 package com.shulpov.spots_app.configs;
 
-import com.shulpov.spots_app.auth.auth_providers.LoginPasswordAuthenticationProvider;
-import com.shulpov.spots_app.auth.filters.JwtAuthenticationFilter;
+import com.shulpov.spots_app.auth_management.auth_providers.LoginPasswordAuthenticationProvider;
+import com.shulpov.spots_app.auth_management.filters.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;

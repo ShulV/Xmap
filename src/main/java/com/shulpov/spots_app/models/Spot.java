@@ -1,6 +1,9 @@
 package com.shulpov.spots_app.models;
 
 import com.shulpov.spots_app.location.models.City;
+import com.shulpov.spots_app.spot_references.models.SpaceType;
+import com.shulpov.spots_app.spot_references.models.SportType;
+import com.shulpov.spots_app.spot_references.models.SpotType;
 import com.shulpov.spots_app.user.User;
 import jakarta.persistence.*;
 
