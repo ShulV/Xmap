@@ -10,5 +10,6 @@ download last veriosn from https://github.com/ShulV/Xmap/tree/main/postman and i
   <li>Insert Countries/Regions/Cities references: https://github.com/ShulV/Xmap/blob/main/sql/insert_cities_regions_countries.sql</li>
   <li>Insert a user and some real spots: https://github.com/ShulV/Xmap/blob/main/sql/additional_insert_scripts.sql</li>
 </ul>
+
 ### How to view the relational model of a database:
 download and open in special UML-tools: https://github.com/ShulV/Xmap/blob/main/uml/relation_model.csv
