@@ -2,10 +2,7 @@ package com.shulpov.spots_app.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.shulpov.spots_app.dto.FieldErrorDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,7 +10,8 @@ import java.util.List;
  * @author Shulpov Victor
  */
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

@@ -1,14 +1,10 @@
 package com.shulpov.spots_app;
 
-import com.shulpov.spots_app.user.UserRepository;
-import org.modelmapper.ModelMapper;
+import com.shulpov.spots_app.users.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.net.*;
 import java.util.Arrays;

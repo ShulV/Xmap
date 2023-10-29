@@ -1,7 +1,7 @@
 package com.shulpov.spots_app.spot_references.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.shulpov.spots_app.models.Spot;
+import com.shulpov.spots_app.spots.models.Spot;
 import jakarta.persistence.*;
 
 import java.util.List;

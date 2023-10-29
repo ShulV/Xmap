@@ -1,7 +1,7 @@
 package com.shulpov.spots_app.configs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shulpov.spots_app.user.UserRepository;
+import com.shulpov.spots_app.users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
