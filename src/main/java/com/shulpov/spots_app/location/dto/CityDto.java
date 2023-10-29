@@ -1,4 +1,4 @@
-package com.shulpov.spots_app.dto;
+package com.shulpov.spots_app.location.dto;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package com.shulpov.spots_app.models;
+package com.shulpov.spots_app.location.models;
 
 import jakarta.persistence.*;
 import lombok.Builder;

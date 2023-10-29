@@ -1,8 +1,8 @@
-package com.shulpov.spots_app.controllers;
+package com.shulpov.spots_app.location.controllers;
 
-import com.shulpov.spots_app.dto.RegionDto;
-import com.shulpov.spots_app.models.Region;
-import com.shulpov.spots_app.services.RegionService;
+import com.shulpov.spots_app.location.dto.RegionDto;
+import com.shulpov.spots_app.location.models.Region;
+import com.shulpov.spots_app.location.services.RegionService;
 import com.shulpov.spots_app.utils.DtoConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

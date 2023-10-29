@@ -1,6 +1,12 @@
 package com.shulpov.spots_app.utils;
 
 import com.shulpov.spots_app.dto.*;
+import com.shulpov.spots_app.location.dto.CityDto;
+import com.shulpov.spots_app.location.dto.CountryDto;
+import com.shulpov.spots_app.location.dto.RegionDto;
+import com.shulpov.spots_app.location.models.City;
+import com.shulpov.spots_app.location.models.Country;
+import com.shulpov.spots_app.location.models.Region;
 import com.shulpov.spots_app.models.*;
 import com.shulpov.spots_app.services.*;
 import com.shulpov.spots_app.user.Role;

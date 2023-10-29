@@ -1,8 +1,8 @@
-package com.shulpov.spots_app.repo;
+package com.shulpov.spots_app.location.repo;
 
-import com.shulpov.spots_app.models.City;
-import com.shulpov.spots_app.models.Country;
-import com.shulpov.spots_app.models.Region;
+import com.shulpov.spots_app.location.models.City;
+import com.shulpov.spots_app.location.models.Country;
+import com.shulpov.spots_app.location.models.Region;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

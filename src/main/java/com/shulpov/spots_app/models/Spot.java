@@ -1,5 +1,6 @@
 package com.shulpov.spots_app.models;
 
+import com.shulpov.spots_app.location.models.City;
 import com.shulpov.spots_app.user.User;
 import jakarta.persistence.*;
 

@@ -1,8 +1,8 @@
-package com.shulpov.spots_app.controllers;
+package com.shulpov.spots_app.location.controllers;
 
-import com.shulpov.spots_app.dto.CityDto;
-import com.shulpov.spots_app.models.City;
-import com.shulpov.spots_app.services.CityService;
+import com.shulpov.spots_app.location.dto.CityDto;
+import com.shulpov.spots_app.location.models.City;
+import com.shulpov.spots_app.location.services.CityService;
 import com.shulpov.spots_app.utils.DtoConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,6 +22,7 @@ import java.util.Map;
 @RequestMapping(value ="/api/cities", produces = "application/json")
 @Tag(name="Контроллер городов (справочник)", description="Выдает города")
 public class CityController {
+    private static final String ERROR_MESSAGE_KEY = "errorMessage";
     private final CityService cityService;
 
     private final DtoConverter dtoConverter;
@@ -46,7 +47,7 @@ public class CityController {
         } catch (NotFoundException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("errorMessage", "There is no data in the table"));
+                    .body(Map.of(ERROR_MESSAGE_KEY, "There is no data in the table"));
         }
     }
 
@@ -64,7 +65,7 @@ public class CityController {
         } catch (NotFoundException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("errorMessage", "Region with id=" + id + " not found"));
+                    .body(Map.of(ERROR_MESSAGE_KEY, "Region with id=" + id + " not found"));
         }
     }
 
@@ -82,7 +83,7 @@ public class CityController {
         } catch (NotFoundException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("errorMessage", "Country with id=" + id + " not found"));
+                    .body(Map.of(ERROR_MESSAGE_KEY, "Country with id=" + id + " not found"));
         }
     }
 }

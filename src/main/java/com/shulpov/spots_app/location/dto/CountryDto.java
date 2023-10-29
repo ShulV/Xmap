@@ -1,11 +1,11 @@
-package com.shulpov.spots_app.dto;
+package com.shulpov.spots_app.location.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class RegionDto {
+public class CountryDto {
     private Integer id;
     private String name;
 }

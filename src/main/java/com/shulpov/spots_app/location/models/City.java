@@ -1,5 +1,6 @@
-package com.shulpov.spots_app.models;
+package com.shulpov.spots_app.location.models;
 
+import com.shulpov.spots_app.models.Spot;
 import com.shulpov.spots_app.user.User;
 import jakarta.persistence.*;
 import lombok.Builder;

@@ -1,7 +1,7 @@
-package com.shulpov.spots_app.services;
+package com.shulpov.spots_app.location.services;
 
-import com.shulpov.spots_app.models.Country;
-import com.shulpov.spots_app.repo.CountryRepo;
+import com.shulpov.spots_app.location.models.Country;
+import com.shulpov.spots_app.location.repo.CountryRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
