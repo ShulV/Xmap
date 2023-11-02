@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  postgres:
+    image: 'postgres'
+    ports:
+      - '5432:5432'
+    environment:
+      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_DB=spot_map'
+      - 'POSTGRES_PASSWORD=12345'
+    volumes:
+      - ../postgres_dir:/docker-entrypoint-initdb.d
+      - /var/lib/postgresql/data:/var/lib/postgresql/data:/var/lib/postgresql/data
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    links:
+      - postgres
+    ports:
+      - '8080:8080'
+    volumes:
+      - /var/lib/postgresql/data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
