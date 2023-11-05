@@ -4,6 +4,7 @@ import com.shulpov.spots_app.image_infos.models.ImageInfo;
 import com.shulpov.spots_app.users.models.User;
 import com.shulpov.spots_app.users.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +41,8 @@ public class ImageInfoController {
 
     @Operation(
             summary = "Загрузка изображения для своего аккаунта",
-            description = "Позволяет пользователю загрузить изображение для своего аккаунта"
+            description = "Позволяет пользователю загрузить изображение для своего аккаунта",
+            security = @SecurityRequirement(name = "accessTokenAuth")
     )
     @PostMapping("/user-image")
     public ResponseEntity<Map<String, Long>> uploadUserImage(@RequestParam MultipartFile file, Principal principal) {
@@ -65,7 +67,8 @@ public class ImageInfoController {
     @Secured({"ROLE_MODERATOR", "ROLE_ADMIN"})
     @Operation(
             summary = "Загрузка изображения для спота",
-            description = "Позволяет модератору или админу добавить 1 изображение для спота"
+            description = "Позволяет модератору или админу добавить 1 изображение для спота",
+            security = @SecurityRequirement(name = "accessTokenAuth")
     )
     @PostMapping("/spot-image/{id}")
     public ResponseEntity<Map<String, Long>> uploadSpotImage(
@@ -91,7 +94,8 @@ public class ImageInfoController {
 
     @Operation(
             summary = "Скачивание изображения пользователя по id изображения",
-            description = "Позволяет пользователю скачивать изображение любого другого пользователя"
+            description = "Позволяет пользователю скачивать изображение любого другого пользователя",
+            security = @SecurityRequirement(name = "accessTokenAuth")
     )
     @GetMapping(path = "/user-image/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<Resource> downloadUserImage(@PathVariable("id") Long id) throws IOException {
@@ -137,7 +141,8 @@ public class ImageInfoController {
 
     @Operation(
             summary = "Удаление картинки пользователя по id изображения",
-            description = "Позволяет пользователю удалить свое изображение по id"
+            description = "Позволяет пользователю удалить свое изображение по id",
+            security = @SecurityRequirement(name = "accessTokenAuth")
     )
     @DeleteMapping("/user-image/{id}")
     //TODO Principle Норм для аутентификации с токенами? Может, лучше юзать @HeaderVariable

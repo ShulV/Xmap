@@ -4,6 +4,7 @@ import com.shulpov.spots_app.users.models.User;
 import com.shulpov.spots_app.users.UserService;
 import com.shulpov.spots_app.utils.DtoConverter;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.security.auth.message.AuthException;
 import jakarta.validation.Valid;
@@ -40,7 +41,8 @@ public class CommentController {
 
     @Operation(
             summary = "Добавление комментария к месту для катания",
-            description = "Позволяет пользователю добавить комментарий"
+            description = "Позволяет пользователю добавить комментарий",
+            security = @SecurityRequirement(name = "accessTokenAuth")
     )
     @Transactional
     @PostMapping("/add-comment-by-spot-id/{spotId}")

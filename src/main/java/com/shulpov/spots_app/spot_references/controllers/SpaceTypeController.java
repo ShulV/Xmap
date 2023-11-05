@@ -40,9 +40,8 @@ public class SpaceTypeController {
             summary = "Получение всех типов помещений",
             description = "Позволяет пользователю получить все типы помещений"
     )
-    @GetMapping("/get-all")
+    @GetMapping("/all")
     public List<SpaceTypeDto> getAllSpaceTypes() {
-        logger.atInfo().log("/get-all");
         return spaceTypeService.getAll().stream().map(dtoConverter::spaceTypeToDto).toList();
     }
 
@@ -54,7 +53,6 @@ public class SpaceTypeController {
     )
     @GetMapping("/{id}")
     public SpaceType getSpaceType(@PathVariable(name = "id")  Integer id) throws NoSuchElementException {
-        logger.atInfo().log("get-by-id: /{}", id);
         Optional<SpaceType> spaceTypeOpt = spaceTypeService.getById(id);
         if(spaceTypeOpt.isPresent()) {
             return spaceTypeOpt.get();

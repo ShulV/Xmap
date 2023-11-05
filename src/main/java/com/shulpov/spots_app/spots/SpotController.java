@@ -8,6 +8,7 @@ import com.shulpov.spots_app.users.models.User;
 import com.shulpov.spots_app.users.UserService;
 import com.shulpov.spots_app.utils.DtoConverter;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.security.auth.message.AuthException;
 import org.slf4j.Logger;
@@ -45,21 +46,20 @@ public class SpotController {
             summary = "Получение всех спотов",
             description = "Позволяет пользователю получить все споты"
     )
-    @GetMapping("/get-all")
+    @GetMapping("/all")
     public List<SpotDto> getAllSpots() {
-        logger.atInfo().log("/get-all");
         return spotService.getAllSpots().stream().map(dtoConverter::spotToDto).toList();
     }
 
     @Operation(
             summary = "Добавление спота",
-            description = "Позволяет пользователю добавить спот (отправить на модерацию)"
+            description = "Позволяет пользователю добавить спот (отправить на модерацию)",
+            security = @SecurityRequirement(name = "accessTokenAuth")
     )
-    @PostMapping("/send-to-moderation")
+    @PostMapping("/moderation")
     public ResponseEntity<Map<String, Object>> sendToModeration(@RequestParam("files") MultipartFile[] files,
                                            @RequestParam("spotDto") String jsonSpotDto,
                                            Principal principal) throws IOException, AuthException {
-        logger.atInfo().log("/send-to-moderation");
         ObjectMapper objectMapper = new ObjectMapper();
         SpotDto spotDto;
         try {
@@ -89,11 +89,11 @@ public class SpotController {
             summary = "Получение всех спотов в определенном радиусе",
             description = "Позволяет пользователю получить все споты, находящиеся в определенном радиусе"
     )
-    @GetMapping("/get-in-radius")
+    @GetMapping("/in-radius")
     public List<SpotDto> getAllSpots(@RequestParam Double lat,
                                      @RequestParam Double lon,
                                      @RequestParam Double radius) {
-        logger.atInfo().log("/get-in-radius: lat=" + lat + "; lon=" + lon + "; radius=" + radius);
+        logger.atInfo().log("lat=" + lat + "; lon=" + lon + "; radius=" + radius);
         return spotService.getSpotsInRadius(lat, lon, radius).stream().map(dtoConverter::spotToDto).toList();
     }
 }

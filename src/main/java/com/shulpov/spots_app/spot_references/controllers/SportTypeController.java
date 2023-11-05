@@ -38,9 +38,8 @@ public class SportTypeController {
             summary = "Получение всех типов спорта",
             description = "Позволяет пользователю получить все типы спотов"
     )
-    @GetMapping("/get-all")
+    @GetMapping("/all")
     public List<SportTypeDto> getAllSportTypes() {
-        logger.atInfo().log("/get-all");
         return sportTypeService.getAll().stream().map(dtoConverter::sportTypeToDto).toList();
     }
 
@@ -50,7 +49,6 @@ public class SportTypeController {
     )
     @GetMapping("/{id}")
     public SportType getSportType(@PathVariable(name = "id")  Integer id) throws NoSuchElementException {
-        logger.atInfo().log("get-by-id: /{}", id);
         Optional<SportType> sportTypeOpt = sportTypeService.getById(id);
         if(sportTypeOpt.isPresent()) {
             return sportTypeOpt.get();

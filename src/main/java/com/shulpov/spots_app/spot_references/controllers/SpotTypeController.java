@@ -37,9 +37,8 @@ public class SpotTypeController {
             summary = "Получение всех типов спотов",
             description = "Позволяет пользователю получить все типы спотов"
     )
-    @GetMapping("/get-all")
+    @GetMapping("/all")
     public List<SpotTypeDto> getAllSpots() {
-        logger.atInfo().log("/get-all");
         return spotTypeService.getAll().stream().map(dtoConverter::spotTypeToDto).toList();
     }
 
@@ -49,7 +48,6 @@ public class SpotTypeController {
     )
     @GetMapping("/{id}")
     public SpotType getSpotType(@PathVariable(name = "id")  Integer id) throws NoSuchElementException {
-        logger.atInfo().log("get-by-id: /{}", id);
         Optional<SpotType> spotTypeOpt = spotTypeService.getById(id);
         if(spotTypeOpt.isPresent()) {
             return spotTypeOpt.get();

@@ -4,6 +4,7 @@ import com.shulpov.spots_app.users.dto.UserDto;
 import com.shulpov.spots_app.users.models.User;
 import com.shulpov.spots_app.utils.DtoConverter;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-@Tag(name="Контроллер пользователей", description="Позволяет получать информацию о пользователе и удалять аккаунт")
+@Tag(name="Контроллер пользователя", description="Позволяет получать информацию о пользователе и удалять аккаунт")
 public class UserController {
     private final UserService userService;
     private final DtoConverter dtoConverter;
@@ -38,46 +39,48 @@ public class UserController {
 
     @Operation(
             summary = "Получение полной информации о пользователе",
-            description = "Позволяет получить полную информацию о пользователе"
+            description = "Позволяет получить полную информацию о пользователе",
+            security = @SecurityRequirement(name = "accessTokenAuth")
     )
-    @GetMapping("/get-user")
+    @GetMapping("/user")
     public ResponseEntity<UserDto> getAuthUser() {
-        logger.atInfo().log("/get-user");
+        logger.atInfo().log("GET /user");
         String email;
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             email = userDetails.getUsername();
         } catch (UsernameNotFoundException e) {
-            logger.atInfo().log("/get-user email={} not found");
+            logger.atInfo().log("GET /user email={} not found");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Optional<User> userOpt = userService.findByEmail(email);
 
         if(userOpt.isPresent()) {
-            logger.atInfo().log("/user-get-info principle exists");
+            logger.atInfo().log("principle exists");
             User user = userOpt.get();
 
             return new ResponseEntity<>(dtoConverter.userToDto(user), HttpStatus.OK);
         }
 
-        logger.atInfo().log("/get-user email={} not found", email);
+        logger.atInfo().log("GET /user email={} not found", email);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @Operation(
             summary = "Удаление своего пользователя",
-            description = "Позволяет удалить своего пользователя по токену"
+            description = "Позволяет удалить своего пользователя по токену",
+            security = @SecurityRequirement(name = "accessTokenAuth")
     )
-    @DeleteMapping("/delete-user")
+    @DeleteMapping("/user")
     public Map<String, Object> deleteUser() {
-        logger.atInfo().log("/delete-user");
+        logger.atInfo().log("DELETE /user");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String email = userDetails.getUsername();
         Optional<User> userOpt = userService.findByEmail(email);
         if(userOpt.isPresent()) {
-            logger.atInfo().log("/delete-user principle exists " +
+            logger.atInfo().log("principle exists " +
                             "user: id={} name={} email={} phone={} birthday={} regDate={}",
                     userOpt.get().getId(),
                     userOpt.get().getName(),
@@ -95,7 +98,7 @@ public class UserController {
             }
 
         }
-        logger.atError().log("/delete-user email={} not found", email);
+        logger.atError().log("email={} not found", email);
         return Map.of("error", "Пользователь не найден");
     }
 }
