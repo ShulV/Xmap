@@ -112,6 +112,10 @@ public class ImageInfoController {
         }
     }
 
+    @Operation(
+            summary = "Скачивание изображения спота по id изображения",
+            description = "Позволяет скачивать изображение спота"
+    )
     @GetMapping(path = "/spot-image/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<Resource> downloadSpotImage(@PathVariable("id") Long id) throws IOException {
         logger.atInfo().log("GET /spot-image/{}", id);
@@ -131,8 +135,13 @@ public class ImageInfoController {
         }
     }
 
-    //Удалить картинку пользователя
+    @Operation(
+            summary = "Удаление картинки пользователя по id изображения",
+            description = "Позволяет пользователю удалить свое изображение по id"
+    )
     @DeleteMapping("/user-image/{id}")
+    //TODO Principle Норм для аутентификации с токенами? Может, лучше юзать @HeaderVariable
+    // (или похожее название аннотации) для передачи токена из загловка запроса
     public ResponseEntity<Map<String, Object>> deleteUserImage(@PathVariable("id") Long id, Principal principal) {
         logger.atInfo().log("DELETE /user-image/{}", id);
         try {
