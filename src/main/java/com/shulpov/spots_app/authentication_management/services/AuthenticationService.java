@@ -59,7 +59,7 @@ public class AuthenticationService {
                 .build();
         userValidator.validate(user, errors);
         if(errors.hasErrors()) {
-            throw new RegisterErrorException("Регистрация не удалась.", errors.getFieldErrors());
+            throw new RegisterErrorException("Регистрация не удалась", errors.getFieldErrors());
         }
         User savedUser = userRepository.save(user);
         String accessToken = jwtService.generateAccessToken(user);
@@ -88,7 +88,7 @@ public class AuthenticationService {
         //authenticated
         Optional<User> userOpt = userRepository.findByEmail(email);
         if(userOpt.isEmpty()) {
-            throw new BadCredentialsException("User with email='" + email + "' not found");
+            throw new BadCredentialsException("Пользователь с email='" + email + "' не найден");
         }
         User user = userOpt.get();
         String newAccessToken = jwtService.generateAccessToken(user);
@@ -185,7 +185,7 @@ public class AuthenticationService {
         return LogoutMessageResponse.builder()
                 .closedSessionNumber(1L)
                 .userId(token.getUser().getId())
-                .message("Successful logout")
+                .message("Успешных выход из аккаунта")
                 .build();
     }
 
@@ -200,7 +200,7 @@ public class AuthenticationService {
         return LogoutMessageResponse.builder()
                 .closedSessionNumber(count)
                 .userId(token.getUser().getId())
-                .message("Successful logout")
+                .message("Успешный выход из аккаунта на всех устройствах")
                 .build();
     }
 }

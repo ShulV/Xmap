@@ -14,6 +14,9 @@ import com.shulpov.spots_app.utils.DtoConverter;
 import io.jsonwebtoken.JwtException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +43,16 @@ public class AuthenticationController {
 
     @Operation(
             summary = "Регистрация",
-            description = "Зарегистрироваться (с проверкой данных на валидность)."
+            description = "Зарегистрироваться (с проверкой данных на валидность).",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Пользователь успешно зарегистрирован",
+                            content = { @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = RegisterResponse.class)) }
+                    ),
+                    @ApiResponse(responseCode = "400", description = "Пользователь не был зарегистрирован",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RegisterErrorResponse.class)) }
+            )}
     )
     @PostMapping(value="/register")
     public ResponseEntity<RegisterResponse> register(
@@ -55,7 +67,16 @@ public class AuthenticationController {
 
     @Operation(
             summary = "Аутентификация",
-            description = "Аутентифицироваться по логину и паролю"
+            description = "Аутентифицироваться по логину и паролю",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Аутентификация прошла успешно",
+                            content = { @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = AuthenticationResponse.class)) }
+                    ),
+                    @ApiResponse(responseCode = "401", description = "Пользователь не был аутентифицирован " +
+                            "(из-за неверного пароля или логина)", content = { @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessageResponse.class)) }
+                    )}
     )
     @PostMapping(value="/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(
@@ -66,7 +87,17 @@ public class AuthenticationController {
 
     @Operation(
             summary = "Получение новых токенов",
-            description = "Получение новых access и refresh токенов пользователя"
+            description = "Получение новых access и refresh токенов пользователя",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Новые токены получены успешно",
+                            content = { @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = RegisterResponse.class)) }
+                    ),
+                    @ApiResponse(responseCode = "401", description = "Новые токены не были получены, " +
+                            "т.к. refreshToken не прошел проверку на валидность или истёк",
+                            content = { @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = RegisterErrorResponse.class)) }
+                    )}
     )
     @PostMapping(value="/refresh-token")
     public ResponseEntity<AuthenticationResponse> refreshToken(
@@ -78,7 +109,17 @@ public class AuthenticationController {
 
     @Operation(
             summary = "Выход из учетной записи",
-            description = "Выход из текущей (одной) учетной записи пользователя"
+            description = "Выход из текущей (одной) учетной записи пользователя",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Успешный выход из аккаунта",
+                            content = { @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = LogoutMessageResponse.class)) }
+                    ),
+                    @ApiResponse(responseCode = "401", description = "Выход из аккаунта не удался, " +
+                            "т.к. refreshToken не прошел проверку на валидность или истёк",
+                            content = { @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessageResponse.class)) }
+                    )}
     )
     @DeleteMapping(value = "/logout")
     public ResponseEntity<LogoutMessageResponse> logout(
@@ -90,7 +131,17 @@ public class AuthenticationController {
 
     @Operation(
             summary = "Выход из всех учетных записей",
-            description = "Выход из всех учетных записей пользователя"
+            description = "Выход из всех учетных записей пользователя",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Успешный выход из аккаунта",
+                            content = { @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = LogoutMessageResponse.class)) }
+                    ),
+                    @ApiResponse(responseCode = "401", description = "Выход из аккаунта не удался, " +
+                            "т.к. refreshToken не прошел проверку на валидность или истёк",
+                            content = { @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessageResponse.class)) }
+                    )}
     )
     @DeleteMapping(value = "/logout-all")
     public ResponseEntity<LogoutMessageResponse> logoutAll(
