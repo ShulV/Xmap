@@ -14,18 +14,18 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CountryControllerTests {
+class CountryControllerTests {
 
     private final MockMvc mockMvc;
 
     @Autowired
-    public CountryControllerTests(MockMvc mockMvc) {
+    CountryControllerTests(MockMvc mockMvc) {
         this.mockMvc = mockMvc;
     }
 
     @Test
-    public void testGetAllCountry() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/countries/get-all")
+    void testGetAllCountry() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/countries/get-all")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))

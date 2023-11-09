@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value ="/api/cities", produces = "application/json")
+@RequestMapping(value ="/api/v1/cities", produces = "application/json")
 @Tag(name="Контроллер городов (справочник)", description="Выдает города")
 public class CityController {
     private static final String ERROR_MESSAGE_KEY = "errorMessage";
@@ -38,7 +38,7 @@ public class CityController {
             summary = "Получение списка всех городов",
             description = "Позволяет пользователю получить перечень всех имеющихся городов"
     )
-    @GetMapping("/get-all")
+    @GetMapping("/all")
     public ResponseEntity<?> getAll() {
         logger.atInfo().log("Getting all cities");
         try {

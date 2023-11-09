@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/api/countries", produces = "application/json")
+@RequestMapping(value = "/api/v1/countries", produces = "application/json")
 @Tag(name="Контроллер стран (справочник)", description="Выдает страны")
 public class CountryController {
 
@@ -36,7 +36,7 @@ public class CountryController {
             summary = "Получение списка всех стран",
             description = "Позволяет пользователю получить перечень всех имеющихся стран"
     )
-    @GetMapping("/get-all")
+    @GetMapping("/all")
     public ResponseEntity<?> getAll() {
         logger.atInfo().log("Getting all countries");
         try {

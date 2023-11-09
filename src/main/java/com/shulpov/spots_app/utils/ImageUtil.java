@@ -40,7 +40,7 @@ public class ImageUtil {
      */
     public static String getUserImageDownloadUrl(Long imageId) {
         logger.atInfo().log("getUserImageDownloadUrl imageId={}", imageId);
-        String url = String.format("%s:%s/api/image-service/download-user-image/%d", address, port, imageId);
+        String url = String.format("%s:%s/api/v1/image-service/download-user-image/%d", address, port, imageId);
         logger.atInfo().log("url={}", url);
         return url;
     }
@@ -52,7 +52,7 @@ public class ImageUtil {
      */
     public static String getSpotImageDownloadUrl(Long imageId) {
         logger.atInfo().log("getSpotImageDownloadUrl imageId={}", imageId);
-        String url = String.format("%s:%s/api/image-service/download-spot-image/%d", address, port, imageId);
+        String url = String.format("%s:%s/api/v1/image-service/download-spot-image/%d", address, port, imageId);
         logger.atInfo().log("url={}", url);
         return url;
     }

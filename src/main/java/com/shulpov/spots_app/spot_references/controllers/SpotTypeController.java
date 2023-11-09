@@ -19,7 +19,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/spot-types")
+@RequestMapping("/api/v1/spot-types")
 @Tag(name="Контроллер типов мест для катания (справочник)", description="Выдает типы мест для катания")
 public class SpotTypeController {
     private final SpotTypeService spotTypeService;

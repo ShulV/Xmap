@@ -13,19 +13,19 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class RegionControllerTests {
+class RegionControllerTests {
 
 
     private final MockMvc mockMvc;
 
     @Autowired
-    public RegionControllerTests(MockMvc mockMvc) {
+    RegionControllerTests(MockMvc mockMvc) {
         this.mockMvc = mockMvc;
     }
 
     @Test
-    public void testGetAllRegion() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/regions/get-all")
+    void testGetAllRegion() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/regions/get-all")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
@@ -35,8 +35,8 @@ public class RegionControllerTests {
     }
 
     @Test
-    public void testGetRegionByCountryCorrectIndex() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/regions/get-by-country-id/1")
+    void testGetRegionByCountryCorrectIndex() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/regions/get-by-country-id/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
@@ -46,8 +46,8 @@ public class RegionControllerTests {
     }
 
     @Test
-    public void testGetRegionByCountryWrongIndex() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/regions/get-by-country-id/100000")
+    void testGetRegionByCountryWrongIndex() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/regions/get-by-country-id/100000")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errorMessage").value("Country with id=100000 not found"));

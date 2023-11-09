@@ -32,23 +32,23 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests()
                 //разрешить неаутентифицир. пользователям обращаться
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 .requestMatchers(
                         "/api/v1/auth/**",
-                        "/api/spot-types/**",
-                        "/api/sport-types/**",
-                        "/api/space-types/**",
-                        "/api/spots/get-all",
-                        "/api/spots/get-in-radius",
-                        "/api/countries/**",
-                        "/api/cities/**",
-                        "/api/regions/**",
-                        "/api/comments/get-by-spot-id/**",
-                        "/api/spots-users/get-like-number/**",
-                        "/api/spots-users/get-favorite-number/**",
-                        "/api/spots-users/get-info/**",
-                        "/api/image-service/download-user-image/**",
-                        "/api/image-service/download-spot-image/**",
+                        "/api/v1/spot-types/**",
+                        "/api/v1/sport-types/**",
+                        "/api/v1/space-types/**",
+                        "/api/v1/spots/get-all",
+                        "/api/v1/spots/get-in-radius",
+                        "/api/v1/countries/**",
+                        "/api/v1/cities/**",
+                        "/api/v1/regions/**",
+                        "/api/v1/comments/get-by-spot-id/**",
+                        "/api/v1/spots-users/get-like-number/**",
+                        "/api/v1/spots-users/get-favorite-number/**",
+                        "/api/v1/spots-users/get-info/**",
+                        "/api/v1/image-service/download-user-image/**",
+                        "/api/v1/image-service/download-spot-image/**",
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
                         "/swagger-ui.html",

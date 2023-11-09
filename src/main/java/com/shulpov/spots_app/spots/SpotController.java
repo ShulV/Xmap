@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/spots")
+@RequestMapping("/api/v1/spots")
 @Tag(name="Контроллер мест для катания", description="Позволяет добавлять и получать споты")
 public class SpotController {
     private final SpotService spotService;

@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 @Tag(name="Контроллер пользователя", description="Позволяет получать информацию о пользователе и удалять аккаунт")
 public class UserController {
     private final UserService userService;

@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/image-service")
+@RequestMapping("/api/v1/image-service")
 @Tag(name="Контроллер информации об изображениях",
         description="Позволяет загружать, скачивать и удалять изображения для пользователей и мест для катания")
 public class ImageInfoController {

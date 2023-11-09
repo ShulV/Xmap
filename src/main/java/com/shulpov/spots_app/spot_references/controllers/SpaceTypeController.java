@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/space-types")
+@RequestMapping("/api/v1/space-types")
 @Tag(name="Контроллер типов помещений (справочник)", description="Выдает типы помещений")
 public class SpaceTypeController {
     private final SpaceTypeService spaceTypeService;

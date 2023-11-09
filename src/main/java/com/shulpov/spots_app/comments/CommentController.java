@@ -23,7 +23,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/comments")
+@RequestMapping("/api/v1/comments")
 @Tag(name="Контроллер комментариев", description="Отвечает за добавление и получение комментариев мест для катания")
 
 public class CommentController {
@@ -67,7 +67,7 @@ public class CommentController {
             summary = "Удалить комментарий по id",
             description = "Позволяет пользователю удалить свой комментарий по id комментария"
     )
-    @DeleteMapping("/delete-by-id/{commentId}")
+    @DeleteMapping("/{commentId}")
     public Map<Object, Object> deleteById(@PathVariable Long commentId, Principal principal) throws AuthException {
         logger.atInfo().log("/delete-by-id/{}", commentId);
         Optional<User> userOpt = userService.findByEmail(principal.getName());

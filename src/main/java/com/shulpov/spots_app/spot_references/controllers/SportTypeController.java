@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/sport-types")
+@RequestMapping("/api/v1/sport-types")
 @Tag(name="Контроллер типов спорта (справочник)", description="Выдает типы спорта")
 public class SportTypeController {
     private final SportTypeService sportTypeService;
