@@ -13,3 +13,15 @@ download last veriosn from https://github.com/ShulV/Xmap/tree/main/postman and i
 
 ### How to view the relational model of a database:
 download and open in special UML-tools: https://github.com/ShulV/Xmap/blob/main/uml/relation_model.csv
+
+### How to write logs:
+<ul>
+  <li>Use snakecase for variables</li>
+  <li>Write variables in square brackets ('[', ']')</li>
+  <li>Write a colon (':') before variables block</li>
+  <li>.atInfo() - informing, .atWarn() - warnings, .atError - critical errors</li>
+</ul>
+
+```java
+logger.atInfo().log("Image info created: [image_info_id = '{}']", imageInfo.getId());
+```
