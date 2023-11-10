@@ -1,70 +1,61 @@
 package com.shulpov.spots_app.users;
 
-import com.shulpov.spots_app.users.dto.UserDto;
+import com.shulpov.spots_app.responses.ErrorMessageResponse;
+import com.shulpov.spots_app.users.dto.MainUserInfoDto;
+import com.shulpov.spots_app.users.exception.UserNotFoundException;
 import com.shulpov.spots_app.users.models.User;
-import com.shulpov.spots_app.utils.DtoConverter;
+import com.shulpov.spots_app.users.services.UserService;
+import io.jsonwebtoken.JwtException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/user")
 @Tag(name="Контроллер пользователя", description="Позволяет получать информацию о пользователе и удалять аккаунт")
 public class UserController {
     private final UserService userService;
-    private final DtoConverter dtoConverter;
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
-    public UserController(UserService userService, @Lazy DtoConverter dtoConverter) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.dtoConverter = dtoConverter;
     }
 
     @Operation(
             summary = "Получение полной информации о пользователе",
             description = "Позволяет получить полную информацию о пользователе",
-            security = @SecurityRequirement(name = "accessTokenAuth")
+            security = @SecurityRequirement(name = "accessTokenAuth"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Данные пользователя успешно получены",
+                            content = { @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = MainUserInfoDto.class)) }
+                    ),
+                    @ApiResponse(responseCode = "400", description = "Пользователь не был найден или получены ошибки JWT",
+                            content = { @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorMessageResponse.class)) }
+                    )}
     )
-    @GetMapping("/user")
-    public ResponseEntity<UserDto> getAuthUser() {
-        logger.atInfo().log("GET /user");
-        String email;
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            email = userDetails.getUsername();
-        } catch (UsernameNotFoundException e) {
-            logger.atInfo().log("GET /user email={} not found");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        Optional<User> userOpt = userService.findByEmail(email);
-
-        if(userOpt.isPresent()) {
-            logger.atInfo().log("principle exists");
-            User user = userOpt.get();
-
-            return new ResponseEntity<>(dtoConverter.userToDto(user), HttpStatus.OK);
-        }
-
-        logger.atInfo().log("GET /user email={} not found", email);
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    @GetMapping("/info")
+    public ResponseEntity<MainUserInfoDto> getAuthUser(
+            @Parameter(description = "access token")
+            @RequestHeader("Authorization") String accessToken) {
+        return ResponseEntity.ok(userService.getMainInfoByAccessToken(accessToken));
     }
 
     @Operation(
@@ -72,7 +63,7 @@ public class UserController {
             description = "Позволяет удалить своего пользователя по токену",
             security = @SecurityRequirement(name = "accessTokenAuth")
     )
-    @DeleteMapping("/user")
+    @DeleteMapping("")
     public Map<String, Object> deleteUser() {
         logger.atInfo().log("DELETE /user");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -100,5 +91,14 @@ public class UserController {
         }
         logger.atError().log("email={} not found", email);
         return Map.of("error", "Пользователь не найден");
+    }
+
+    /**
+     * Обработчик ошибки ненайденного пользователя или Jwt
+     * @param e исключение, содержащее текст ошибки
+     */
+    @ExceptionHandler({UserNotFoundException.class, JwtException.class})
+    private ResponseEntity<ErrorMessageResponse> handleJwtExceptionException(Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessageResponse(e.getMessage()));
     }
 }

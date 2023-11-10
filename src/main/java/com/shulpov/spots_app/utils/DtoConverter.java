@@ -1,10 +1,8 @@
 package com.shulpov.spots_app.utils;
 
-import com.shulpov.spots_app.comments.Comment;
-import com.shulpov.spots_app.comments.CommentDto;
 import com.shulpov.spots_app.dto.*;
-import com.shulpov.spots_app.image_infos.models.ImageInfo;
 import com.shulpov.spots_app.image_infos.dto.ImageInfoDto;
+import com.shulpov.spots_app.image_infos.utils.ImageInfoDtoConverter;
 import com.shulpov.spots_app.locations.dto.CityDto;
 import com.shulpov.spots_app.locations.dto.CountryDto;
 import com.shulpov.spots_app.locations.dto.RegionDto;
@@ -25,10 +23,6 @@ import com.shulpov.spots_app.spot_user_infos.dto.SpotUserDto;
 import com.shulpov.spots_app.spot_user_infos.SpotUserService;
 import com.shulpov.spots_app.spots.models.Spot;
 import com.shulpov.spots_app.spots.dto.SpotDto;
-import com.shulpov.spots_app.users.authorization.Role;
-import com.shulpov.spots_app.users.models.User;
-import com.shulpov.spots_app.users.dto.UserDto;
-import com.shulpov.spots_app.users.dto.UserWithoutSpotsDto;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,73 +39,28 @@ import java.util.Optional;
 /**
  * Класс, помогающий конвертировать модели в их DTO и обратно. Класс-@Component.
  * @author Victor Shulpov "vshulpov@gmail.com"
- * @version 1.0
- * @since 1.0
  */
 @Component
 public class DtoConverter {
-
     private final Logger logger = LoggerFactory.getLogger(DtoConverter.class);
 
-    /** Компонент маппинга классов */
     private final  ModelMapper modelMapper;
-    /** Сервис типов помещений */
+    private final ImageInfoDtoConverter imageInfoDtoConverter;
     private final SpaceTypeService spaceTypeService;
-    /** Сервис типов спотов */
     private final SpotTypeService spotTypeService;
-    /** Сервис типов спорта */
     private final SportTypeService sportTypeService;
-    /** Сервис управления данными между пользователями и спотами */
     private final SpotUserService spotUserService;
 
-    /**
-     * Конструктор компонента
-     * @param modelMapper компонент маппинга классов
-     * @param spaceTypeService сервис типов помещений
-     * @param spotTypeService сервис типов спотов
-     * @param sportTypeService сервис типов спорта
-     * @param spotUserService сервис управления данными между пользователями и спотами
-     */
-
     @Autowired
-    public DtoConverter(@Lazy ModelMapper modelMapper, @Lazy SpaceTypeService spaceTypeService,
+    public DtoConverter(@Lazy ModelMapper modelMapper, ImageInfoDtoConverter imageInfoDtoConverter, @Lazy SpaceTypeService spaceTypeService,
                         @Lazy SpotTypeService spotTypeService, @Lazy SportTypeService sportTypeService,
                         SpotUserService spotUserService) {
         this.modelMapper = modelMapper;
+        this.imageInfoDtoConverter = imageInfoDtoConverter;
         this.spaceTypeService = spaceTypeService;
         this.spotTypeService = spotTypeService;
         this.sportTypeService = sportTypeService;
         this.spotUserService = spotUserService;
-    }
-
-    /**
-     * Конвертор класса User в класс UserDto
-     * @param user класс пользователя
-     * @return класс DTO пользователя
-     */
-    public UserDto userToDto(User user) {
-        logger.atInfo().log("userToDto id: {}, name: {}", user.getId(), user.getName());
-        UserDto dto = modelMapper.map(user, UserDto.class);
-        dto.setImageInfoDtoList(user.getImageInfos().stream().map(this::imageInfoToDto).toList());
-        dto.setCreatedSpots(user.getCreatedSpots().stream().map(this::spotToDto).toList());
-        dto.setLikedSpotIds(spotUserService.getLikedSpotUsers(user).stream()
-                .map(ss -> ss.getPostedSpot().getId()).toList());
-        dto.setFavoriteSpotIds(spotUserService.getFavoriteSpotUsers(user).stream()
-                .map(ss -> ss.getPostedSpot().getId()).toList());
-        return dto;
-    }
-
-    /**
-     * Конвертор класса UserDto в класс User
-     * @param dto класс DTO пользователя
-     * @return класс пользователя
-     */
-    public User dtoToNewUser(UserDto dto) {
-        logger.atInfo().log("dtoToNewUser name: {}", dto.getName());
-        User user = modelMapper.map(dto, User.class);
-        user.setRegDate(new Date(System.currentTimeMillis()));
-        user.setRole(Role.USER);
-        return user;
     }
 
     /**
@@ -166,7 +115,7 @@ public class DtoConverter {
         dto.setSpaceTypeId(spot.getSpaceType().getId());
         //инф о картинках
         List<ImageInfoDto> imageInfoDtoList = spot.getImageInfos().stream()
-                .map(this::imageInfoToDto).toList();
+                .map(imageInfoDtoConverter::imageInfoToDto).toList();
         dto.setImageInfoDtoList(imageInfoDtoList);
         //кол-во избранных
         Integer favoriteNum = spotUserService.getFavoriteNumber(spot);
@@ -175,30 +124,6 @@ public class DtoConverter {
         Integer likeNum = spotUserService.getLikeNumber(spot);
         dto.setLikeNumber(likeNum);
 
-        return dto;
-    }
-
-    /**
-     * Конвертор класса ImageInfo в класс ImageInfoDto
-     * @param imageInfo класс информации об изображении
-     * @return класс DTO информации об изображении
-     */
-    public ImageInfoDto imageInfoToDto(ImageInfo imageInfo) throws NullPointerException {
-        logger.atInfo().log("imageInfoToDto id: {}, genName: {}", imageInfo.getId(), imageInfo.getGenName());
-        ImageInfoDto dto = modelMapper.map(imageInfo, ImageInfoDto.class);
-
-        if(imageInfo.getPhotographedUser() != null) {
-            String url = ImageUtil.getUserImageDownloadUrl(imageInfo.getId());
-            dto.setUrl(url);
-            logger.atInfo().log("imageInfoToDto image for user, user_id={}", imageInfo.getPhotographedUser().getId());
-        } else if(imageInfo.getPhotographedSpot() != null) {
-            String url = ImageUtil.getSpotImageDownloadUrl(imageInfo.getId());
-            dto.setUrl(url);
-            logger.atInfo().log("imageInfoToDto image for spot, spot_id={}", imageInfo.getPhotographedSpot().getId());
-        } else {
-            logger.atInfo().log("Invalid image info object (user and spot are null)");
-            throw new NullPointerException("Invalid image info object (user and spot are null)");
-        }
         return dto;
     }
 
@@ -230,19 +155,6 @@ public class DtoConverter {
     public SpaceTypeDto spaceTypeToDto(SpaceType spaceType) {
         logger.atInfo().log("spaceTypeToDto id={}", spaceType.getId());
         return modelMapper.map(spaceType, SpaceTypeDto.class);
-    }
-
-    /**
-     * Конвертор класса Comment в класс CommentDto
-     * @param comment класс комментария
-     * @return класс DTO комментария
-     */
-    public CommentDto commentToDto(Comment comment) {
-        logger.atInfo().log("commentToDto id={}", comment.getId());
-        CommentDto dto = modelMapper.map(comment, CommentDto.class);
-        UserDto userDto = userToDto(comment.getCommentator());
-        dto.setCommentatorDto(new UserWithoutSpotsDto(userDto));
-        return dto;
     }
 
     /**
@@ -282,7 +194,6 @@ public class DtoConverter {
      * @return класс DTO класса страны
      */
     public CountryDto countryToDto(Country country) {
-        // TODO дописать логгер
         return modelMapper.map(country, CountryDto.class);
     }
 
@@ -292,7 +203,6 @@ public class DtoConverter {
      * @return класс DTO класса региона
      */
     public RegionDto regionToDto(Region region) {
-        // TODO дописать логгер
         return modelMapper.map(region, RegionDto.class);
     }
 
@@ -302,7 +212,6 @@ public class DtoConverter {
      * @return класс DTO класса города
      */
     public CityDto cityToDto(City city) {
-        // TODO дописать логгер
         return modelMapper.map(city, CityDto.class);
     }
 }

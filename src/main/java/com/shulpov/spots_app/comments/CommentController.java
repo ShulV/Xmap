@@ -1,8 +1,8 @@
 package com.shulpov.spots_app.comments;
 
+import com.shulpov.spots_app.comments.utils.CommentDtoConverter;
 import com.shulpov.spots_app.users.models.User;
-import com.shulpov.spots_app.users.UserService;
-import com.shulpov.spots_app.utils.DtoConverter;
+import com.shulpov.spots_app.users.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,13 +30,15 @@ public class CommentController {
     private final CommentService commentService;
     private final UserService userService;
     private final Logger logger = LoggerFactory.getLogger(CommentController.class);
-    private final DtoConverter dtoConverter;
+
+    private final CommentDtoConverter commentDtoConverter;
 
     @Autowired
-    public CommentController(CommentService commentService, @Lazy UserService userService, @Lazy DtoConverter dtoConverter) {
+    public CommentController(
+            CommentService commentService, @Lazy UserService userService, CommentDtoConverter commentDtoConverter) {
         this.commentService = commentService;
         this.userService = userService;
-        this.dtoConverter = dtoConverter;
+        this.commentDtoConverter = commentDtoConverter;
     }
 
     @Operation(
@@ -96,6 +98,6 @@ public class CommentController {
     @GetMapping("/get-by-spot-id/{spotId}")
     public List<CommentDto> getBySpotId(@PathVariable Long spotId) {
         logger.atInfo().log("/get-by-spot-id/{}", spotId);
-        return commentService.findByCommentedSpotId(spotId).stream().map(dtoConverter::commentToDto).toList();
+        return commentService.findByCommentedSpotId(spotId).stream().map(commentDtoConverter::commentToDto).toList();
     }
 }

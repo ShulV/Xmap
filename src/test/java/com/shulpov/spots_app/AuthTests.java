@@ -7,7 +7,7 @@ import com.shulpov.spots_app.authentication_management.tokens.Token;
 import com.shulpov.spots_app.authentication_management.tokens.TokenService;
 import com.shulpov.spots_app.db_cleaner.DBCleaner;
 import com.shulpov.spots_app.responses.ErrorMessageResponse;
-import com.shulpov.spots_app.users.UserService;
+import com.shulpov.spots_app.users.services.UserService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;

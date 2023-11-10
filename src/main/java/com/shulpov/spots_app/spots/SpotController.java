@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shulpov.spots_app.spots.dto.SpotDto;
 import com.shulpov.spots_app.spots.models.Spot;
 import com.shulpov.spots_app.users.models.User;
-import com.shulpov.spots_app.users.UserService;
+import com.shulpov.spots_app.users.services.UserService;
 import com.shulpov.spots_app.utils.DtoConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

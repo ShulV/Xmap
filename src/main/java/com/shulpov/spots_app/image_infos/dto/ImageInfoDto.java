@@ -1,8 +1,9 @@
 package com.shulpov.spots_app.image_infos.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ImageInfoDto {
+public class ImageInfoDto implements Serializable {
 
     private Long id;
     private String url;

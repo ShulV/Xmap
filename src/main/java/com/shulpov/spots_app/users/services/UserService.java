@@ -1,7 +1,13 @@
-package com.shulpov.spots_app.users;
+package com.shulpov.spots_app.users.services;
 
+import com.shulpov.spots_app.authentication_management.services.JwtService;
 import com.shulpov.spots_app.image_infos.ImageInfoService;
+import com.shulpov.spots_app.users.UserRepository;
+import com.shulpov.spots_app.users.dto.MainUserInfoDto;
+import com.shulpov.spots_app.users.exception.UserNotFoundException;
 import com.shulpov.spots_app.users.models.User;
+import com.shulpov.spots_app.users.utils.UserDtoConverter;
+import io.jsonwebtoken.JwtException;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,33 +26,34 @@ public class UserService {
 
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final ImageInfoService imageInfoService;
+    private final JwtService jwtService;
     private final UserRepository userRepository;
 
+    private final UserDtoConverter userDtoConverter;
+
     @Autowired
-    public UserService(ImageInfoService imageInfoService, UserRepository userRepository) {
+    public UserService(ImageInfoService imageInfoService, JwtService jwtService, UserRepository userRepository, UserDtoConverter userDtoConverter) {
         this.imageInfoService = imageInfoService;
+        this.jwtService = jwtService;
         this.userRepository = userRepository;
+        this.userDtoConverter = userDtoConverter;
     }
 
-    //Найти пользователя по id
     public Optional<User> findById(Long id) {
         logger.atInfo().log("findById id={}", id);
         return userRepository.findById(id);
     }
 
-    //Найти пользователя по email
     public Optional<User> findByEmail(String email) {
         logger.atInfo().log("findByEmail email={}", email);
         return userRepository.findByEmail(email);
     }
 
-    //Найти пользователя по имени
     public Optional<User> findByName(String name) {
         logger.atInfo().log("findByName name={}", name);
         return userRepository.findByName(name);
     }
 
-    //Удалить пользователя по id
     @Transactional(rollbackFor = IOException.class)
     public Boolean deleteById(Long id) {
         logger.atInfo().log("deleteById id={}", id);
@@ -71,10 +78,24 @@ public class UserService {
         return false;
     }
 
-    //Найти пользователя по номеру телефона
     public Optional<User> findByPhoneNumber(String phoneNumber) {
         logger.atInfo().log("findByPhoneNumber phoneNumber={}", phoneNumber);
         return userRepository.findByPhoneNumber(phoneNumber);
     }
 
+    public MainUserInfoDto getMainInfoByAccessToken(String accessToken) throws UserNotFoundException, JwtException {
+        Optional<User> userOpt = getByAccessToken(accessToken);
+        if (userOpt.isEmpty()) {
+            throw new UserNotFoundException("User not found");
+        }
+        return userDtoConverter.userToUserMainInfoDto(userOpt.get());
+    }
+
+    /**
+     * Получить пользователя по его access токену
+     */
+    private Optional<User> getByAccessToken(String accessToken) throws JwtException {
+        String email = jwtService.extractEmail(accessToken);
+        return userRepository.findByEmail(email);
+    }
 }

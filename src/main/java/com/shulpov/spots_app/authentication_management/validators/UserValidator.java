@@ -1,6 +1,6 @@
 package com.shulpov.spots_app.authentication_management.validators;
 
-import com.shulpov.spots_app.users.UserService;
+import com.shulpov.spots_app.users.services.UserService;
 import com.shulpov.spots_app.users.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
