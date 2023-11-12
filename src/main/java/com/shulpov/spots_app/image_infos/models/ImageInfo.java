@@ -6,6 +6,11 @@ import jakarta.persistence.*;
 
 import java.util.Date;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @Entity
 @Table(name = "image_info")
 public class ImageInfo {

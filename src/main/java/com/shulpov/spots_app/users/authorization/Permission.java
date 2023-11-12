@@ -3,6 +3,11 @@ package com.shulpov.spots_app.users.authorization;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @RequiredArgsConstructor
 public enum Permission {
 

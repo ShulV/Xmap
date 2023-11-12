@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
  */
 @Component
 public class LoginPasswordAuthenticationProvider implements AuthenticationProvider {

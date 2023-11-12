@@ -3,11 +3,20 @@ package com.shulpov.spots_app.spot_references.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shulpov.spots_app.spots.models.Spot;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @Entity
 @Table(name = "spot_types")
+@Getter
+@Setter
 public class SpotType {
     @Id
     @Column(name = "id")
@@ -22,28 +31,4 @@ public class SpotType {
             cascade = {CascadeType.PERSIST,CascadeType.MERGE })
     @JsonIgnore
     private List<Spot> spots;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Spot> getSpots() {
-        return spots;
-    }
-
-    public void setSpots(List<Spot> spots) {
-        this.spots = spots;
-    }
 }

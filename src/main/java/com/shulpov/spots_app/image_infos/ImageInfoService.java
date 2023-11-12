@@ -1,6 +1,6 @@
 package com.shulpov.spots_app.image_infos;
 
-import com.shulpov.spots_app.utils.file_manager.FileManager;
+import com.shulpov.spots_app.common.utils.file_manager.FileManager;
 import com.shulpov.spots_app.image_infos.models.ImageInfo;
 import com.shulpov.spots_app.spots.models.Spot;
 import com.shulpov.spots_app.spots.SpotService;
@@ -27,6 +27,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @Service
 @Transactional(readOnly = true)
 @Scope(value = "prototype")

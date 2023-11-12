@@ -23,6 +23,11 @@ import java.security.Principal;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/api/v1/image-service")
 @Tag(name="Контроллер информации об изображениях",

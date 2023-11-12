@@ -5,6 +5,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @Service
 public class TokenService {
     private final TokenRepository tokenRepository;

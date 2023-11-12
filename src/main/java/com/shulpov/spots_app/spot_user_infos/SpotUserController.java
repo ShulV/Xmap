@@ -1,13 +1,13 @@
 package com.shulpov.spots_app.spot_user_infos;
 
+import com.shulpov.spots_app.authentication_management.services.AuthenticationService;
 import com.shulpov.spots_app.spot_user_infos.dto.SpotUserDto;
 import com.shulpov.spots_app.spot_user_infos.models.SpotUser;
+import com.shulpov.spots_app.spots.SpotService;
 import com.shulpov.spots_app.spots.dto.SpotDto;
 import com.shulpov.spots_app.spots.models.Spot;
 import com.shulpov.spots_app.users.models.User;
-import com.shulpov.spots_app.spots.SpotService;
-import com.shulpov.spots_app.users.services.UserService;
-import com.shulpov.spots_app.utils.DtoConverter;
+import com.shulpov.spots_app.common.utils.DtoConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,6 +22,11 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/api/v1/spots-users")
 @Tag(name="Контроллер промежуточной таблицы отношения пользователей к местам для катания",
@@ -31,16 +36,15 @@ import java.util.Optional;
 public class SpotUserController {
     private final SpotUserService spotUserService;
     private final SpotService spotService;
-    private final UserService userService;
-
+    private final AuthenticationService authService;
     private final DtoConverter dtoConverter;
 
     @Autowired
     public SpotUserController(SpotUserService spotUserService, @Lazy SpotService spotService,
-                              @Lazy UserService userService, @Lazy DtoConverter dtoConverter) {
+                              AuthenticationService authService, @Lazy DtoConverter dtoConverter) {
         this.spotUserService = spotUserService;
         this.spotService = spotService;
-        this.userService = userService;
+        this.authService = authService;
         this.dtoConverter = dtoConverter;
     }
 
@@ -55,24 +59,13 @@ public class SpotUserController {
         return spotOpt.get();
     }
 
-    /**
-     * Позволяет проверить есть ли определенный юзер в базе данных
-     */
-    private User checkUser(Principal principal) throws AuthException {
-        Optional<User> userOpt = userService.findByEmail(principal.getName());
-        if(userOpt.isEmpty()) {
-            throw new AuthException("No principal");
-        }
-        return userOpt.get();
-    }
-
     @Operation(
             summary = "Изменить состояние лайка",
             description = "Позволяет изменить состояние лайка спота для авторизированного пользователя"
     )
     @PatchMapping("/like-state/{spotId}")
     public Map<String, Object> changeLikeState(@PathVariable Long spotId, Principal principal) throws AuthException {
-        User user = checkUser(principal);
+        User user = authService.getUserByPrinciple(principal);
         Spot spot = checkSpot(spotId);
         return spotUserService.changeLikeState(spot, user);
     }
@@ -83,7 +76,7 @@ public class SpotUserController {
     )
     @PatchMapping("/favorite-state/{spotId}")
     public Map<String, Object> changeFavoriteState(@PathVariable Long spotId, Principal principal) throws AuthException {
-        User user = checkUser(principal);
+        User user = authService.getUserByPrinciple(principal);
         Spot spot = checkSpot(spotId);
         return spotUserService.changeFavoriteState(spot, user);
     }
@@ -115,7 +108,7 @@ public class SpotUserController {
     )
     @GetMapping("/info/{spotId}")
     public SpotUserDto getInfo(@PathVariable Long spotId, Principal principal) throws AuthException {
-        User user = checkUser(principal);
+        User user = authService.getUserByPrinciple(principal);
         Spot spot = checkSpot(spotId);
         SpotUser spotUser = spotUserService.getInfo(spot, user);
         return dtoConverter.spotUserToDto(spotUser);
@@ -128,7 +121,7 @@ public class SpotUserController {
     )
     @GetMapping("/favorite-spots")
     public List<SpotDto> getFavoriteSpots(Principal principal) throws AuthException {
-        User user = checkUser(principal);
+        User user = authService.getUserByPrinciple(principal);
         return spotUserService.getFavoriteSpotUsers(user).stream()
                 .map(ss->dtoConverter.spotToDto(ss.getPostedSpot())).toList();
     }

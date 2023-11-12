@@ -1,6 +1,6 @@
-package com.shulpov.spots_app.utils;
+package com.shulpov.spots_app.common.utils;
 
-import com.shulpov.spots_app.dto.*;
+import com.shulpov.spots_app.common.dto.FieldErrorDto;
 import com.shulpov.spots_app.image_infos.dto.ImageInfoDto;
 import com.shulpov.spots_app.image_infos.utils.ImageInfoDtoConverter;
 import com.shulpov.spots_app.locations.dto.CityDto;

@@ -7,6 +7,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @Repository
 public interface TokenRepository extends JpaRepository<Token, Long> {
     List<Token> findByUser(User user);

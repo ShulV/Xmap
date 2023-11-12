@@ -8,9 +8,15 @@ import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBl
 
 import java.util.Date;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @Getter
 @Setter
 public class CommentDto {
+
     private Long id;
 
     @NotBlank(message = "Комментарий не должен быть пустым")

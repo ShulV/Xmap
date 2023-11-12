@@ -8,9 +8,9 @@ import com.shulpov.spots_app.authentication_management.responses.LogoutMessageRe
 import com.shulpov.spots_app.authentication_management.responses.RegisterErrorResponse;
 import com.shulpov.spots_app.authentication_management.responses.RegisterResponse;
 import com.shulpov.spots_app.authentication_management.services.AuthenticationService;
-import com.shulpov.spots_app.dto.FieldErrorDto;
-import com.shulpov.spots_app.responses.ErrorMessageResponse;
-import com.shulpov.spots_app.utils.DtoConverter;
+import com.shulpov.spots_app.common.dto.FieldErrorDto;
+import com.shulpov.spots_app.common.responses.ErrorMessageResponse;
+import com.shulpov.spots_app.common.utils.DtoConverter;
 import io.jsonwebtoken.JwtException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,8 +30,9 @@ import java.util.List;
 
 /**
  * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
  */
-
 @RestController
 @RequestMapping(value = "/api/v1/auth")
 @Tag(name="Контроллер управления аутентификацией пользователей")

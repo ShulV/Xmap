@@ -7,6 +7,11 @@ import com.shulpov.spots_app.users.utils.UserDtoConverter;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @Component
 public class CommentDtoConverter {
     private final ModelMapper modelMapper;

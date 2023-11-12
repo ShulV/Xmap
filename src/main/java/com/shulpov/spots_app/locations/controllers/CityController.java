@@ -3,7 +3,7 @@ package com.shulpov.spots_app.locations.controllers;
 import com.shulpov.spots_app.locations.dto.CityDto;
 import com.shulpov.spots_app.locations.models.City;
 import com.shulpov.spots_app.locations.services.CityService;
-import com.shulpov.spots_app.utils.DtoConverter;
+import com.shulpov.spots_app.common.utils.DtoConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
@@ -18,6 +18,11 @@ import org.webjars.NotFoundException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Orlov Daniil
+ * @since 1.0
+ * @version 1.0
+ */
 @RestController
 @RequestMapping(value ="/api/v1/cities", produces = "application/json")
 @Tag(name="Контроллер городов (справочник)", description="Выдает города")

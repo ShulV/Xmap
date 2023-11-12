@@ -7,6 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @Repository
 public interface SpotRepo extends JpaRepository<Spot, Long> {
     //получить споты в заданном радиусе (ед. изм. - км)

@@ -4,12 +4,21 @@ import com.shulpov.spots_app.spots.models.Spot;
 import com.shulpov.spots_app.users.models.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank;
 
 import java.util.Date;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @Entity
 @Table(name = "comments")
+@Getter
+@Setter
 public class Comment {
     @Id
     @Column(name = "id")
@@ -31,44 +40,4 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User commentator;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Date getUploadDate() {
-        return uploadDate;
-    }
-
-    public void setUploadDate(Date uploadDate) {
-        this.uploadDate = uploadDate;
-    }
-
-    public Spot getCommentedSpot() {
-        return commentedSpot;
-    }
-
-    public void setCommentedSpot(Spot commentedSpot) {
-        this.commentedSpot = commentedSpot;
-    }
-
-    public User getCommentator() {
-        return commentator;
-    }
-
-    public void setCommentator(User commentator) {
-        this.commentator = commentator;
-    }
 }

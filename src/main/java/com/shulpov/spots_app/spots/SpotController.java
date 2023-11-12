@@ -6,7 +6,7 @@ import com.shulpov.spots_app.spots.dto.SpotDto;
 import com.shulpov.spots_app.spots.models.Spot;
 import com.shulpov.spots_app.users.models.User;
 import com.shulpov.spots_app.users.services.UserService;
-import com.shulpov.spots_app.utils.DtoConverter;
+import com.shulpov.spots_app.common.utils.DtoConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,6 +25,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/api/v1/spots")
 @Tag(name="Контроллер мест для катания", description="Позволяет добавлять и получать споты")

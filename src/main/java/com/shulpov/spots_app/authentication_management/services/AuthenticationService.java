@@ -14,7 +14,9 @@ import com.shulpov.spots_app.authentication_management.validators.UserValidator;
 import com.shulpov.spots_app.users.authorization.Role;
 import com.shulpov.spots_app.users.models.User;
 import com.shulpov.spots_app.users.UserRepository;
+import com.shulpov.spots_app.users.services.UserService;
 import io.jsonwebtoken.JwtException;
+import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,11 +26,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
+import java.security.Principal;
 import java.util.Date;
 import java.util.Optional;
 
 /**
  * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
  */
 @Service
 @RequiredArgsConstructor
@@ -39,6 +44,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final TokenService tokenService;
+    private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final UserValidator userValidator;
 
@@ -202,6 +208,17 @@ public class AuthenticationService {
                 .userId(token.getUser().getId())
                 .message("Успешный выход из аккаунта на всех устройствах")
                 .build();
+    }
+
+    /**
+     * Получает объект пользователя, используя principle (Получает principal из SecurityContextHolder)
+     */
+    public User getUserByPrinciple(Principal principal) throws AuthException {
+        Optional<User> userOpt = userService.findByEmail(principal.getName());
+        if(userOpt.isEmpty()) {
+            throw new AuthException("No principal");
+        }
+        return userOpt.get();
     }
 }
 

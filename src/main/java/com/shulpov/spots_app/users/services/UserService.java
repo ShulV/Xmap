@@ -13,12 +13,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @Service
 @Transactional(readOnly = true)
 @Scope(value = "prototype")
@@ -40,7 +46,6 @@ public class UserService {
     }
 
     public Optional<User> findById(Long id) {
-        logger.atInfo().log("findById id={}", id);
         return userRepository.findById(id);
     }
 
@@ -83,7 +88,9 @@ public class UserService {
         return userRepository.findByPhoneNumber(phoneNumber);
     }
 
-    public MainUserInfoDto getMainInfoByAccessToken(String accessToken) throws UserNotFoundException, JwtException {
+    public MainUserInfoDto getMainInfoByAccessToken(String accessHeader)
+            throws UserNotFoundException, JwtException, AuthenticationCredentialsNotFoundException {
+        String accessToken = jwtService.getAccessTokenFromAccessHeader(accessHeader);
         Optional<User> userOpt = getByAccessToken(accessToken);
         if (userOpt.isEmpty()) {
             throw new UserNotFoundException("User not found");

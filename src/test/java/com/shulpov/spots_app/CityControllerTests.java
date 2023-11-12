@@ -9,6 +9,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+/**
+ * @author Orlov Daniil
+ * @since 1.0
+ * @version 1.0
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 class CityControllerTests {
@@ -22,7 +27,7 @@ class CityControllerTests {
 
     @Test
     void testGetAllCities() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/cities/get-all")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/cities/all")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))

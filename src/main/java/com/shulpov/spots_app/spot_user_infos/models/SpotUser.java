@@ -3,9 +3,18 @@ package com.shulpov.spots_app.spot_user_infos.models;
 import com.shulpov.spots_app.spots.models.Spot;
 import com.shulpov.spots_app.users.models.User;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @Entity
 @Table(name = "spots_users")
+@Getter
+@Setter
 public class SpotUser {
     @EmbeddedId
     private UserSpotPK id;
@@ -34,45 +43,5 @@ public class SpotUser {
         this.userActor = userActor;
         this.liked = liked;
         this.favorite = favorite;
-    }
-
-    public UserSpotPK getId() {
-        return id;
-    }
-
-    public void setId(UserSpotPK id) {
-        this.id = id;
-    }
-
-    public Boolean getLiked() {
-        return liked;
-    }
-
-    public void setLiked(Boolean liked) {
-        this.liked = liked;
-    }
-
-    public Boolean getFavorite() {
-        return favorite;
-    }
-
-    public void setFavorite(Boolean favorite) {
-        this.favorite = favorite;
-    }
-
-    public Spot getPostedSpot() {
-        return postedSpot;
-    }
-
-    public void setPostedSpot(Spot postedSpot) {
-        this.postedSpot = postedSpot;
-    }
-
-    public User getUserActor() {
-        return userActor;
-    }
-
-    public void setUserActor(User userActor) {
-        this.userActor = userActor;
     }
 }

@@ -11,6 +11,11 @@ import java.util.stream.Collectors;
 
 import static com.shulpov.spots_app.users.authorization.Permission.*;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @Getter
 @RequiredArgsConstructor
 public enum Role {

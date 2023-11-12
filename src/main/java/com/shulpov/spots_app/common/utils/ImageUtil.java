@@ -1,4 +1,4 @@
-package com.shulpov.spots_app.utils;
+package com.shulpov.spots_app.common.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * Класс, помогающий получать ссылки на изображения. Класс-@Component.
- * @author Victor Shulpov "vshulpov@gmail.com"
- * @version 1.0
+ * Класс, помогающий получать ссылки на изображения.
+ * @author Shulpov Victor
  * @since 1.0
+ * @version 1.0
  */
 @Component
 public class ImageUtil {

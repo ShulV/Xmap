@@ -3,7 +3,7 @@ package com.shulpov.spots_app.spot_references.controllers;
 import com.shulpov.spots_app.spot_references.dto.SpaceTypeDto;
 import com.shulpov.spots_app.spot_references.models.SpaceType;
 import com.shulpov.spots_app.spot_references.services.SpaceTypeService;
-import com.shulpov.spots_app.utils.DtoConverter;
+import com.shulpov.spots_app.common.utils.DtoConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
@@ -19,6 +19,11 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/api/v1/space-types")
 @Tag(name="Контроллер типов помещений (справочник)", description="Выдает типы помещений")

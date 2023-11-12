@@ -8,6 +8,11 @@ import lombok.*;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @Setter
 @Getter
 public class MainUserInfoDto {

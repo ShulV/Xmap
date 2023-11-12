@@ -9,12 +9,21 @@ import com.shulpov.spots_app.spot_references.models.SportType;
 import com.shulpov.spots_app.spot_references.models.SpotType;
 import com.shulpov.spots_app.users.models.User;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @Entity
 @Table(name = "spots")
+@Getter
+@Setter
 public class Spot {
     @Id
     @Column(name = "id")
@@ -89,148 +98,4 @@ public class Spot {
 
     @OneToMany(mappedBy = "commentedSpot")
     private List<Comment> comments;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
-    public Boolean getAccepted() {
-        return accepted;
-    }
-
-    public void setAccepted(Boolean accepted) {
-        this.accepted = accepted;
-    }
-
-    public Date getAddingDate() {
-        return addingDate;
-    }
-
-    public void setAddingDate(Date addingDate) {
-        this.addingDate = addingDate;
-    }
-
-    public Date getUpdatingDate() {
-        return updatingDate;
-    }
-
-    public void setUpdatingDate(Date updatingDate) {
-        this.updatingDate = updatingDate;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<ImageInfo> getImageInfos() {
-        return imageInfos;
-    }
-
-    public void setImageInfos(List<ImageInfo> imageInfos) {
-        this.imageInfos = imageInfos;
-    }
-
-    public List<SpotType> getSpotTypes() {
-        return spotTypes;
-    }
-
-    public void setSpotTypes(List<SpotType> spotTypes) {
-        this.spotTypes = spotTypes;
-    }
-
-    public List<SportType> getSportTypes() {
-        return sportTypes;
-    }
-
-    public void setSportTypes(List<SportType> sportTypes) {
-        this.sportTypes = sportTypes;
-    }
-
-    public List<SpotUser> getSpotUsers() {
-        return spotUsers;
-    }
-
-    public void setSpotUsers(List<SpotUser> spotUsers) {
-        this.spotUsers = spotUsers;
-    }
-
-    public SpaceType getSpaceType() {
-        return spaceType;
-    }
-
-    public void setSpaceType(SpaceType spaceType) {
-        this.spaceType = spaceType;
-    }
-
-    public User getModerUser() {
-        return moderUser;
-    }
-
-    public void setModerUser(User moderUser) {
-        this.moderUser = moderUser;
-    }
-
-    public User getCreatorUser() {
-        return creatorUser;
-    }
-
-    public void setCreatorUser(User creatorUser) {
-        this.creatorUser = creatorUser;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
-
-    public List<SpotUser> getSpotUserList() {
-        return spotUserList;
-    }
-
-    public void setSpotUserList(List<SpotUser> spotUserList) {
-        this.spotUserList = spotUserList;
-    }
-
-    public City getCity() {
-        return city;
-    }
-
-    public void setCity(City city) {
-        this.city = city;
-    }
 }

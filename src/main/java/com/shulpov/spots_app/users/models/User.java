@@ -16,7 +16,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @Entity
 @Getter
 @Setter

@@ -6,7 +6,7 @@ import com.shulpov.spots_app.authentication_management.responses.AuthenticationR
 import com.shulpov.spots_app.authentication_management.tokens.Token;
 import com.shulpov.spots_app.authentication_management.tokens.TokenService;
 import com.shulpov.spots_app.db_cleaner.DBCleaner;
-import com.shulpov.spots_app.responses.ErrorMessageResponse;
+import com.shulpov.spots_app.common.responses.ErrorMessageResponse;
 import com.shulpov.spots_app.users.services.UserService;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -29,9 +29,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-
 /**
  * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
  */
 @SpringBootTest
 @AutoConfigureMockMvc

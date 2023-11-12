@@ -13,6 +13,11 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @Getter
 @Setter
 public class UserFullInfoDto implements Serializable {
@@ -44,5 +49,4 @@ public class UserFullInfoDto implements Serializable {
     private List<Long> likedSpotIds;
 
     private List<Long> favoriteSpotIds;
-
 }

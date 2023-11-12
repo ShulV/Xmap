@@ -1,4 +1,4 @@
-package com.shulpov.spots_app.utils.file_manager;
+package com.shulpov.spots_app.common.utils.file_manager;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -12,10 +12,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Класс,отвечающий за загрузку/скачивание/удаление изображений в/из директории на сервере. Класс-@Component.
- * @author Victor Shulpov "vshulpov@gmail.com"
- * @version 1.0
+ * @author Shulpov Victor
  * @since 1.0
+ * @version 1.0
  */
 @Component
 public class ImageManager implements FileManager {

@@ -2,7 +2,7 @@ package com.shulpov.spots_app.image_infos.utils;
 
 import com.shulpov.spots_app.image_infos.dto.ImageInfoDto;
 import com.shulpov.spots_app.image_infos.models.ImageInfo;
-import com.shulpov.spots_app.utils.ImageUtil;
+import com.shulpov.spots_app.common.utils.ImageUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 

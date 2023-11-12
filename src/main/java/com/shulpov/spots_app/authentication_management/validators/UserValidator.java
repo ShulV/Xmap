@@ -12,10 +12,10 @@ import org.springframework.validation.Validator;
 import java.util.Date;
 
 /**
- * Класс, проверяющий экземпляры класса пользователя на валидность. Класс-@Component.
- * @author Victor Shulpov "vshulpov@gmail.com"
- * @version 1.0
+ * Класс, проверяющий экземпляры класса пользователя на валидность
+ * @author Shulpov Victor
  * @since 1.0
+ * @version 1.0
  */
 @Component
 public class UserValidator implements Validator {

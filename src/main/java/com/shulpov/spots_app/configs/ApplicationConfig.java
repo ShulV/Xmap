@@ -17,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
  */
 @Configuration
 @RequiredArgsConstructor

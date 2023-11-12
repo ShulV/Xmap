@@ -22,6 +22,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/api/v1/comments")
 @Tag(name="Контроллер комментариев", description="Отвечает за добавление и получение комментариев мест для катания")

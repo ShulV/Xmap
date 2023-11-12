@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
  */
 @Data
 @Builder

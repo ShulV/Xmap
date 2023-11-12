@@ -18,8 +18,9 @@ import java.util.function.Function;
 
 /**
  * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
  */
-
 @Service
 public class JwtService {
 
@@ -31,16 +32,23 @@ public class JwtService {
     private long refreshExpiration;
 
     /**
+     * Получить значение access токена из заголовка
+     */
+    public String getAccessTokenFromAccessHeader(String accessHeader) throws AuthenticationCredentialsNotFoundException {
+        if (accessHeader == null ||!accessHeader.startsWith("Bearer ")) {
+            throw new AuthenticationCredentialsNotFoundException("Bearer token (access) not found");
+        }
+        return accessHeader.substring(7);
+    }
+
+    /**
      * Получить access token из запроса (из заголовка)
      * @param request запрос
      * @return access token
      */
     public String getAccessTokenFromRequest(HttpServletRequest request) throws AuthenticationCredentialsNotFoundException {
-        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
-            throw new AuthenticationCredentialsNotFoundException("Bearer token (access) not found");
-        }
-        return authHeader.substring(7);
+        final String accessHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        return getAccessTokenFromAccessHeader(accessHeader);
     }
 
     /**

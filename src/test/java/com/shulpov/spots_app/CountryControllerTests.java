@@ -11,6 +11,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 /**
  * @author Orlov Daniil
+ * @since 1.0
+ * @version 1.0
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -25,7 +27,7 @@ class CountryControllerTests {
 
     @Test
     void testGetAllCountry() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/countries/get-all")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/countries/all")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))

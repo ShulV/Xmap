@@ -6,7 +6,6 @@ import com.shulpov.spots_app.users.models.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-
 /**
  * Компонент, помогающий конвертировать модели класса User в DTO и обратно.
  * @author Victor Shulpov "vshulpov@gmail.com"
