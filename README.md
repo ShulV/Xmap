@@ -26,7 +26,7 @@ download and open in special UML-tools: https://github.com/ShulV/Xmap/blob/main/
 logger.atInfo().log("Image info created: [image_info_id = '{}']", imageInfo.getId());
 ```
 
-### Hot to name JSON keys: 
+### How to name JSON keys: 
 (snake_case)
 ```javascript
 "some_key_name" : "value" 
