@@ -28,8 +28,8 @@ logger.atInfo().log("Image info created: [image_info_id = '{}']", imageInfo.getI
 
 ### Hot to name JSON keys: 
 (snake_case)
-```
-"some_key_name": "value" 
+```javascript
+"some_key_name" : "value" 
 ```
 P.S. many JSON libraries (in Spring Framework), such as Jackson, support camelCase format out of the box.
 
