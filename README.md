@@ -27,8 +27,9 @@ logger.atInfo().log("Image info created: [image_info_id = '{}']", imageInfo.getI
 ```
 
 ### Hot to name JSON keys: 
-someName (camelCase)
-Why? Many JSON libraries (in Spring Framework), such as Jackson, support this format out of the box.
+"some_key_name": "value" (snake_case)
+P.S. many JSON libraries (in Spring Framework), such as Jackson, support camelCase format out of the box.
+But snake_case is more convenient to read now.
 
 ### Size of methods and classes:
 The maximum length of methods is 100 lines. The maximum class length is 1000 lines.
