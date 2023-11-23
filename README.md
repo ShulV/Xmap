@@ -41,3 +41,6 @@ The maximum length of methods is 100 lines. The maximum class length is 1000 lin
 If the size of a method or class exceeds these values, then new business logic can only be added in the form of calling methods of other functions. 
 
 But it is better to carefully refactor it!
+
+### Package structure:
+When more than one controller, service, repository, model, dto and etc. appears, we put them together in a package.
