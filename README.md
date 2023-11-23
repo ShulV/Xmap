@@ -16,7 +16,7 @@ download and open in special UML-tools: https://github.com/ShulV/Xmap/blob/main/
 
 ### How to write logs:
 <ul>
-  <li>Use snakecase for variables</li>
+  <li>Use snake_case for variables</li>
   <li>Write variables in square brackets ('[', ']')</li>
   <li>Write a colon (':') before variables block</li>
   <li>.atInfo() - informing, .atWarn() - warnings, .atError - critical errors</li>
