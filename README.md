@@ -25,3 +25,12 @@ download and open in special UML-tools: https://github.com/ShulV/Xmap/blob/main/
 ```java
 logger.atInfo().log("Image info created: [image_info_id = '{}']", imageInfo.getId());
 ```
+
+### Hot to name JSON keys: 
+someName (camelCase)
+Why? Many JSON libraries (in Spring Framework), such as Jackson, support this format out of the box.
+
+### Size of methods and classes:
+The maximum length of methods is 100 lines. The maximum class length is 1000 lines.
+If the size of a method or class exceeds these values, then new business logic can only be added in the form of calling methods of other functions. 
+But it is better to carefully refactor it!
