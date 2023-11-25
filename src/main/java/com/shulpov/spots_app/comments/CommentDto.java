@@ -1,6 +1,6 @@
 package com.shulpov.spots_app.comments;
 
-import com.shulpov.spots_app.users.dto.MainUserInfoDto;
+import com.shulpov.spots_app.users.dto.CommentatorDto;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,5 +25,5 @@ public class CommentDto {
 
     private Date uploadDate;
 
-    private MainUserInfoDto commentatorDto;
+    private CommentatorDto commentatorDto;
 }

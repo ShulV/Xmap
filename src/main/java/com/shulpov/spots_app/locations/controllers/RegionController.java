@@ -3,7 +3,7 @@ package com.shulpov.spots_app.locations.controllers;
 import com.shulpov.spots_app.locations.dto.RegionDto;
 import com.shulpov.spots_app.locations.models.Region;
 import com.shulpov.spots_app.locations.services.RegionService;
-import com.shulpov.spots_app.common.utils.DtoConverter;
+import com.shulpov.spots_app.locations.utils.RegionDtoConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
@@ -30,12 +30,12 @@ import java.util.Map;
 public class RegionController {
 
     private final RegionService regionService;
-    private final DtoConverter dtoConverter;
+    private final RegionDtoConverter regionDtoConverter;
     private final Logger logger;
 
-    public RegionController(RegionService regionService, DtoConverter dtoConverter) {
+    public RegionController(RegionService regionService, RegionDtoConverter regionDtoConverter) {
         this.regionService = regionService;
-        this.dtoConverter = dtoConverter;
+        this.regionDtoConverter = regionDtoConverter;
         this.logger = LoggerFactory.getLogger(RegionController.class);
     }
 
@@ -47,7 +47,7 @@ public class RegionController {
     public ResponseEntity<?> getAll() {
         logger.atInfo().log("Getting all regions");
         try {
-            List<RegionDto> regionDtopList = regionService.getAll().stream().map(dtoConverter::regionToDto).toList();
+            List<RegionDto> regionDtopList = regionService.getAll().stream().map(regionDtoConverter::convertToDto).toList();
             return ResponseEntity.ok(regionDtopList);
         } catch (NotFoundException e) {
             return ResponseEntity
@@ -65,7 +65,7 @@ public class RegionController {
         logger.atInfo().log("Getting all regions by country id = {}", id);
         try {
             List<Region> regions = regionService.getByCountryId(id);
-            List<RegionDto> regionDtoList = regions.stream().map(dtoConverter::regionToDto).toList();
+            List<RegionDto> regionDtoList = regions.stream().map(regionDtoConverter::convertToDto).toList();
             return ResponseEntity.ok(regionDtoList);
         } catch (NotFoundException e) {
             return ResponseEntity

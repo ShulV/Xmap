@@ -202,7 +202,7 @@ class AuthTests {
         performAuthenticate(incorrectPasswordAuthenticateRequestBody)
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized()) //401
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.errorMessage").value("Неверный пароль"));
+                .andExpect(jsonPath("$.error_message").value("Неверный пароль"));
     }
 
     //использование несуществующего логина
@@ -216,7 +216,7 @@ class AuthTests {
         performAuthenticate(nonExistLoginAuthenticateRequestBody)
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized()) //401
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.errorMessage").value("Неверный логин"));
+                .andExpect(jsonPath("$.error_message").value("Неверный логин"));
     }
     //====================================================================================================
     //======ОБНОВЛЕНИЕ ТОКЕНОВ============================================================================
@@ -414,14 +414,14 @@ class AuthTests {
     @Test
     void unsuccessfulLogoutByInvalidRefreshTokenTest() throws Exception {
         performLogout(validExpiredJwtToken)
-                .andExpect(jsonPath("$.errorMessage", "Refresh not found in DB").isString());
+                .andExpect(jsonPath("$.error_message", "Refresh not found in DB").isString());
     }
 
     //Логаут после регистрации с помощью испорченного refreshToken
     @Test
     void unsuccessfulLogoutByIncorrectRefreshTokenTest() throws Exception {
         performLogout(incorrectJwtToken)
-                .andExpect(jsonPath("$.errorMessage", "JWT token error").isString());
+                .andExpect(jsonPath("$.error_message", "JWT token error").isString());
     }
     //====================================================================================================
     //======LOGOUT ALL========================================================================================

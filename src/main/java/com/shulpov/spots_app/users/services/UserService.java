@@ -3,7 +3,7 @@ package com.shulpov.spots_app.users.services;
 import com.shulpov.spots_app.authentication_management.services.JwtService;
 import com.shulpov.spots_app.image_infos.ImageInfoService;
 import com.shulpov.spots_app.users.UserRepository;
-import com.shulpov.spots_app.users.dto.MainUserInfoDto;
+import com.shulpov.spots_app.users.dto.CommentatorDto;
 import com.shulpov.spots_app.users.exception.UserNotFoundException;
 import com.shulpov.spots_app.users.models.User;
 import com.shulpov.spots_app.users.utils.UserDtoConverter;
@@ -88,14 +88,14 @@ public class UserService {
         return userRepository.findByPhoneNumber(phoneNumber);
     }
 
-    public MainUserInfoDto getMainInfoByAccessToken(String accessHeader)
+    public CommentatorDto getFullInfoByAccessToken(String accessHeader)
             throws UserNotFoundException, JwtException, AuthenticationCredentialsNotFoundException {
         String accessToken = jwtService.getAccessTokenFromAccessHeader(accessHeader);
         Optional<User> userOpt = getByAccessToken(accessToken);
         if (userOpt.isEmpty()) {
             throw new UserNotFoundException("User not found");
         }
-        return userDtoConverter.userToUserMainInfoDto(userOpt.get());
+        return userDtoConverter.convertToCommentatorDto(userOpt.get());
     }
 
     /**

@@ -8,9 +8,9 @@ import com.shulpov.spots_app.authentication_management.responses.LogoutMessageRe
 import com.shulpov.spots_app.authentication_management.responses.RegisterErrorResponse;
 import com.shulpov.spots_app.authentication_management.responses.RegisterResponse;
 import com.shulpov.spots_app.authentication_management.services.AuthenticationService;
+import com.shulpov.spots_app.common.converters.FieldErrorDtoConverter;
 import com.shulpov.spots_app.common.dto.FieldErrorDto;
 import com.shulpov.spots_app.common.responses.ErrorMessageResponse;
-import com.shulpov.spots_app.common.utils.DtoConverter;
 import io.jsonwebtoken.JwtException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,7 +40,7 @@ import java.util.List;
 public class AuthenticationController {
 
     private final AuthenticationService service;
-    private final DtoConverter dtoConverter;
+    private final FieldErrorDtoConverter fieldErrorDtoConverter;
 
     @Operation(
             summary = "Регистрация",
@@ -160,7 +160,7 @@ public class AuthenticationController {
     @ExceptionHandler
     private ResponseEntity<RegisterErrorResponse> handleRegisterErrorException(RegisterErrorException e) {
         RegisterErrorResponse response = new RegisterErrorResponse(e.getMessage());
-        List<FieldErrorDto> errorDtoList = e.getErrors().stream().map(dtoConverter::fieldErrorToDto).toList();
+        List<FieldErrorDto> errorDtoList = e.getErrors().stream().map(fieldErrorDtoConverter::convertToDto).toList();
         response.setErrorDtoList(errorDtoList);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }

@@ -86,7 +86,7 @@ public class User implements UserDetails {
     private City city;
 
     /**
-     * @return
+     * Получить список ролей
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -94,11 +94,10 @@ public class User implements UserDetails {
     }
 
     /**
-     * @return
+     * возвращаем hash, т.к. под капотом Security использует
+     * passEncoder.matches(presentedPassword, userDetails.getPassword())
+     * где getPassword должен возвращать хэш из БД
      */
-    //возвращаем hash, т.к. под капотом Security использует
-    //passEncoder.matches(presentedPassword, userDetails.getPassword())
-    //где getPassword должен возвращать хэш из БД
     @Override
     public String getPassword() {
         return passHash;
@@ -106,7 +105,7 @@ public class User implements UserDetails {
 
     /**
      * Получить логин пользователя (email). P.S. такое название метода у интерфейса...
-     * @return email
+     * @return email пользователя (логин)
      */
     @Override
     public String getUsername() {
@@ -114,36 +113,32 @@ public class User implements UserDetails {
     }
 
     /**
-     * @return
+     * нет функционала, связанного со временем жизни аккаунта
      */
-    //нет функционала, связанного со временем жизни аккаунта
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
     /**
-     * @return
+     * нет функционала, связанного с блокировкой пользователя
      */
-    //нет функционала, связанного с блокировкой пользователя
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
     /**
-     * @return
+     * нет функционала, связанного со временем жизни аутентификационных данных
      */
-    //нет функционала, связанного со временем жизни аутентификационных данных
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     /**
-     * @return
+     * нет функционала, связанного с выключением аккаунта
      */
-    //нет функционала, связанного с выключением аккаунта
     @Override
     public boolean isEnabled() {
         return true;

@@ -1,9 +1,7 @@
 package com.shulpov.spots_app.locations.controllers;
 
 import com.shulpov.spots_app.locations.dto.CityDto;
-import com.shulpov.spots_app.locations.models.City;
 import com.shulpov.spots_app.locations.services.CityService;
-import com.shulpov.spots_app.common.utils.DtoConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
@@ -29,13 +27,10 @@ import java.util.Map;
 public class CityController {
     private static final String ERROR_MESSAGE_KEY = "errorMessage";
     private final CityService cityService;
-
-    private final DtoConverter dtoConverter;
     private final Logger logger;
 
-    public CityController(CityService cityService, DtoConverter dtoConverter) {
+    public CityController(CityService cityService) {
         this.cityService = cityService;
-        this.dtoConverter = dtoConverter;
         this.logger = LoggerFactory.getLogger(CityController.class);
     }
 
@@ -47,7 +42,7 @@ public class CityController {
     public ResponseEntity<?> getAll() {
         logger.atInfo().log("Getting all cities");
         try {
-            List<CityDto> cityDtoList = cityService.getAll().stream().map(dtoConverter::cityToDto).toList();
+            List<CityDto> cityDtoList = cityService.getAllDto();
             return ResponseEntity.ok(cityDtoList);
         } catch (NotFoundException e) {
             return ResponseEntity
@@ -64,8 +59,7 @@ public class CityController {
     public ResponseEntity<?> getByRegionId(@PathVariable("id") Integer id){
         logger.atInfo().log("Getting all cities by region id = {}", id);
         try {
-            List<City> cities = cityService.getByRegionId(id);
-            List<CityDto> cityDtoList = cities.stream().map(dtoConverter::cityToDto).toList();
+            List<CityDto> cityDtoList = cityService.getDtoByRegionId(id);
             return ResponseEntity.ok(cityDtoList);
         } catch (NotFoundException e) {
             return ResponseEntity
@@ -82,8 +76,7 @@ public class CityController {
     public ResponseEntity<?> getByCountryId(@PathVariable("id") Integer id) {
         logger.atInfo().log("Getting all cities by region id = {}", id);
         try {
-            List<City> cities = cityService.getByCountryId(id);
-            List<CityDto> cityDtoList = cities.stream().map(dtoConverter::cityToDto).toList();
+            List<CityDto> cityDtoList = cityService.getDtoByCountryId(id);
             return ResponseEntity.ok(cityDtoList);
         } catch (NotFoundException e) {
             return ResponseEntity

@@ -1,7 +1,7 @@
 package com.shulpov.spots_app.users;
 
 import com.shulpov.spots_app.common.responses.ErrorMessageResponse;
-import com.shulpov.spots_app.users.dto.MainUserInfoDto;
+import com.shulpov.spots_app.users.dto.CommentatorDto;
 import com.shulpov.spots_app.users.exception.UserNotFoundException;
 import com.shulpov.spots_app.users.services.UserService;
 import io.jsonwebtoken.JwtException;
@@ -40,7 +40,7 @@ public class UserController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Данные пользователя успешно получены",
                             content = { @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = MainUserInfoDto.class)) }
+                                    schema = @Schema(implementation = CommentatorDto.class)) }
                     ),
                     @ApiResponse(responseCode = "400", description = "Пользователь не был найден или получены ошибки JWT",
                             content = { @Content(mediaType = "application/json",
@@ -48,10 +48,10 @@ public class UserController {
                     )}
     )
     @GetMapping("/info")
-    public ResponseEntity<MainUserInfoDto> getAuthUser(
+    public ResponseEntity<CommentatorDto> getAuthUser(
             @Parameter(description = "Access токен", example = "Bearer token_value")
             @RequestHeader("Authorization") String accessHeader) {
-        return ResponseEntity.ok(userService.getMainInfoByAccessToken(accessHeader));
+        return ResponseEntity.ok(userService.getFullInfoByAccessToken(accessHeader));
     }
 
     /**

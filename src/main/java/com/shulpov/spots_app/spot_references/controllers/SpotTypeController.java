@@ -3,7 +3,6 @@ package com.shulpov.spots_app.spot_references.controllers;
 import com.shulpov.spots_app.spot_references.dto.SpotTypeDto;
 import com.shulpov.spots_app.spot_references.models.SpotType;
 import com.shulpov.spots_app.spot_references.services.SpotTypeService;
-import com.shulpov.spots_app.common.utils.DtoConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
@@ -30,12 +29,9 @@ public class SpotTypeController {
     private final SpotTypeService spotTypeService;
     private final Logger logger = LoggerFactory.getLogger(SpotTypeController.class);
 
-    private final DtoConverter dtoConverter;
-
     @Autowired
-    public SpotTypeController(SpotTypeService spotTypeService, DtoConverter dtoConverter) {
+    public SpotTypeController(SpotTypeService spotTypeService) {
         this.spotTypeService = spotTypeService;
-        this.dtoConverter = dtoConverter;
     }
 
     @Operation(
@@ -44,7 +40,7 @@ public class SpotTypeController {
     )
     @GetMapping("/all")
     public List<SpotTypeDto> getAllSpots() {
-        return spotTypeService.getAll().stream().map(dtoConverter::spotTypeToDto).toList();
+        return spotTypeService.getAllDto();
     }
 
     @Operation(

@@ -3,13 +3,11 @@ package com.shulpov.spots_app.spot_references.controllers;
 import com.shulpov.spots_app.spot_references.dto.SpaceTypeDto;
 import com.shulpov.spots_app.spot_references.models.SpaceType;
 import com.shulpov.spots_app.spot_references.services.SpaceTypeService;
-import com.shulpov.spots_app.common.utils.DtoConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,30 +26,23 @@ import java.util.Optional;
 @RequestMapping("/api/v1/space-types")
 @Tag(name="Контроллер типов помещений (справочник)", description="Выдает типы помещений")
 public class SpaceTypeController {
+    private final Logger logger = LoggerFactory.getLogger(SpaceTypeController.class);
     private final SpaceTypeService spaceTypeService;
 
-    private final DtoConverter dtoConverter;
-    private final Logger logger;
-
     @Autowired
-    public SpaceTypeController(SpaceTypeService spaceTypeService, @Lazy DtoConverter dtoConverter) {
+    public SpaceTypeController(SpaceTypeService spaceTypeService) {
         this.spaceTypeService = spaceTypeService;
-        this.dtoConverter = dtoConverter;
-        this.logger = LoggerFactory.getLogger(SpaceTypeController.class);
     }
 
-    //Получить все типы помещений
     @Operation(
             summary = "Получение всех типов помещений",
             description = "Позволяет пользователю получить все типы помещений"
     )
     @GetMapping("/all")
     public List<SpaceTypeDto> getAllSpaceTypes() {
-        return spaceTypeService.getAll().stream().map(dtoConverter::spaceTypeToDto).toList();
+        return spaceTypeService.getAllDto();
     }
 
-
-    //Получить тип помещения по id
     @Operation(
             summary = "Получение конкретного типа помещения",
             description = "Позволяет пользователю получить тип помещения по id"

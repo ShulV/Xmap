@@ -2,6 +2,7 @@ package com.shulpov.spots_app.spots.dto;
 
 
 import com.shulpov.spots_app.image_infos.dto.ImageInfoDto;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +18,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@Builder
 public class SpotDto implements Serializable {
     //TODO VALID ANNOTATION
 

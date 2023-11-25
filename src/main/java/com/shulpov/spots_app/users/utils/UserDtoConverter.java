@@ -1,17 +1,20 @@
 package com.shulpov.spots_app.users.utils;
 
+import com.shulpov.spots_app.common.converters.DtoConvertible;
 import com.shulpov.spots_app.image_infos.utils.ImageInfoDtoConverter;
-import com.shulpov.spots_app.users.dto.MainUserInfoDto;
+import com.shulpov.spots_app.users.dto.CommentatorDto;
+import com.shulpov.spots_app.users.dto.UserDto;
 import com.shulpov.spots_app.users.models.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 /**
- * Компонент, помогающий конвертировать модели класса User в DTO и обратно.
- * @author Victor Shulpov "vshulpov@gmail.com"
+ * @author Shulpov Victor
+ * @since 1.0
+ * @version 1.0
  */
 @Component
-public class UserDtoConverter {
+public class UserDtoConverter implements DtoConvertible<User, UserDto> {
     private final ModelMapper modelMapper;
     private final ImageInfoDtoConverter imageInfoDtoConverter;
 
@@ -20,14 +23,23 @@ public class UserDtoConverter {
         this.imageInfoDtoConverter = imageInfoDtoConverter;
     }
 
-    /**
-     * Конвертор класса User в класс MainUserInfoDto
-     * @param user класс пользователя
-     * @return класс DTO пользователя с основными свойствами пользователя
-     */
-    public MainUserInfoDto userToUserMainInfoDto(User user) {
-        MainUserInfoDto dto = modelMapper.map(user, MainUserInfoDto.class);
-        dto.setImageInfoDtoList(user.getImageInfos().stream().map(imageInfoDtoConverter::imageInfoToDto).toList());
+    public CommentatorDto convertToCommentatorDto(User user) {
+        CommentatorDto dto = modelMapper.map(user, CommentatorDto.class);
+        if (!user.getImageInfos().isEmpty()) {
+            dto.setCommentatorImageInfo(imageInfoDtoConverter.convertToDto(user.getImageInfos().get(0)));
+        }
         return dto;
+    }
+
+    //не используется
+    @Override
+    public User convertToEntity(UserDto dto) {
+        return null;
+    }
+
+    //не используется
+    @Override
+    public UserDto convertToDto(User entity) {
+        return null;
     }
 }

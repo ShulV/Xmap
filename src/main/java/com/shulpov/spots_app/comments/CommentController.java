@@ -1,6 +1,5 @@
 package com.shulpov.spots_app.comments;
 
-import com.shulpov.spots_app.comments.utils.CommentDtoConverter;
 import com.shulpov.spots_app.users.models.User;
 import com.shulpov.spots_app.users.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -57,11 +56,9 @@ public class CommentController {
                                            @RequestBody @Valid Comment comment,
                                            BindingResult bindingResult,
                                            Principal principal) throws AuthException {
-        logger.atInfo().log("/add-comment-by-spot-id/{}", spotId);
         Optional<User> userOpt = userService.findByEmail(principal.getName());
         if(userOpt.isPresent()) {
             Comment newComment = commentService.save(comment, userOpt.get(), spotId);
-            logger.atInfo().log("new comment");
             return Map.of("id", newComment.getId());
         } else {
             logger.atError().log("not created comment");
@@ -76,16 +73,13 @@ public class CommentController {
     )
     @DeleteMapping("/{commentId}")
     public Map<Object, Object> deleteById(@PathVariable Long commentId, Principal principal) throws AuthException {
-        logger.atInfo().log("/delete-by-id/{}", commentId);
         Optional<User> userOpt = userService.findByEmail(principal.getName());
         if(userOpt.isPresent()) {
             boolean commentExists = userOpt.get().getComments().stream()
                     .filter(c-> Objects.equals(c.getId(), commentId)).toList()
                     .size() == 1;
-            logger.atInfo().log("commentExists={}", commentExists);
             if(commentExists) {
                 commentService.deleteById(commentId);
-                logger.atInfo().log("comment was deleted");
                 return Map.of("message", "комментарий удален", "id", commentId);
             } else {
                 logger.atError().log("comment wasn't deleted");
@@ -102,7 +96,6 @@ public class CommentController {
     )
     @GetMapping("/get-by-spot-id/{spotId}")
     public List<CommentDto> getBySpotId(@PathVariable Long spotId) {
-        logger.atInfo().log("/get-by-spot-id/{}", spotId);
-        return commentService.findByCommentedSpotId(spotId).stream().map(commentDtoConverter::commentToDto).toList();
+        return commentService.findByCommentedSpotId(spotId).stream().map(commentDtoConverter::convertToDto).toList();
     }
 }

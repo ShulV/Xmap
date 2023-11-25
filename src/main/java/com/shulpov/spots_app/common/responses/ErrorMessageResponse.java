@@ -18,6 +18,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ErrorMessageResponse {
     @Schema(description = "Сообщение об ошибке", example = "Пользователь с email='vova@mail.ru' не найден")
-    @JsonProperty("errorMessage")
+    @JsonProperty("error_message")
     private String errorMessage;
 }

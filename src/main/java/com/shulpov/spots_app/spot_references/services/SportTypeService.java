@@ -1,7 +1,9 @@
 package com.shulpov.spots_app.spot_references.services;
 
+import com.shulpov.spots_app.spot_references.dto.SportTypeDto;
 import com.shulpov.spots_app.spot_references.models.SportType;
 import com.shulpov.spots_app.spot_references.repo.SportTypeRepo;
+import com.shulpov.spots_app.spot_references.utils.SportTypeDtoConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,18 +24,23 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 @Scope(value = "prototype")
 public class SportTypeService {
+    private final SportTypeDtoConverter sportTypeDtoConverter;
     private final SportTypeRepo sportTypeRepo;
-
     private final Logger logger = LoggerFactory.getLogger(SportTypeService.class);
 
     @Autowired
-    public SportTypeService(SportTypeRepo sportTypeRepo) {
+    public SportTypeService(SportTypeDtoConverter sportTypeDtoConverter, SportTypeRepo sportTypeRepo) {
+        this.sportTypeDtoConverter = sportTypeDtoConverter;
         this.sportTypeRepo = sportTypeRepo;
     }
 
     //Получить все типы спорта
     public List<SportType> getAll() {
         return sportTypeRepo.findAll();
+    }
+
+    public List<SportTypeDto> getAllDto() {
+        return getAll().stream().map(sportTypeDtoConverter::convertToDto).toList();
     }
 
     //Получить все типы спорта по их id

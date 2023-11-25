@@ -2,18 +2,19 @@ package com.shulpov.spots_app.spots;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shulpov.spots_app.authentication_management.services.AuthenticationService;
+import com.shulpov.spots_app.spot_user_infos.SpotUserService;
 import com.shulpov.spots_app.spots.dto.SpotDto;
 import com.shulpov.spots_app.spots.models.Spot;
+import com.shulpov.spots_app.spots.utils.SpotDtoConverter;
 import com.shulpov.spots_app.users.models.User;
 import com.shulpov.spots_app.users.services.UserService;
-import com.shulpov.spots_app.common.utils.DtoConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.security.auth.message.AuthException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,16 +36,18 @@ import java.util.Optional;
 @Tag(name="Контроллер мест для катания", description="Позволяет добавлять и получать споты")
 public class SpotController {
     private final SpotService spotService;
+    private final SpotUserService spotUserService;
     private final UserService userService;
-    private final DtoConverter dtoConverter;
+    private final SpotDtoConverter spotDtoConverter;
+    private final AuthenticationService authService;
     private final Logger logger = LoggerFactory.getLogger(SpotController.class);
 
-    @Autowired
-    public SpotController(SpotService spotService, @Lazy UserService userService,
-                          @Lazy DtoConverter dtoConverter) {
+    public SpotController(SpotService spotService, SpotUserService spotUserService, @Lazy UserService userService, SpotDtoConverter spotDtoConverter, AuthenticationService authService) {
         this.spotService = spotService;
+        this.spotUserService = spotUserService;
         this.userService = userService;
-        this.dtoConverter = dtoConverter;
+        this.spotDtoConverter = spotDtoConverter;
+        this.authService = authService;
     }
 
     @Operation(
@@ -53,7 +56,7 @@ public class SpotController {
     )
     @GetMapping("/all")
     public List<SpotDto> getAllSpots() {
-        return spotService.getAllSpots().stream().map(dtoConverter::spotToDto).toList();
+        return spotService.getAllSpots().stream().map(spotDtoConverter::convertToDto).toList();
     }
 
     @Operation(
@@ -75,7 +78,7 @@ public class SpotController {
             return ResponseEntity.badRequest().body(Map.of("errorMessage", "Incorrect spotDto in request param"));
         }
 
-        Spot spot = dtoConverter.dtoToNewSpot(spotDto);
+        Spot spot = spotDtoConverter.convertToNewSpot(spotDto);
 
         String email = principal.getName();
         Optional<User> creatorUserOpt = userService.findByEmail(email);
@@ -99,6 +102,18 @@ public class SpotController {
                                      @RequestParam Double lon,
                                      @RequestParam Double radius) {
         logger.atInfo().log("lat=" + lat + "; lon=" + lon + "; radius=" + radius);
-        return spotService.getSpotsInRadius(lat, lon, radius).stream().map(dtoConverter::spotToDto).toList();
+        return spotService.getSpotsInRadius(lat, lon, radius).stream().map(spotDtoConverter::convertToDto).toList();
+    }
+
+    @Operation(
+            summary = "Получение избранных спотов текущего пользователя",
+            description = "Позволяет получить избранные споты текущего пользователя",
+            security = @SecurityRequirement(name = "accessTokenAuth")
+    )
+    @GetMapping("/favorite")
+    public List<SpotDto> getFavoriteSpots(Principal principal) throws AuthException {
+        User user = authService.getUserByPrinciple(principal);
+        return spotUserService.getFavoriteSpotUsers(user).stream()
+                .map(ss->spotDtoConverter.convertToDto(ss.getPostedSpot())).toList();
     }
 }

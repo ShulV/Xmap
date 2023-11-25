@@ -2,7 +2,7 @@ package com.shulpov.spots_app.locations.controllers;
 
 import com.shulpov.spots_app.locations.dto.CountryDto;
 import com.shulpov.spots_app.locations.services.CountryService;
-import com.shulpov.spots_app.common.utils.DtoConverter;
+import com.shulpov.spots_app.locations.utils.CountryDtoConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
@@ -28,12 +28,12 @@ import java.util.Map;
 public class CountryController {
 
     private final CountryService countryService;
-    private final DtoConverter dtoConverter;
+    private final CountryDtoConverter countryDtoConverter;
     private final Logger logger;
 
-    public CountryController(CountryService countryService, DtoConverter dtoConverter) {
+    public CountryController(CountryService countryService, CountryDtoConverter countryDtoConverter) {
         this.countryService = countryService;
-        this.dtoConverter = dtoConverter;
+        this.countryDtoConverter = countryDtoConverter;
         this.logger = LoggerFactory.getLogger(CountryController.class);
     }
 
@@ -45,12 +45,13 @@ public class CountryController {
     public ResponseEntity<?> getAll() {
         logger.atInfo().log("Getting all countries");
         try {
-            List<CountryDto> countryDtoList = countryService.getAll().stream().map(dtoConverter::countryToDto).toList();
+            List<CountryDto> countryDtoList = countryService.getAll().stream()
+                    .map(countryDtoConverter::convertToDto).toList();
             return ResponseEntity.ok(countryDtoList);
         } catch (NotFoundException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("errorMessage", "There is no data in the table"));
+                    .body(Map.of("error_message", "There is no data in the table"));
         }
     }
 }
