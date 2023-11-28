@@ -1,50 +1,54 @@
-# :world_map: Xmap (Map of spots)
-## :question: A little help for the developers
-### How to open swagger doc:
+# :world_map: Xmap (Карта мест)
+## :question: Небольшая помощь для разработчиков
+### Как открыть Swagger документацию:
 http://localhost:8080/swagger-ui/index.html
-### How to get a collection for postman:
-download last veriosn from https://github.com/ShulV/Xmap/tree/main/postman and import into postman 
-### How to initialize the database (PostgreSQL):
+### Как получить коллекцию для Postman:
+Скачайте последнюю версию с https://github.com/ShulV/Xmap/tree/main/postman и импортируйте в Postman.
+### Как инициализировать базу данных (PostgreSQL):
 <ul>
-  <li>Create all tables, indexes, functions and etc, also insert main refrerences: https://github.com/ShulV/Xmap/blob/main/sql/generate_DB.sql</li>
-  <li>Insert Countries/Regions/Cities references: https://github.com/ShulV/Xmap/blob/main/sql/insert_cities_regions_countries.sql</li>
-  <li>Insert a user and some real spots: https://github.com/ShulV/Xmap/blob/main/sql/additional_insert_scripts.sql</li>
+  <li>Создайте все таблицы, индексы, функции и т.д., также вставьте основные справочники: https://github.com/ShulV/Xmap/blob/main/sql/generate_DB.sql</li>
+  <li>Вставьте справочники для стран/регионов/городов: https://github.com/ShulV/Xmap/blob/main/sql/insert_cities_regions_countries.sql</li>
+  <li>Вставьте пользователя и некоторые реальные споты: https://github.com/ShulV/Xmap/blob/main/sql/additional_insert_scripts.sql</li>
 </ul>
 
-### How to view the relational model of a database:
-download and open in special UML-tools: https://github.com/ShulV/Xmap/blob/main/uml/relation_model.csv
+### Как просмотреть модель базы данных:
+Скачайте и откройте в специальных UML-инструментах: https://github.com/ShulV/Xmap/blob/main/uml/relation_model.csv
+Разработчики должны держать эту модель в актуальном состоянии или добавлять в репо новые её версии, указывая в названии дату изменения.
 
-### How to write logs:
+### Как писать логи:
 <ul>
-  <li>Use snake_case for variables</li>
-  <li>Write variables in square brackets ('[', ']')</li>
-  <li>Write a colon (':') before variables block</li>
-  <li>.atInfo() - informing, .atWarn() - warnings, .atError - critical errors</li>
+  <li>Используйте snake_case для переменных</li>
+  <li>Записывайте переменные в квадратных скобках ('[', ']')</li>
+  <li>Пишите двоеточие (':') перед блоком переменных</li>
+  <li><code>logger.atInfo()</code> - информация, <code>logger.atWarn()</code> - предупреждения, <code>logger.atError()</code> - критические ошибки</li>
 </ul>
 
 ```java
-logger.atInfo().log("Image info created: [image_info_id = '{}']", imageInfo.getId());
+logger.atInfo().log("Информация об изображении создана: [image_info_id = '{}']", imageInfo.getId());
 ```
 
-### How to name JSON keys: 
+### Как называть ключи JSON: 
 (snake_case)
 ```javascript
 "some_key_name" : "value" 
 ```
-P.S. many JSON libraries (in Spring Framework), such as Jackson, support camelCase format out of the box.
+P.S. Многие библиотеки JSON (в Spring Framework), такие как Jackson, поддерживают формат camelCase из коробки.
 
-But snake_case is more convenient to read now.
+Но было решено, что snake_case более удобен для чтения.
 
-### Size of methods and classes:
-The maximum length of methods is 100 lines. The maximum class length is 1000 lines.
+### Размеры методов и классов:
+<p>Максимальная длина методов - 100 строк. Максимальная длина класса - 1000 строк.</p>
+<p>Если размер метода или класса превышает эти значения, новая бизнес-логика может быть добавлена только в виде вызовов методов других функций.</p>
+<p>Но лучше внимательно рефакторить!</p>
 
-If the size of a method or class exceeds these values, then new business logic can only be added in the form of calling methods of other functions. 
+### Структура пакетов:
+Когда появляется более одного контроллера, сервиса, репозитория, модели, DTO и т.д., мы объединяем их в один пакет.
 
-But it is better to carefully refactor it!
+### Внедрение зависимостей с использованием Lombok:
+Используйте @RequiredArgsConstructor и только его. 1 конструктор для внедрения зависимостей (без аннотации @Autowired).
+Lombok сгенерирует конструктор, который принимает все необходимые зависимости, помеченные из переменных final или @NonNull.
 
-### Package structure:
-When more than one controller, service, repository, model, dto and etc. appears, we put them together in a package.
-
-### Dependency injection via lombok:
-Use @RequiredArgsConstructor and only it. 1 constructor for autowiring (without @Autowired annotation).
-Lombok will generate a constructor that accepts all required dependencies, marked as final or @NonNull.
+## :question: Некторые пока что нерешенные проблемы приложения:
+<ul>
+  <li>Проблема Hibernate N+1</li>
+</ul>
