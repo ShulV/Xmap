@@ -44,3 +44,7 @@ But it is better to carefully refactor it!
 
 ### Package structure:
 When more than one controller, service, repository, model, dto and etc. appears, we put them together in a package.
+
+### Dependency injection via lombok:
+Use @RequiredArgsConstructor and only it. 1 constructor for autowiring (without @Autowired annotation).
+Lombok will generate a constructor that accepts all required dependencies, marked as final or @NonNull.
