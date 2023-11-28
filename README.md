@@ -1,3 +1,4 @@
+<a href="https://github.com/ShulV/Xmap/blob/main/README_en.md">Английская версия</a>
 # :world_map: Xmap (Карта мест)
 ## :question: Небольшая помощь для разработчиков
 ### Как открыть Swagger документацию:
