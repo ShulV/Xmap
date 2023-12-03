@@ -1,7 +1,7 @@
 <a href="https://github.com/ShulV/Xmap/blob/main/README_en.md">Английская версия</a>
 # :world_map: Xmap (Карта мест)
 ## :question: Небольшая помощь для разработчиков
-### Как открыть Swagger документацию:
+### :point_right: Как открыть Swagger документацию: 
 http://localhost:8080/swagger-ui/index.html
 ### Как получить коллекцию для Postman:
 Скачайте последнюю версию с https://github.com/ShulV/Xmap/tree/main/postman и импортируйте в Postman.
@@ -28,7 +28,10 @@ http://localhost:8080/swagger-ui/index.html
 logger.atInfo().log("Информация об изображении создана: [image_info_id = '{}']", imageInfo.getId());
 ```
 
-### Как называть ключи JSON: 
+### Код стайл:
+Максимальное количество символов в строке - 130. По дефолту IntelliJ IDEA устанавливает ограничительную линию на 120 (перенастроить).
+
+#### Как называть ключи JSON: 
 (snake_case)
 ```javascript
 "some_key_name" : "value" 
@@ -36,9 +39,6 @@ logger.atInfo().log("Информация об изображении созда
 P.S. Многие библиотеки JSON (в Spring Framework), такие как Jackson, поддерживают формат camelCase из коробки.
 
 Но было решено, что snake_case более удобен для чтения.
-
-### Код стайл:
-Максимальное количество символов в строке - 130. По дефолту IntelliJ IDEA устанавливает ограничительную линию на 120 (перенастроить).
 
 ### Размеры методов и классов:
 <p>Максимальная длина методов - 100 строк. Максимальная длина класса - 1000 строк.</p>
