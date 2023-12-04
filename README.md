@@ -1,46 +1,82 @@
-# :world_map: Xmap (Map of spots)
-## :question: A little help for the developers
-### How to open swagger doc:
-http://localhost:8080/swagger-ui/index.html
-### How to get a collection for postman:
-download last veriosn from https://github.com/ShulV/Xmap/tree/main/postman and import into postman 
-### How to initialize the database (PostgreSQL):
+<a href="https://github.com/ShulV/Xmap/blob/main/README_en.md">Английская версия</a>
+
+<h1>🗺️ Xmap (Карта мест)</h1>
+
+<h2>❓ Небольшая помощь для разработчиков</h2>
+
+<h3>👉 Как открыть Swagger документацию:</h3>
+<p>http://localhost:8080/swagger-ui/index.html</p>
+
+<h3>👉 Как получить коллекцию для Postman:</h3>
+<p>Скачайте последнюю версию с https://github.com/ShulV/Xmap/tree/main/postman и импортируйте в Postman.</p>
+
+<h3>👉 Как инициализировать базу данных (PostgreSQL):</h3>
 <ul>
-  <li>Create all tables, indexes, functions and etc, also insert main refrerences: https://github.com/ShulV/Xmap/blob/main/sql/generate_DB.sql</li>
-  <li>Insert Countries/Regions/Cities references: https://github.com/ShulV/Xmap/blob/main/sql/insert_cities_regions_countries.sql</li>
-  <li>Insert a user and some real spots: https://github.com/ShulV/Xmap/blob/main/sql/additional_insert_scripts.sql</li>
+  <li>Создайте все таблицы, индексы, функции и т.д., также вставьте основные справочники: https://github.com/ShulV/Xmap/blob/main/sql/generate_DB.sql</li>
+  <li>Вставьте справочники для стран/регионов/городов: https://github.com/ShulV/Xmap/blob/main/sql/insert_cities_regions_countries.sql</li>
+  <li>Вставьте пользователя и некоторые реальные споты: https://github.com/ShulV/Xmap/blob/main/sql/additional_insert_scripts.sql</li>
 </ul>
 
-### How to view the relational model of a database:
-download and open in special UML-tools: https://github.com/ShulV/Xmap/blob/main/uml/relation_model.csv
+<h3>👉 Как просмотреть модель базы данных:</h3>
+<p>Скачайте и откройте в специальных UML-инструментах: https://github.com/ShulV/Xmap/blob/main/uml/relation_model.csv</p>
+<p>Разработчики должны держать эту модель в актуальном состоянии или добавлять в репо новые её версии, указывая в названии дату изменения.</p>
 
-### How to write logs:
+<h3>👉 Как писать логи:</h3>
 <ul>
-  <li>Use snake_case for variables</li>
-  <li>Write variables in square brackets ('[', ']')</li>
-  <li>Write a colon (':') before variables block</li>
-  <li>.atInfo() - informing, .atWarn() - warnings, .atError - critical errors</li>
+  <li>Используйте snake_case для переменных</li>
+  <li>Записывайте переменные в квадратных скобках ('[', ']')</li>
+  <li>Пишите двоеточие (':') перед блоком переменных</li>
+  <li><code>logger.atInfo()</code> - информация, <code>logger.atWarn()</code> - предупреждения, <code>logger.atError()</code> - критические ошибки</li>
 </ul>
 
 ```java
-logger.atInfo().log("Image info created: [image_info_id = '{}']", imageInfo.getId());
+logger.atInfo().log("Информация об изображении создана: [image_info_id = '{}']", imageInfo.getId());
 ```
 
-### How to name JSON keys: 
-(snake_case)
+<h3>👉 Код стайл:</h3>
+<p>Максимальное количество символов в строке - 130. По дефолту IntelliJ IDEA устанавливает ограничительную линию на 120 (перенастроить).</p>
+
+<h4>Как называть ключи JSON:</h4>
+<p>(snake_case)</p>
+
 ```javascript
 "some_key_name" : "value" 
 ```
-P.S. many JSON libraries (in Spring Framework), such as Jackson, support camelCase format out of the box.
 
-But snake_case is more convenient to read now.
+<p>Многие библиотеки JSON (в Spring Framework), такие как Jackson, поддерживают формат camelCase из коробки.</p>
+<p>Но было решено, что snake_case более удобен для чтения.</p>
 
-### Size of methods and classes:
-The maximum length of methods is 100 lines. The maximum class length is 1000 lines.
+<h4>Как называть ключи в структурах данных например в HashMap ("key_name", "value"):</h4>
+<p>snake_case</p>
 
-If the size of a method or class exceeds these values, then new business logic can only be added in the form of calling methods of other functions. 
+```java
+Map<String, String>; someMap = new HashMap<>();
+someMap.put("key_name_in_snake_case", "value");
+```
 
-But it is better to carefully refactor it!
+<h4>Как называть пути роутов (эндпоинтов):</h4>
+<p>kebab-case</p>
 
-### Package structure:
-When more than one controller, service, repository, model, dto and etc. appears, we put them together in a package.
+```java
+@RequestMapping("/api/v1/image-service") //для всего контроллера
+
+@PostMapping("/spot-image/{id}") //для метода
+```
+
+<h4>Размеры методов и классов:</h4>
+<p>Максимальная длина методов - 100 строк. Максимальная длина класса - 1000 строк.</p>
+<p>Если размер метода или класса превышает эти значения, новая бизнес-логика может быть добавлена только в виде вызовов методов других функций.</p>
+<p>Но лучше внимательно рефакторить!</p>
+
+<h4>Структура пакетов:</h4>
+<p>Когда появляется более одного контроллера, сервиса, репозитория, модели, DTO и т.д., мы объединяем их в один пакет.</p>
+
+<h3>👉 Внедрение зависимостей с использованием Lombok:</h3>
+<p>Используйте @RequiredArgsConstructor и только его. 1 конструктор для внедрения зависимостей (без аннотации @Autowired).</p>
+<p>Lombok сгенерирует конструктор, который принимает все необходимые зависимости, помеченные из переменных final или @NonNull.</p>
+
+<h2>❓ Некоторые пока что нерешенные проблемы приложения:</h2>
+<ul>
+  <li>Проблема Hibernate N+1</li>
+  <li>LOMBOK в тестах не работает, не понял почему. Внедряем зависимости там с помощью одного конструктора с @Autowired (без него даже с одним конструктором почему-то не работает).</li>
+</ul>
