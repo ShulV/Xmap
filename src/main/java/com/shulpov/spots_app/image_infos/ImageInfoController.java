@@ -28,10 +28,10 @@ import java.util.Optional;
  * @since 1.0
  * @version 1.0
  */
-@RestController
-@RequestMapping("/api/v1/image-service")
 @Tag(name="Контроллер информации об изображениях",
         description="Позволяет загружать, скачивать и удалять изображения для пользователей и мест для катания")
+@RestController
+@RequestMapping("/api/v1/image-service")
 public class ImageInfoController {
     private final ImageInfoService imageInfoService;
     private final UserService userService;

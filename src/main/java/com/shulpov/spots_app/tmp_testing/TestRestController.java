@@ -7,6 +7,7 @@ import com.shulpov.spots_app.spots.SpotService;
 import com.shulpov.spots_app.spots.models.Spot;
 import com.shulpov.spots_app.users.models.User;
 import com.shulpov.spots_app.users.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.security.auth.message.AuthException;
@@ -25,10 +26,10 @@ import java.util.Optional;
 
 //TODO ТЕСТОВЫЙ КОНТРОЛЛЕР НУЖЕН ТОЛЬКО ДЛЯ УДОБСТВА РУЧНОГО ТЕСТИРОВАНИЯ. ПИСАТЬ Г***О-КОД ТУТ МОЖНО
 //TODO СЮДА ВЫКИНУ РОУТЫ, КОТОРЫЕ В КЛИЕНТСКОЙ ЧАСТИ ПОКА ИСПОЛЬЗОВАТЬСЯ НЕ БУДУТ И РЕФАКТОРИТЬ ИХ ПОКА НЕКОГДА И НЕЗАЧЕМ
-@RestController
 @Tag(description = "Тестовый контроллер для удобства. " +
         "Роуты отсюда не юзать в клиентской части. Нужен для ручного тестирования.",
         name = "Тестовый контроллер")
+@RestController
 public class TestRestController {
     private final UserService userService;
     private final SpotService spotService;

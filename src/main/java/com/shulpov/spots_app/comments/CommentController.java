@@ -26,10 +26,9 @@ import java.util.Optional;
  * @since 1.0
  * @version 1.0
  */
+@Tag(name="Контроллер комментариев", description="Отвечает за добавление и получение комментариев мест для катания")
 @RestController
 @RequestMapping("/api/v1/comments")
-@Tag(name="Контроллер комментариев", description="Отвечает за добавление и получение комментариев мест для катания")
-
 public class CommentController {
     private final CommentService commentService;
     private final UserService userService;

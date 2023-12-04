@@ -33,9 +33,9 @@ import java.util.List;
  * @since 1.0
  * @version 1.0
  */
+@Tag(name="Контроллер управления аутентификацией пользователей")
 @RestController
 @RequestMapping(value = "/api/v1/auth")
-@Tag(name="Контроллер управления аутентификацией пользователей")
 @RequiredArgsConstructor
 public class AuthenticationController {
 

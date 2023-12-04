@@ -24,12 +24,11 @@ import java.util.Optional;
  * @since 1.0
  * @version 1.0
  */
-@RestController
-@RequestMapping("/api/v1/spots-users")
 @Tag(name="Контроллер промежуточной таблицы отношения пользователей к местам для катания",
         description="Позволяет изменять состояние лайка и добавления в избранные, " +
                 "получать их количество для спота")
-
+@RestController
+@RequestMapping("/api/v1/spots-users")
 public class SpotUserController {
     private final SpotUserService spotUserService;
     private final SpotService spotService;
