@@ -25,7 +25,10 @@ public class City {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne
+    @Column(name = "region_id", insertable = false, updatable = false)
+    private Integer regionId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id", referencedColumnName = "id")
     private Region region;
 

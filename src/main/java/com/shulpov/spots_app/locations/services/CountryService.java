@@ -1,9 +1,10 @@
 package com.shulpov.spots_app.locations.services;
 
+import com.shulpov.spots_app.locations.dto.CountryDto;
 import com.shulpov.spots_app.locations.models.Country;
 import com.shulpov.spots_app.locations.repo.CountryRepo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.shulpov.spots_app.locations.utils.CountryDtoConverter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,24 +15,29 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 @Scope(value = "prototype")
+@RequiredArgsConstructor
 public class CountryService {
 
     private final CountryRepo countryRepo;
+    private final CountryDtoConverter countryDtoConverter;
 
-    private final Logger logger = LoggerFactory.getLogger(CountryService.class);
-
-    public CountryService(CountryRepo countryRepo) {
-        this.countryRepo = countryRepo;
-    }
-
+    /**
+     * Получить все страны
+     */
     public List<Country> getAll() {
-        logger.atInfo().log("getAll");
         return countryRepo.findAll();
     }
 
+    /**
+     * Получить все DTO стран
+     */
+    public List<CountryDto> getAllDto() {
+        return getAll().stream().map(countryDtoConverter::convertToDto).toList();
+    }
+
+
     //Получить страну по id
     public Optional<Country> getById(Integer id) {
-        logger.atInfo().log("getById id={}", id);
         return countryRepo.findById(id);
     }
 }

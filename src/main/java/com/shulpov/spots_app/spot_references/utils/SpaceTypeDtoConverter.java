@@ -3,6 +3,7 @@ package com.shulpov.spots_app.spot_references.utils;
 import com.shulpov.spots_app.common.converters.DtoConvertible;
 import com.shulpov.spots_app.spot_references.dto.SpaceTypeDto;
 import com.shulpov.spots_app.spot_references.models.SpaceType;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -12,20 +13,9 @@ import org.springframework.stereotype.Component;
  * @version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class SpaceTypeDtoConverter implements DtoConvertible<SpaceType, SpaceTypeDto> {
     private final ModelMapper modelMapper;
-
-    public SpaceTypeDtoConverter(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
-    }
-
-    /**
-     * не используется
-     */
-    @Override
-    public SpaceType convertToEntity(SpaceTypeDto dto) {
-        return null;
-    }
 
     @Override
     public SpaceTypeDto convertToDto(SpaceType entity) {

@@ -30,16 +30,4 @@ public class UserDtoConverter implements DtoConvertible<User, UserDto> {
         }
         return dto;
     }
-
-    //не используется
-    @Override
-    public User convertToEntity(UserDto dto) {
-        return null;
-    }
-
-    //не используется
-    @Override
-    public UserDto convertToDto(User entity) {
-        return null;
-    }
 }

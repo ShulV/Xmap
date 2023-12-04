@@ -3,6 +3,7 @@ package com.shulpov.spots_app.spot_references.utils;
 import com.shulpov.spots_app.common.converters.DtoConvertible;
 import com.shulpov.spots_app.spot_references.dto.SportTypeDto;
 import com.shulpov.spots_app.spot_references.models.SportType;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -12,20 +13,9 @@ import org.springframework.stereotype.Component;
  * @version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class SportTypeDtoConverter implements DtoConvertible<SportType, SportTypeDto> {
     private final ModelMapper modelMapper;
-
-    public SportTypeDtoConverter(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
-    }
-
-    /**
-     * не используется
-     */
-    @Override
-    public SportType convertToEntity(SportTypeDto dto) {
-        return null;
-    }
 
     @Override
     public SportTypeDto convertToDto(SportType entity) {

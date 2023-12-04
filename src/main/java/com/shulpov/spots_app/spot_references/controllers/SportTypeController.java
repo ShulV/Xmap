@@ -5,9 +5,9 @@ import com.shulpov.spots_app.spot_references.models.SportType;
 import com.shulpov.spots_app.spot_references.services.SportTypeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,17 +22,13 @@ import java.util.Optional;
  * @since 1.0
  * @version 1.0
  */
+@Tag(name="Контроллер типов спорта (справочник)", description="Выдает типы спорта")
 @RestController
 @RequestMapping("/api/v1/sport-types")
-@Tag(name="Контроллер типов спорта (справочник)", description="Выдает типы спорта")
+@RequiredArgsConstructor
 public class SportTypeController {
     private final SportTypeService sportTypeService;
     private final Logger logger = LoggerFactory.getLogger(SportTypeController.class);
-
-    @Autowired
-    public SportTypeController(SportTypeService sportTypeService) {
-        this.sportTypeService = sportTypeService;
-    }
 
     @Operation(
             summary = "Получение всех типов спорта",

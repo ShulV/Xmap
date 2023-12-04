@@ -3,6 +3,7 @@ package com.shulpov.spots_app.locations.utils;
 import com.shulpov.spots_app.common.converters.DtoConvertible;
 import com.shulpov.spots_app.locations.dto.CityDto;
 import com.shulpov.spots_app.locations.models.City;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -12,20 +13,9 @@ import org.springframework.stereotype.Component;
  * @version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class CityDtoConverter implements DtoConvertible<City, CityDto> {
     private final ModelMapper modelMapper;
-
-    public CityDtoConverter(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
-    }
-
-    /**
-     * не используется
-     */
-    @Override
-    public City convertToEntity(CityDto dto) {
-        return null;
-    }
 
     @Override
     public CityDto convertToDto(City entity) {

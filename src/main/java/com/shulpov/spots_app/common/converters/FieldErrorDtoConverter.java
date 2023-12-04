@@ -1,6 +1,7 @@
 package com.shulpov.spots_app.common.converters;
 
 import com.shulpov.spots_app.common.dto.FieldErrorDto;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
@@ -11,20 +12,9 @@ import org.springframework.validation.FieldError;
  * @version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class FieldErrorDtoConverter implements  DtoConvertible<FieldError, FieldErrorDto> {
     private final ModelMapper modelMapper;
-
-    public FieldErrorDtoConverter(ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
-    }
-
-    /**
-     * не используется
-     */
-    @Override
-    public FieldError convertToEntity(FieldErrorDto dto) {
-        return null;
-    }
 
     /**
      * Преобразует объект FieldError (ошибка валидации поля) в объект FieldErrorDto.

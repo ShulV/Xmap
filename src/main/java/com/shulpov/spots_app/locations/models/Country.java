@@ -1,9 +1,7 @@
 package com.shulpov.spots_app.locations.models;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,7 +9,6 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "countries")
-@Builder
 public class Country {
 
     @Id
@@ -24,13 +21,4 @@ public class Country {
 
     @OneToMany(mappedBy = "country")
     private List<Region> regions;
-
-    public Country() {
-    }
-
-    public Country(Integer id, String name, List<Region> regions) {
-        this.id = id;
-        this.name = name;
-        this.regions = regions;
-    }
 }

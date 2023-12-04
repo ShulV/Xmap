@@ -1,87 +1,83 @@
 package com.shulpov.spots_app.locations.controllers;
 
+import com.shulpov.spots_app.common.ApiResponse;
+import com.shulpov.spots_app.common.ApiResponseStatus;
 import com.shulpov.spots_app.locations.dto.CityDto;
 import com.shulpov.spots_app.locations.services.CityService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.webjars.NotFoundException;
+
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Orlov Daniil
  * @since 1.0
  * @version 1.0
  */
+@Tag(name="Контроллер городов (справочник)", description="Выдает города")
 @RestController
 @RequestMapping(value ="/api/v1/cities", produces = "application/json")
-@Tag(name="Контроллер городов (справочник)", description="Выдает города")
+@RequiredArgsConstructor
 public class CityController {
-    private static final String ERROR_MESSAGE_KEY = "errorMessage";
     private final CityService cityService;
-    private final Logger logger;
-
-    public CityController(CityService cityService) {
-        this.cityService = cityService;
-        this.logger = LoggerFactory.getLogger(CityController.class);
-    }
 
     @Operation(
             summary = "Получение списка всех городов",
-            description = "Позволяет пользователю получить перечень всех имеющихся городов"
+            description = "Позволяет получить перечень всех имеющихся городов " +
+                    "(БОЛЬШАЯ НАГРУЗКА НА СЕТЬ! НУЖНО ПОЛУЧАТЬ СПИСОК ГОРОДОВ ИСХОДЯ ИЗ СТРАНЫ, А ЗАТЕМ ИЗ РЕГИОНА)"
     )
     @GetMapping("/all")
-    public ResponseEntity<?> getAll() {
-        logger.atInfo().log("Getting all cities");
-        try {
-            List<CityDto> cityDtoList = cityService.getAllDto();
-            return ResponseEntity.ok(cityDtoList);
-        } catch (NotFoundException e) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(Map.of(ERROR_MESSAGE_KEY, "There is no data in the table"));
-        }
+    public ResponseEntity<ApiResponse<CityDto>> getAll() {
+        ApiResponse<CityDto> response = new ApiResponse<>();
+        response.setDataList(cityService.getAllDto());
+        response.setCustomStatus(ApiResponseStatus.SUCCESS);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(
             summary = "Получение списка всех городов по региону",
             description = "Позволяет пользователю получить перечень всех городов, находящихся в определенном регионе по ее id"
     )
-    @GetMapping("/get-by-region-id/{id}")
-    public ResponseEntity<?> getByRegionId(@PathVariable("id") Integer id){
-        logger.atInfo().log("Getting all cities by region id = {}", id);
-        try {
-            List<CityDto> cityDtoList = cityService.getDtoByRegionId(id);
-            return ResponseEntity.ok(cityDtoList);
-        } catch (NotFoundException e) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(Map.of(ERROR_MESSAGE_KEY, "Region with id=" + id + " not found"));
+    @GetMapping("/by-region/{id}")
+    public ResponseEntity<ApiResponse<CityDto>> getByRegionId(
+            @Parameter(name = "id", description = "Идентификатор региона", required = true)
+            @PathVariable("id") Integer id){
+        ApiResponse<CityDto> response = new ApiResponse<>();
+        List<CityDto> cityDtoList = cityService.getDtoByRegionId(id);
+        if (cityDtoList.isEmpty()) {
+            response.setCustomStatus(ApiResponseStatus.CLIENT_ERROR);
+            response.setMessage("Region isn't exist or no cities in region");
+        } else {
+            response.setCustomStatus(ApiResponseStatus.SUCCESS);
+            response.setDataList(cityDtoList);
         }
+        return ResponseEntity.ok(response);
     }
 
     @Operation(
             summary = "Получение списка всех городов по стране",
             description = "Позволяет пользователю получить перечень всех городов, находящихся в определенной стране по ее id"
     )
-    @GetMapping("/get-by-country-id/{id}")
-    public ResponseEntity<?> getByCountryId(@PathVariable("id") Integer id) {
-        logger.atInfo().log("Getting all cities by region id = {}", id);
-        try {
-            List<CityDto> cityDtoList = cityService.getDtoByCountryId(id);
-            return ResponseEntity.ok(cityDtoList);
-        } catch (NotFoundException e) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(Map.of(ERROR_MESSAGE_KEY, "Country with id=" + id + " not found"));
+    @GetMapping("/by-country/{id}")
+    public ResponseEntity<ApiResponse<CityDto>> getByCountryId(
+            @Parameter(name = "id", description = "Идентификатор страны", required = true)
+            @PathVariable("id") Integer id) {
+        ApiResponse<CityDto> response = new ApiResponse<>();
+        List<CityDto> cityDtoList = cityService.getDtoByCountryId(id);
+        if (cityDtoList.isEmpty()) {
+            response.setCustomStatus(ApiResponseStatus.CLIENT_ERROR);
+            response.setMessage("Country isn't exist or no cities in country");
+        } else {
+            response.setCustomStatus(ApiResponseStatus.SUCCESS);
+            response.setDataList(cityDtoList);
         }
+        return ResponseEntity.ok(response);
     }
 }

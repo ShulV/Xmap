@@ -42,7 +42,8 @@ public class SpotController {
     private final AuthenticationService authService;
     private final Logger logger = LoggerFactory.getLogger(SpotController.class);
 
-    public SpotController(SpotService spotService, SpotUserService spotUserService, @Lazy UserService userService, SpotDtoConverter spotDtoConverter, AuthenticationService authService) {
+    public SpotController(SpotService spotService, SpotUserService spotUserService, @Lazy UserService userService,
+                          SpotDtoConverter spotDtoConverter, AuthenticationService authService) {
         this.spotService = spotService;
         this.spotUserService = spotUserService;
         this.userService = userService;

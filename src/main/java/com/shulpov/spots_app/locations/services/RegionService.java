@@ -1,14 +1,13 @@
 package com.shulpov.spots_app.locations.services;
 
-import com.shulpov.spots_app.locations.models.Country;
+import com.shulpov.spots_app.locations.dto.RegionDto;
 import com.shulpov.spots_app.locations.models.Region;
 import com.shulpov.spots_app.locations.repo.RegionRepo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.shulpov.spots_app.locations.utils.RegionDtoConverter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.webjars.NotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,37 +15,46 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 @Scope(value = "prototype")
+@RequiredArgsConstructor
 public class RegionService {
     private final RegionRepo regionRepo;
+    private final RegionDtoConverter regionDtoConverter;
 
-    private final CountryService countryService;
-
-    private final Logger logger = LoggerFactory.getLogger(RegionService.class);
-
-    public RegionService(RegionRepo regionRepo, CountryService countryService) {
-        this.regionRepo = regionRepo;
-        this.countryService = countryService;
-    }
-
+    /**
+     * Получить список регионов
+     */
     public List<Region> getAll() {
-        logger.atInfo().log("getAll");
         return regionRepo.findAll();
     }
 
-    //Получить регион по id
+    /**
+     * Получить регион по id
+     */
     public Optional<Region> getById(Integer id) {
-        logger.atInfo().log("getById id={}", id);
         return regionRepo.findById(id);
     }
 
-    public List<Region> getByCountryId(Integer id) throws NotFoundException {
-        logger.atInfo().log("getByCountryId id={}", id);
-        Optional<Country> optCountry = countryService.getById(id);
-        if (optCountry.isPresent()) {
-            return regionRepo.findByCountry(optCountry.get());
-        } else {
-            throw new NotFoundException("Country not found");
-        }
+    /**
+     * Получить список регионов по id города
+     */
+    public List<Region> getByCountryId(Integer id) {
+        return regionRepo.findByCountryId(id);
+    }
+
+    // DTO ------------------------------------------------------------------------------------
+
+    /**
+     * Получить весь список DTO регионов
+     */
+    public List<RegionDto> getAllDto() {
+        return getAll().stream().map(regionDtoConverter::convertToDto).toList();
+    }
+
+    /**
+     * Получить список DTO регионов по id города
+     */
+    public List<RegionDto> getDtoByCountryId(Integer id) {
+        return getByCountryId(id).stream().map(regionDtoConverter::convertToDto).toList();
     }
 
 }

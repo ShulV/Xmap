@@ -35,7 +35,6 @@ import java.util.Optional;
 public class ImageInfoController {
     private final ImageInfoService imageInfoService;
     private final UserService userService;
-
     private final Logger logger = LoggerFactory.getLogger(ImageInfoController.class);
 
     @Autowired
@@ -75,7 +74,7 @@ public class ImageInfoController {
             description = "Позволяет модератору или админу добавить 1 изображение для спота",
             security = @SecurityRequirement(name = "accessTokenAuth")
     )
-    @PostMapping("/spot-image/{id}")
+
     public ResponseEntity<Map<String, Long>> uploadSpotImage(
             @PathVariable(name = "id") Long spotId, @RequestParam MultipartFile file, Principal principal) {
         logger.atInfo().log("POST /spot-image filename={} size={} email={}",

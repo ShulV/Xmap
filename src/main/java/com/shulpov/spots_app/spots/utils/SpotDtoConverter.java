@@ -11,6 +11,7 @@ import com.shulpov.spots_app.spot_references.services.SpotTypeService;
 import com.shulpov.spots_app.spot_user_infos.SpotUserService;
 import com.shulpov.spots_app.spots.dto.SpotDto;
 import com.shulpov.spots_app.spots.models.Spot;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,7 @@ import java.util.Optional;
  * @version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class SpotDtoConverter implements DtoConvertible<Spot, SpotDto> {
     private final  ModelMapper modelMapper;
     private final ImageInfoDtoConverter imageInfoDtoConverter;
@@ -32,15 +34,6 @@ public class SpotDtoConverter implements DtoConvertible<Spot, SpotDto> {
     private final SpotTypeService spotTypeService;
     private final SportTypeService sportTypeService;
     private final SpotUserService spotUserService;
-
-    public SpotDtoConverter(ModelMapper modelMapper, ImageInfoDtoConverter imageInfoDtoConverter, SpaceTypeService spaceTypeService, SpotTypeService spotTypeService, SportTypeService sportTypeService, SpotUserService spotUserService) {
-        this.modelMapper = modelMapper;
-        this.imageInfoDtoConverter = imageInfoDtoConverter;
-        this.spaceTypeService = spaceTypeService;
-        this.spotTypeService = spotTypeService;
-        this.sportTypeService = sportTypeService;
-        this.spotUserService = spotUserService;
-    }
 
     /**
      * Для создания спотов. Подставляет текущее время и подтверждение спота в false.
@@ -67,12 +60,6 @@ public class SpotDtoConverter implements DtoConvertible<Spot, SpotDto> {
         spotTypeService.getByIds(dto.getSpotTypeIds());
 
         return spot;
-    }
-
-    //не используется
-    @Override
-    public Spot convertToEntity(SpotDto dto) {
-        return null;
     }
 
     @Override

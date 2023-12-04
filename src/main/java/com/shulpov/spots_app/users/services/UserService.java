@@ -8,10 +8,10 @@ import com.shulpov.spots_app.users.exception.UserNotFoundException;
 import com.shulpov.spots_app.users.models.User;
 import com.shulpov.spots_app.users.utils.UserDtoConverter;
 import io.jsonwebtoken.JwtException;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Service;
@@ -27,23 +27,15 @@ import java.util.Optional;
  */
 @Service
 @Transactional(readOnly = true)
-@Scope(value = "prototype")
+@Scope(value = "prototype")//TODO избавиться
+@RequiredArgsConstructor
 public class UserService {
 
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final ImageInfoService imageInfoService;
     private final JwtService jwtService;
     private final UserRepository userRepository;
-
     private final UserDtoConverter userDtoConverter;
-
-    @Autowired
-    public UserService(ImageInfoService imageInfoService, JwtService jwtService, UserRepository userRepository, UserDtoConverter userDtoConverter) {
-        this.imageInfoService = imageInfoService;
-        this.jwtService = jwtService;
-        this.userRepository = userRepository;
-        this.userDtoConverter = userDtoConverter;
-    }
 
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);

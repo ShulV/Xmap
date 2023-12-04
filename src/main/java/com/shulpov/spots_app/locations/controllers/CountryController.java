@@ -1,57 +1,39 @@
 package com.shulpov.spots_app.locations.controllers;
 
+import com.shulpov.spots_app.common.ApiResponse;
+import com.shulpov.spots_app.common.ApiResponseStatus;
 import com.shulpov.spots_app.locations.dto.CountryDto;
 import com.shulpov.spots_app.locations.services.CountryService;
-import com.shulpov.spots_app.locations.utils.CountryDtoConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.webjars.NotFoundException;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Orlov Daniil
  * @since 1.0
  * @version 1.0
  */
+@Tag(name="Контроллер стран (справочник)", description="Выдает страны")
 @RestController
 @RequestMapping(value = "/api/v1/countries", produces = "application/json")
-@Tag(name="Контроллер стран (справочник)", description="Выдает страны")
+@RequiredArgsConstructor
 public class CountryController {
 
     private final CountryService countryService;
-    private final CountryDtoConverter countryDtoConverter;
-    private final Logger logger;
-
-    public CountryController(CountryService countryService, CountryDtoConverter countryDtoConverter) {
-        this.countryService = countryService;
-        this.countryDtoConverter = countryDtoConverter;
-        this.logger = LoggerFactory.getLogger(CountryController.class);
-    }
 
     @Operation(
             summary = "Получение списка всех стран",
             description = "Позволяет пользователю получить перечень всех имеющихся стран"
     )
     @GetMapping("/all")
-    public ResponseEntity<?> getAll() {
-        logger.atInfo().log("Getting all countries");
-        try {
-            List<CountryDto> countryDtoList = countryService.getAll().stream()
-                    .map(countryDtoConverter::convertToDto).toList();
-            return ResponseEntity.ok(countryDtoList);
-        } catch (NotFoundException e) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error_message", "There is no data in the table"));
-        }
+    public ResponseEntity<ApiResponse<CountryDto>> getAll() {
+        ApiResponse<CountryDto> response = new ApiResponse<>();
+        response.setDataList(countryService.getAllDto());
+        response.setCustomStatus(ApiResponseStatus.SUCCESS);
+        return ResponseEntity.ok(response);
     }
 }

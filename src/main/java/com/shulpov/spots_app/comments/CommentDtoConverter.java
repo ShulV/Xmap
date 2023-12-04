@@ -3,6 +3,7 @@ package com.shulpov.spots_app.comments;
 import com.shulpov.spots_app.common.converters.DtoConvertible;
 import com.shulpov.spots_app.users.dto.CommentatorDto;
 import com.shulpov.spots_app.users.utils.UserDtoConverter;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -12,20 +13,10 @@ import org.springframework.stereotype.Component;
  * @version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class CommentDtoConverter implements DtoConvertible<Comment, CommentDto> {
     private final ModelMapper modelMapper;
     private final UserDtoConverter userDtoConverter;
-
-    public CommentDtoConverter(ModelMapper modelMapper, UserDtoConverter userDtoConverter) {
-        this.modelMapper = modelMapper;
-        this.userDtoConverter = userDtoConverter;
-    }
-
-    //не используется
-    @Override
-    public Comment convertToEntity(CommentDto dto) {
-        return null;
-    }
 
     @Override
     public CommentDto convertToDto(Comment entity) {

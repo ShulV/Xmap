@@ -1,5 +1,6 @@
 package com.shulpov.spots_app;
 
+import com.shulpov.spots_app.common.ApiResponseStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,9 +32,11 @@ class CountryControllerTests {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Россия"))
-                .andExpect(MockMvcResultMatchers.jsonPath("[217].name").value("Япония"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(218));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data_list[0].name").value("Россия"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data_list[217].name").value("Япония"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data_list.length()").value(218))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.custom_status")
+                        .value(ApiResponseStatus.SUCCESS.toString()));
     }
 
 }

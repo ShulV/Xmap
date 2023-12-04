@@ -1,5 +1,7 @@
 package com.shulpov.spots_app.common.converters;
 
+import org.apache.commons.lang3.NotImplementedException;
+
 /**
  * @author Shulpov Victor
  * @since 1.0
@@ -7,7 +9,11 @@ package com.shulpov.spots_app.common.converters;
  */
 public interface DtoConvertible<E, D> {
 
-    E convertToEntity(D dto);
+    default E convertToEntity(D dto) {
+        throw new NotImplementedException("convertToEntity(D dto) not implemented");
+    }
 
-    D convertToDto(E entity);
+    default D convertToDto(E entity) {
+        throw new NotImplementedException("convertToDto(E entity) not implemented");
+    }
 }

@@ -1,9 +1,7 @@
 package com.shulpov.spots_app.locations.models;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,7 +9,6 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "regions")
-@Builder
 public class Region {
 
     @Id
@@ -22,6 +19,8 @@ public class Region {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "country_id", insertable = false, updatable = false)
+    private Integer countryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", referencedColumnName = "id")
@@ -29,15 +28,4 @@ public class Region {
 
     @OneToMany(mappedBy = "region")
     private List<City> cities;
-
-    public Region() {
-    }
-
-    public Region(Integer id, String name, Country country, List<City> cities) {
-        this.id = id;
-        this.name = name;
-        this.country = country;
-        this.cities = cities;
-    }
-
 }
