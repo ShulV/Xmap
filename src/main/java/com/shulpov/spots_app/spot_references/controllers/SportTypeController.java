@@ -1,21 +1,20 @@
 package com.shulpov.spots_app.spot_references.controllers;
 
+import com.shulpov.spots_app.common.ApiResponse;
+import com.shulpov.spots_app.common.ApiResponseStatus;
 import com.shulpov.spots_app.spot_references.dto.SportTypeDto;
-import com.shulpov.spots_app.spot_references.models.SportType;
 import com.shulpov.spots_app.spot_references.services.SportTypeService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 /**
  * @author Shulpov Victor
@@ -28,15 +27,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SportTypeController {
     private final SportTypeService sportTypeService;
-    private final Logger logger = LoggerFactory.getLogger(SportTypeController.class);
 
     @Operation(
             summary = "Получение всех типов спорта",
             description = "Позволяет пользователю получить все типы спотов"
     )
     @GetMapping("/all")
-    public List<SportTypeDto> getAllSportTypes() {
-        return sportTypeService.getAllDto();
+    public ResponseEntity<ApiResponse<SportTypeDto>> getAllSportTypes() {
+        ApiResponse<SportTypeDto> response = new ApiResponse<>();
+        response.setDataList(sportTypeService.getAllDto());
+        response.setCustomStatus(ApiResponseStatus.SUCCESS);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(
@@ -44,13 +45,17 @@ public class SportTypeController {
             description = "Позволяет пользователю получить тип спорта по id"
     )
     @GetMapping("/{id}")
-    public SportType getSportType(@PathVariable(name = "id")  Integer id) throws NoSuchElementException {
-        Optional<SportType> sportTypeOpt = sportTypeService.getById(id);
-        if(sportTypeOpt.isPresent()) {
-            return sportTypeOpt.get();
-        } else {
-            logger.atError().log("No sport type with such id");
-            throw new NoSuchElementException("No sport type with such id");
+    public ResponseEntity<ApiResponse<SportTypeDto>> getSportType(
+            @Parameter(description = "Идентификатор типа спорта", example = "1")
+            @PathVariable(name = "id")  Integer id) {
+        ApiResponse<SportTypeDto> response = new ApiResponse<>();
+        try {
+            response.setData(sportTypeService.getDtoById(id));
+            response.setCustomStatus(ApiResponseStatus.SUCCESS);
+        } catch (NoSuchElementException e) {
+            response.setCustomStatus(ApiResponseStatus.CLIENT_ERROR);
+            response.setMessage("No sport type with id=" + id);
         }
+        return ResponseEntity.ok(response);
     }
 }

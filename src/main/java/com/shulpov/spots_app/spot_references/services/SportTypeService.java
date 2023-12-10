@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
@@ -34,33 +34,53 @@ public class SportTypeService {
         this.sportTypeRepo = sportTypeRepo;
     }
 
-    //Получить все типы спорта
+    /**
+     * Получить все типы спорта
+     */
     public List<SportType> getAll() {
         return sportTypeRepo.findAll();
     }
 
+
+    /**
+     * Получить все типы спорта по списку с их id
+     */
+    public List<SportType> getByIds(List<Integer> ids) {
+        List<SportType> sportTypes =  sportTypeRepo.getByIds(ids);
+        if (sportTypes.size() != ids.size()) {
+            logger.error("getByIds method. Different size of lists: [ids = '{}', sport_types_size = '{}']", sportTypes.size(),
+                    ids.size());
+        }
+        return sportTypes;
+    }
+
+    /**
+     * Получить тип спорта по id
+     */
+    public Optional<SportType> getById(Integer id) {
+        return sportTypeRepo.findById(id);
+    }
+
+    // DTO ------------------------------------------------------------------------------------
+
+    /**
+     * Получить все виды спорта в виде DTO
+     */
     public List<SportTypeDto> getAllDto() {
         return getAll().stream().map(sportTypeDtoConverter::convertToDto).toList();
     }
 
-    //Получить все типы спорта по их id
-    public List<SportType> getByIds(List<Integer> ids) {
-        logger.atInfo().log("findByIds ids:{}", ids.toString());
-        List<SportType> sportTypes = new ArrayList<>();
-        ids.forEach(id -> {
-            Optional<SportType> sportTypeOpt = sportTypeRepo.findById(id);
-            if (sportTypeOpt.isPresent()) {
-                sportTypes.add(sportTypeOpt.get());
-                logger.atInfo().log("id={} exists", id);
-            } else {
-                logger.atError().log("id={} doesn't exist: ID SPORT TYPE LIST ERROR", id);
-            }
-        });
-        return sportTypes;
+    /**
+     * Получить тип спорта по id в виде DTO
+     */
+    public SportTypeDto getDtoById(Integer id) throws NoSuchElementException {
+        Optional<SportType> sportTypeOpt = getById(id);
+        if (sportTypeOpt.isEmpty()) {
+            logger.error("No sport type: [id = '{}']", id);
+            throw new NoSuchElementException();
+        }
+        return sportTypeDtoConverter.convertToDto(sportTypeOpt.get());
+
     }
 
-    //Получить тип спорта по id
-    public Optional<SportType> getById(Integer id) {
-        return sportTypeRepo.findById(id);
-    }
 }

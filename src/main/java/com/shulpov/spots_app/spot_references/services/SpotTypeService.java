@@ -4,14 +4,15 @@ import com.shulpov.spots_app.spot_references.dto.SpotTypeDto;
 import com.shulpov.spots_app.spot_references.models.SpotType;
 import com.shulpov.spots_app.spot_references.repo.SpotTypeRepo;
 import com.shulpov.spots_app.spot_references.utils.SpotTypeDtoConverter;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
@@ -22,23 +23,40 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 @Scope(value = "prototype")
+@RequiredArgsConstructor
 public class SpotTypeService {
     private final SpotTypeDtoConverter spotTypeDtoConverter;
     private final SpotTypeRepo spotTypeRepo;
     private final Logger logger = LoggerFactory.getLogger(SpotTypeService.class);
 
-    public SpotTypeService(SpotTypeDtoConverter spotTypeDtoConverter, SpotTypeRepo spotTypeRepo) {
-        this.spotTypeDtoConverter = spotTypeDtoConverter;
-        this.spotTypeRepo = spotTypeRepo;
-    }
-
     /**
      * Получить все типы спотов
      */
     public List<SpotType> getAll() {
-        logger.atInfo().log("getAll");
         return spotTypeRepo.findAll();
     }
+
+    /**
+     * Получить все типы спотов по их id
+     */
+    public List<SpotType> getByIds(List<Integer> ids) {
+        List<SpotType> spotTypes =  spotTypeRepo.getByIds(ids);
+        if (spotTypes.size() != ids.size()) {
+            logger.error("getByIds method. Different size of lists: [ids = '{}', spot_types_size = '{}']", spotTypes.size(),
+                    ids.size());
+        }
+        return spotTypes;
+    }
+
+    /**
+     * Получить тип спота по id
+     */
+    public Optional<SpotType> getById(Integer id) {
+        return spotTypeRepo.findById(id);
+    }
+
+    // DTO ------------------------------------------------------------------------------------
+
 
     /**
      * Получить все типы спотов в виде DTO
@@ -48,28 +66,15 @@ public class SpotTypeService {
     }
 
     /**
-     * Получить все типы спотов по их id
+     * Получить тип спота по id в виде DTO
      */
-    public List<SpotType> getByIds(List<Integer> ids) {
-        logger.atInfo().log("findByIds ids:{}", ids.toString());
-        List<SpotType> spotTypes = new ArrayList<>();
-        ids.forEach(id->{
-            Optional<SpotType> spotTypeOpt = spotTypeRepo.findById(id);
-            if(spotTypeOpt.isPresent()) {
-                spotTypes.add(spotTypeOpt.get());
-                logger.atInfo().log("id={} exists", id);
-            } else {
-                logger.atError().log("id={} doesn't exist: ID SPOTTYPE LIST ERROR", id);
-            }
-        });
-        return spotTypes;
-    }
+    public SpotTypeDto getDtoById(Integer id) throws NoSuchElementException {
+        Optional<SpotType> spotTypeOpt = getById(id);
+        if (spotTypeOpt.isEmpty()) {
+            logger.error("No spot type: [id = '{}']", id);
+            throw new NoSuchElementException();
+        }
+        return spotTypeDtoConverter.convertToDto(spotTypeOpt.get());
 
-    /**
-     * Получить тип спота по id
-     */
-    public Optional<SpotType> getById(Integer id) {
-        logger.atInfo().log("getById id={}", id);
-        return spotTypeRepo.findById(id);
     }
 }

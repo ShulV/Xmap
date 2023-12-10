@@ -2,7 +2,10 @@ package com.shulpov.spots_app.spot_references.repo;
 
 import com.shulpov.spots_app.spot_references.models.SpotType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author Shulpov Victor
@@ -11,4 +14,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface SpotTypeRepo extends JpaRepository<SpotType, Integer> {
+
+    @Query("FROM SpotType WHERE id in :ids")
+    List<SpotType> getByIds(List<Integer> ids);
 }

@@ -43,7 +43,8 @@ public class RegionController {
 
     @Operation(
             summary = "Получение списка всех регионов по стране",
-            description = "Позволяет пользователю получить перечень всех регионов, находящихся в определенной стране по ее id"
+            description = "Позволяет пользователю получить перечень всех регионов, находящихся в определенной стране по ее id" +
+                    "(БОЛЬШАЯ НАГРУЗКА НА СЕТЬ! СНАЧАЛА НУЖНО ПОЛУЧАТЬ СПИСОК РЕГИОНОВ ДЛЯ ОПРЕДЕЛЕННОЙ СТРАНЫ!)"
     )
     @GetMapping("/by-country/{id}")
     public ResponseEntity<ApiResponse<RegionDto>> getByCountryId(
