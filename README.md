@@ -146,6 +146,12 @@ someMap.put("key_name_in_snake_case", "value");
   </ul>
 </div>
 
+<h3>👉 Работа с access и refresh токенами</h3>
+<div>
+  <h4>Как кодировать/декодировать?</h4>
+  <img src='https://github.com/ShulV/Xmap/blob/main/readme-images/doc/jwt_io_example.jpg' width='60%'>
+</div>
+
 <h2>❓ Некоторые пока что нерешенные проблемы приложения:</h2>
 <ul>
   <li>Проблема Hibernate N+1</li>
