@@ -85,7 +85,7 @@ public class UserService {
         String accessToken = jwtService.getAccessTokenFromAccessHeader(accessHeader);
         Optional<User> userOpt = getByAccessToken(accessToken);
         if (userOpt.isEmpty()) {
-            throw new UserNotFoundException("User not found");
+            throw new UserNotFoundException("User by access token not found");
         }
         return userDtoConverter.convertToCommentatorDto(userOpt.get());
     }

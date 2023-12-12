@@ -1,7 +1,6 @@
 package com.shulpov.spots_app.spot_references.controllers;
 
-import com.shulpov.spots_app.common.ApiResponse;
-import com.shulpov.spots_app.common.ApiResponseStatus;
+import com.shulpov.spots_app.common.ResponseData;
 import com.shulpov.spots_app.spot_references.dto.SportTypeDto;
 import com.shulpov.spots_app.spot_references.services.SportTypeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,10 +32,9 @@ public class SportTypeController {
             description = "Позволяет пользователю получить все типы спотов"
     )
     @GetMapping("/all")
-    public ResponseEntity<ApiResponse<SportTypeDto>> getAllSportTypes() {
-        ApiResponse<SportTypeDto> response = new ApiResponse<>();
+    public ResponseEntity<ResponseData<SportTypeDto>> getAllSportTypes() {
+        ResponseData<SportTypeDto> response = new ResponseData<>();
         response.setDataList(sportTypeService.getAllDto());
-        response.setCustomStatus(ApiResponseStatus.SUCCESS);
         return ResponseEntity.ok(response);
     }
 
@@ -45,15 +43,13 @@ public class SportTypeController {
             description = "Позволяет пользователю получить тип спорта по id"
     )
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<SportTypeDto>> getSportType(
+    public ResponseEntity<ResponseData<SportTypeDto>> getSportType(
             @Parameter(description = "Идентификатор типа спорта", example = "1")
             @PathVariable(name = "id")  Integer id) {
-        ApiResponse<SportTypeDto> response = new ApiResponse<>();
+        ResponseData<SportTypeDto> response = new ResponseData<>();
         try {
             response.setData(sportTypeService.getDtoById(id));
-            response.setCustomStatus(ApiResponseStatus.SUCCESS);
         } catch (NoSuchElementException e) {
-            response.setCustomStatus(ApiResponseStatus.CLIENT_ERROR);
             response.setMessage("No sport type with id=" + id);
         }
         return ResponseEntity.ok(response);

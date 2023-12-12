@@ -1,6 +1,5 @@
 package com.shulpov.spots_app;
 
-import com.shulpov.spots_app.common.ApiResponseStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -34,10 +33,7 @@ class CityControllerTests {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data_list[0].name").value("Москва"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data_list[17286].name").value("Vert"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data_list.length()").value(17287))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.custom_status")
-                        .value(ApiResponseStatus.SUCCESS.toString()));
-
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data_list.length()").value(17287));
     }
 
     @Test
@@ -48,10 +44,7 @@ class CityControllerTests {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data_list[0].name").value("Москва"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data_list[2567].name").value("Черкесск"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data_list.length()").value(2568))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.custom_status")
-                        .value(ApiResponseStatus.SUCCESS.toString()));
-
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data_list.length()").value(2568));
     }
 
     @Test
@@ -60,9 +53,7 @@ class CityControllerTests {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message")
-                        .value("Country isn't exist or no cities in country"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.custom_status")
-                        .value(ApiResponseStatus.CLIENT_ERROR.toString()));
+                        .value("Country isn't exist or no cities in country"));
     }
 
 
@@ -74,9 +65,7 @@ class CityControllerTests {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data_list[0].name").value("Москва"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data_list[171].name").value("Яхрома"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data_list.length()").value(172))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.custom_status")
-                        .value(ApiResponseStatus.SUCCESS.toString()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data_list.length()").value(172));
     }
 
     @Test
@@ -85,10 +74,7 @@ class CityControllerTests {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message")
-                        .value("Region isn't exist or no cities in region"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.custom_status")
-                        .value(ApiResponseStatus.CLIENT_ERROR.toString()));
-
+                        .value("Region isn't exist or no cities in region"));
     }
 
 

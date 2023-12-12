@@ -1,6 +1,5 @@
 package com.shulpov.spots_app;
 
-import com.shulpov.spots_app.common.ApiResponseStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -34,9 +33,7 @@ class RegionControllerTests {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data_list[0].name").value("Москва и Московская обл."))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data_list[1610].name").value("Яманаси"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data_list.length()").value(1611))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.custom_status")
-                        .value(ApiResponseStatus.SUCCESS.toString()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data_list.length()").value(1611));
     }
 
     @Test
@@ -47,9 +44,7 @@ class RegionControllerTests {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data_list[0].name").value("Винницкая обл."))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data_list[24].name").value("Черновицкая обл."))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data_list.length()").value(25))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.custom_status")
-                        .value(ApiResponseStatus.SUCCESS.toString()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data_list.length()").value(25));
     }
 
     @Test
@@ -57,8 +52,6 @@ class RegionControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/regions/by-country/100000")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.custom_status")
-                        .value(ApiResponseStatus.CLIENT_ERROR.toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message")
                         .value("Country isn't exist or no regions in country"));
 

@@ -20,7 +20,7 @@ public class CommentatorDto {
     @Schema(description = "Почта пользователя", example = "alex_green@gmail.com")
     private String email;
 
-    @JsonProperty("commentator_image_info")
+    @JsonProperty("image_info")
     @Schema(description = "Информация о картинке профиля комментатора")
     private ImageInfoDto commentatorImageInfo;
 }

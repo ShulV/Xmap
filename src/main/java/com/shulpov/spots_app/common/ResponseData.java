@@ -22,11 +22,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiResponse<T> {
-
-    @Schema(description = "Кастомный статус ответа")
-    @JsonProperty("custom_status")
-    private ApiResponseStatus customStatus;
+public class ResponseData<T> {
 
     @Schema(description = "Сообщение для разработчиков клиентской части (на англ.)", example = "Some error")
     private String message;

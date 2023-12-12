@@ -1,7 +1,6 @@
 package com.shulpov.spots_app.locations.controllers;
 
-import com.shulpov.spots_app.common.ApiResponse;
-import com.shulpov.spots_app.common.ApiResponseStatus;
+import com.shulpov.spots_app.common.ResponseData;
 import com.shulpov.spots_app.locations.dto.RegionDto;
 import com.shulpov.spots_app.locations.services.RegionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,10 +33,9 @@ public class RegionController {
             description = "Позволяет пользователю получить перечень всех имеющихся регионов"
     )
     @GetMapping("/all")
-    public ResponseEntity<ApiResponse<RegionDto>> getAll() {
-        ApiResponse<RegionDto> response = new ApiResponse<>();
+    public ResponseEntity<ResponseData<RegionDto>> getAll() {
+        ResponseData<RegionDto> response = new ResponseData<>();
         response.setDataList(regionService.getAllDto());
-        response.setCustomStatus(ApiResponseStatus.SUCCESS);
         return ResponseEntity.ok(response);
     }
 
@@ -47,17 +45,15 @@ public class RegionController {
                     "(БОЛЬШАЯ НАГРУЗКА НА СЕТЬ! СНАЧАЛА НУЖНО ПОЛУЧАТЬ СПИСОК РЕГИОНОВ ДЛЯ ОПРЕДЕЛЕННОЙ СТРАНЫ!)"
     )
     @GetMapping("/by-country/{id}")
-    public ResponseEntity<ApiResponse<RegionDto>> getByCountryId(
+    public ResponseEntity<ResponseData<RegionDto>> getByCountryId(
             @Parameter(name = "id", description = "Идентификатор страны", required = true)
             @PathVariable("id") Integer id) {
-        ApiResponse<RegionDto> response = new ApiResponse<>();
+        ResponseData<RegionDto> response = new ResponseData<>();
         List<RegionDto> regionDtoList = regionService.getDtoByCountryId(id);
         if (regionDtoList.isEmpty()) {
-            response.setCustomStatus(ApiResponseStatus.CLIENT_ERROR);
             response.setMessage("Country isn't exist or no regions in country");
         } else {
             response.setDataList(regionDtoList);
-            response.setCustomStatus(ApiResponseStatus.SUCCESS);
         }
 
         return ResponseEntity.ok(response);

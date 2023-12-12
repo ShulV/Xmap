@@ -1,7 +1,6 @@
 package com.shulpov.spots_app.spot_references.controllers;
 
-import com.shulpov.spots_app.common.ApiResponse;
-import com.shulpov.spots_app.common.ApiResponseStatus;
+import com.shulpov.spots_app.common.ResponseData;
 import com.shulpov.spots_app.spot_references.dto.SpaceTypeDto;
 import com.shulpov.spots_app.spot_references.services.SpaceTypeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,10 +35,9 @@ public class SpaceTypeController {
             description = "Позволяет пользователю получить все типы помещений"
     )
     @GetMapping("/all")
-    public ResponseEntity<ApiResponse<SpaceTypeDto>> getAllSpaceTypes() {
-        ApiResponse<SpaceTypeDto> response = new ApiResponse<>();
+    public ResponseEntity<ResponseData<SpaceTypeDto>> getAllSpaceTypes() {
+        ResponseData<SpaceTypeDto> response = new ResponseData<>();
         response.setDataList(spaceTypeService.getAllDto());
-        response.setCustomStatus(ApiResponseStatus.SUCCESS);
         return ResponseEntity.ok(response);
     }
 
@@ -48,15 +46,13 @@ public class SpaceTypeController {
             description = "Позволяет пользователю получить тип помещения по id"
     )
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<SpaceTypeDto>> getSpaceType(
+    public ResponseEntity<ResponseData<SpaceTypeDto>> getSpaceType(
             @Parameter(description = "Идентификатор типа помещения", example = "1")
             @PathVariable(name = "id")  Integer id) {
-        ApiResponse<SpaceTypeDto> response = new ApiResponse<>();
+        ResponseData<SpaceTypeDto> response = new ResponseData<>();
         try {
             response.setData(spaceTypeService.getDtoById(id));
-            response.setCustomStatus(ApiResponseStatus.SUCCESS);
         } catch (NoSuchElementException e) {
-            response.setCustomStatus(ApiResponseStatus.CLIENT_ERROR);
             response.setMessage("No space type with id=" + id);
         }
         return ResponseEntity.ok(response);

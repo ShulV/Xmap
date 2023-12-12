@@ -1,7 +1,6 @@
 package com.shulpov.spots_app.locations.controllers;
 
-import com.shulpov.spots_app.common.ApiResponse;
-import com.shulpov.spots_app.common.ApiResponseStatus;
+import com.shulpov.spots_app.common.ResponseData;
 import com.shulpov.spots_app.locations.dto.CityDto;
 import com.shulpov.spots_app.locations.services.CityService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,10 +33,9 @@ public class CityController {
                     "(БОЛЬШАЯ НАГРУЗКА НА СЕТЬ! НУЖНО ПОЛУЧАТЬ СПИСОК ГОРОДОВ ИСХОДЯ ИЗ СТРАНЫ, А ЗАТЕМ ИЗ РЕГИОНА)"
     )
     @GetMapping("/all")
-    public ResponseEntity<ApiResponse<CityDto>> getAll() {
-        ApiResponse<CityDto> response = new ApiResponse<>();
+    public ResponseEntity<ResponseData<CityDto>> getAll() {
+        ResponseData<CityDto> response = new ResponseData<>();
         response.setDataList(cityService.getAllDto());
-        response.setCustomStatus(ApiResponseStatus.SUCCESS);
         return ResponseEntity.ok(response);
     }
 
@@ -46,16 +44,14 @@ public class CityController {
             description = "Позволяет пользователю получить перечень всех городов, находящихся в определенном регионе по ее id"
     )
     @GetMapping("/by-region/{id}")
-    public ResponseEntity<ApiResponse<CityDto>> getByRegionId(
+    public ResponseEntity<ResponseData<CityDto>> getByRegionId(
             @Parameter(name = "id", description = "Идентификатор региона", required = true)
             @PathVariable("id") Integer id){
-        ApiResponse<CityDto> response = new ApiResponse<>();
+        ResponseData<CityDto> response = new ResponseData<>();
         List<CityDto> cityDtoList = cityService.getDtoByRegionId(id);
         if (cityDtoList.isEmpty()) {
-            response.setCustomStatus(ApiResponseStatus.CLIENT_ERROR);
             response.setMessage("Region isn't exist or no cities in region");
         } else {
-            response.setCustomStatus(ApiResponseStatus.SUCCESS);
             response.setDataList(cityDtoList);
         }
         return ResponseEntity.ok(response);
@@ -66,16 +62,14 @@ public class CityController {
             description = "Позволяет пользователю получить перечень всех городов, находящихся в определенной стране по ее id"
     )
     @GetMapping("/by-country/{id}")
-    public ResponseEntity<ApiResponse<CityDto>> getByCountryId(
+    public ResponseEntity<ResponseData<CityDto>> getByCountryId(
             @Parameter(name = "id", description = "Идентификатор страны", required = true)
             @PathVariable("id") Integer id) {
-        ApiResponse<CityDto> response = new ApiResponse<>();
+        ResponseData<CityDto> response = new ResponseData<>();
         List<CityDto> cityDtoList = cityService.getDtoByCountryId(id);
         if (cityDtoList.isEmpty()) {
-            response.setCustomStatus(ApiResponseStatus.CLIENT_ERROR);
             response.setMessage("Country isn't exist or no cities in country");
         } else {
-            response.setCustomStatus(ApiResponseStatus.SUCCESS);
             response.setDataList(cityDtoList);
         }
         return ResponseEntity.ok(response);

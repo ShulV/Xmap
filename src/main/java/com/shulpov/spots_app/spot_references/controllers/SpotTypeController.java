@@ -1,7 +1,6 @@
 package com.shulpov.spots_app.spot_references.controllers;
 
-import com.shulpov.spots_app.common.ApiResponse;
-import com.shulpov.spots_app.common.ApiResponseStatus;
+import com.shulpov.spots_app.common.ResponseData;
 import com.shulpov.spots_app.spot_references.dto.SpotTypeDto;
 import com.shulpov.spots_app.spot_references.services.SpotTypeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,10 +32,9 @@ public class SpotTypeController {
             description = "Позволяет пользователю получить все типы спотов"
     )
     @GetMapping("/all")
-    public ResponseEntity<ApiResponse<SpotTypeDto>> getAllSpots() {
-        ApiResponse<SpotTypeDto> response = new ApiResponse<>();
+    public ResponseEntity<ResponseData<SpotTypeDto>> getAllSpots() {
+        ResponseData<SpotTypeDto> response = new ResponseData<>();
         response.setDataList(spotTypeService.getAllDto());
-        response.setCustomStatus(ApiResponseStatus.SUCCESS);
         return ResponseEntity.ok(response);
     }
 
@@ -45,15 +43,13 @@ public class SpotTypeController {
             description = "Позволяет пользователю получить тип спота по его id"
     )
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<SpotTypeDto>> getSpotType(
+    public ResponseEntity<ResponseData<SpotTypeDto>> getSpotType(
             @Parameter(description = "Идентификатор типа спота", example = "1")
             @PathVariable(name = "id")  Integer id) throws NoSuchElementException {
-        ApiResponse<SpotTypeDto> response = new ApiResponse<>();
+        ResponseData<SpotTypeDto> response = new ResponseData<>();
         try {
             response.setData(spotTypeService.getDtoById(id));
-            response.setCustomStatus(ApiResponseStatus.SUCCESS);
         } catch (NoSuchElementException e) {
-            response.setCustomStatus(ApiResponseStatus.CLIENT_ERROR);
             response.setMessage("No spot type with id=" + id);
         }
         return ResponseEntity.ok(response);

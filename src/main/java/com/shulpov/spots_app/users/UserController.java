@@ -1,9 +1,11 @@
 package com.shulpov.spots_app.users;
 
+import com.shulpov.spots_app.common.ResponseData;
 import com.shulpov.spots_app.common.responses.ErrorMessageResponse;
 import com.shulpov.spots_app.users.dto.CommentatorDto;
 import com.shulpov.spots_app.users.exception.UserNotFoundException;
 import com.shulpov.spots_app.users.services.UserService;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,6 +15,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -28,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 public class UserController {
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
     @Operation(
@@ -44,11 +49,14 @@ public class UserController {
                                     schema = @Schema(implementation = ErrorMessageResponse.class)) }
                     )}
     )
+    //TODO заменить на UserDto
     @GetMapping("/info")
-    public ResponseEntity<CommentatorDto> getAuthUser(
+    public ResponseEntity<ResponseData<CommentatorDto>> getAuthUser(
             @Parameter(description = "Access токен", example = "Bearer token_value")
             @RequestHeader("Authorization") String accessHeader) {
-        return ResponseEntity.ok(userService.getFullInfoByAccessToken(accessHeader));
+        ResponseData<CommentatorDto> response = new ResponseData<>();
+        response.setData(userService.getFullInfoByAccessToken(accessHeader));
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -56,7 +64,20 @@ public class UserController {
      * @param e исключение, содержащее текст ошибки
      */
     @ExceptionHandler({UserNotFoundException.class, JwtException.class, AuthenticationCredentialsNotFoundException.class})
-    private ResponseEntity<ErrorMessageResponse> handleJwtExceptionException(Exception e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorMessageResponse(e.getMessage()));
+    private ResponseEntity<ResponseData<Object>> handleJwtException(Exception e) {
+        ResponseData<Object> response = new ResponseData<>();
+        logger.error("User not found by token, JWT is wrong", e);
+        response.setMessage("User not found by token, JWT is wrong");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    /**
+     * Обработчик истекшего
+     */
+    @ExceptionHandler(ExpiredJwtException.class)
+    private ResponseEntity<ResponseData<Object>> handleExpiredJwtException() {
+        ResponseData<Object> response = new ResponseData<>();
+        response.setMessage("JWT token is expired");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 }

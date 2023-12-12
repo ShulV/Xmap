@@ -1,7 +1,6 @@
 package com.shulpov.spots_app.locations.controllers;
 
-import com.shulpov.spots_app.common.ApiResponse;
-import com.shulpov.spots_app.common.ApiResponseStatus;
+import com.shulpov.spots_app.common.ResponseData;
 import com.shulpov.spots_app.locations.dto.CountryDto;
 import com.shulpov.spots_app.locations.services.CountryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,10 +29,9 @@ public class CountryController {
             description = "Позволяет пользователю получить перечень всех имеющихся стран"
     )
     @GetMapping("/all")
-    public ResponseEntity<ApiResponse<CountryDto>> getAll() {
-        ApiResponse<CountryDto> response = new ApiResponse<>();
+    public ResponseEntity<ResponseData<CountryDto>> getAll() {
+        ResponseData<CountryDto> response = new ResponseData<>();
         response.setDataList(countryService.getAllDto());
-        response.setCustomStatus(ApiResponseStatus.SUCCESS);
         return ResponseEntity.ok(response);
     }
 }
