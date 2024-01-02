@@ -60,7 +60,6 @@ public class CommentController {
             Comment newComment = commentService.save(comment, userOpt.get(), spotId);
             return Map.of("id", newComment.getId());
         } else {
-            logger.atError().log("not created comment");
             throw new AuthException("No principle");
         }
 

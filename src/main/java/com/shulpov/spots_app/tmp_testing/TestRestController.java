@@ -7,18 +7,24 @@ import com.shulpov.spots_app.spots.SpotService;
 import com.shulpov.spots_app.spots.models.Spot;
 import com.shulpov.spots_app.users.models.User;
 import com.shulpov.spots_app.users.services.UserService;
-import io.swagger.v3.oas.annotations.Operation;
+import io.minio.BucketExistsArgs;
+import io.minio.MakeBucketArgs;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import io.minio.errors.MinioException;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.security.auth.message.AuthException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Optional;
@@ -85,4 +91,71 @@ public class TestRestController {
         Spot spot = spotService.findById(spotId).get();
         return Map.of("favoriteNumber", spotUserService.getFavoriteNumber(spot));
     }
+
+//    ------------------------------------------------------------------------
+    private String endpoint = "http://144.91.114.139:9000";
+    private String accessKey = "luhW4s8LJ0GdcG2uaVhL";
+    private String secretKey = "L0nU7AlzTKr0sSn6kTptpw5F4gO953l7UpIz0jUI";
+    private String bucketName = "asiatrip";
+
+    //FIXME разобраться как загружать файл из переменной, а не из filename
+    @PostMapping("/s3")
+    public void upload(@RequestParam MultipartFile file, String bucketFilename) throws IOException, NoSuchAlgorithmException,
+            InvalidKeyException {
+
+
+        try {
+            // Create a minioClient with the MinIO server playground, its access key and secret key.
+            MinioClient minioClient =
+                    MinioClient.builder()
+                            .endpoint(endpoint)
+                            .credentials(accessKey, secretKey)
+                            .build();
+
+            // Make 'asiatrip' bucket if not exist.
+            boolean found =
+                    minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
+            if (!found) {
+                // Make a new bucket called 'asiatrip'.
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+            } else {
+                System.out.println("Bucket '" + bucketName + "' already exists.");
+            }
+
+            // Upload '/home/user/Photos/asiaphotos.zip' as object name 'asiaphotos-2015.zip' to bucket
+            // 'asiatrip'.
+
+            // Получение входного потока из MultipartFile
+            InputStream inputStream = file.getInputStream();
+
+            // Загрузка файла в бакет MinIO
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(bucketFilename)
+                            .stream(inputStream, file.getSize(), -1)
+                            .contentType(file.getContentType())
+                            .build());
+
+//            minioClient.uploadObject(
+//                    UploadObjectArgs.builder()
+//                            .bucket(bucketName)
+//                            .object(bucketFilename)
+//                            .filename("C:\\Users\\Victor\\Downloads\\вк\\1.jpg")
+//                            .build());
+
+            System.out.println(
+                    "'/home/user/Photos/asiaphotos.zip' is successfully uploaded as "
+                            + "object 'asiaphotos-2015.zip' to bucket 'asiatrip'.");
+        } catch (MinioException e) {
+            System.out.println("Error occurred: " + e);
+            System.out.println("HTTP trace: " + e.httpTrace());
+        }
+    }
+
+
+//    @GetMapping("/s3")
+
+
+
 }

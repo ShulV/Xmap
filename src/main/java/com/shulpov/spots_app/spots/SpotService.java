@@ -34,14 +34,18 @@ public class SpotService {
         this.imageInfoService = imageInfoService;
     }
 
-    //Получить все споты
+    /**
+     * Получить все споты
+     */
     public List<Spot> getAllSpots() {
         List<Spot> spots = spotRepo.findAll();
         logger.atInfo().log("getAllSpots() size={}", spots.size());
         return spots;
     }
 
-    //Получить спот по id
+    /**
+     * Получить спот по id
+     */
     public Optional<Spot> findById(Long spotId) {
         logger.atInfo().log("findById id={}", spotId);
         return spotRepo.findById(spotId);
@@ -49,7 +53,6 @@ public class SpotService {
 
     @Transactional
     public Spot saveWithAvatars(MultipartFile[] files, Spot spot) throws IOException {
-        logger.atInfo().log("saveWithAvatars files.length={}, spot.name={}", files.length, spot.getName());
         spot = spotRepo.save(spot);
         Long spotId = spot.getId();
         for (MultipartFile file : files) {
@@ -58,7 +61,12 @@ public class SpotService {
         return spot;
     }
 
-    //Получить все споты в определенном радиусе
+    /**
+     * Получить все споты в определенном радиусе
+     * @param lat широта
+     * @param lon долгота
+     * @param radius радиус
+     */
     public List<Spot> getSpotsInRadius(Double lat, Double lon, Double radius) {
         logger.atInfo().log("getSpotsInRadius lat={}, lon={}, rad={}", lat, lon, radius);
         return spotRepo.findSpotsInRadius(lat, lon, radius);

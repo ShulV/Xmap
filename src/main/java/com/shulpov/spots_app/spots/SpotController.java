@@ -102,7 +102,6 @@ public class SpotController {
     public List<SpotDto> getAllSpots(@RequestParam Double lat,
                                      @RequestParam Double lon,
                                      @RequestParam Double radius) {
-        logger.atInfo().log("lat=" + lat + "; lon=" + lon + "; radius=" + radius);
         return spotService.getSpotsInRadius(lat, lon, radius).stream().map(spotDtoConverter::convertToDto).toList();
     }
 

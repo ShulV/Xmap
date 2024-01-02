@@ -94,7 +94,6 @@ public class ImageInfoService {
     @Secured({"ROLE_MODERATOR", "ROLE_ADMIN"})
     @Transactional(rollbackFor = NoTransactionException.class)
     public ImageInfo uploadSpotImage(MultipartFile file, Long spotId) throws IOException {
-        logger.atInfo().log("uploadSpotImage file.name={} spotId={}", file.getOriginalFilename(), spotId);
         String genName = generateName(file.getOriginalFilename());
         ImageInfo createdFile = new ImageInfo();
         createdFile.setOriginalName(file.getOriginalFilename());
@@ -106,12 +105,6 @@ public class ImageInfoService {
             createdFile.setPhotographedSpot(spot.get());
             createdFile = imageInfoRepo.save(createdFile);
             imageManager.upload(file.getBytes(), spotsUploadPath, genName);
-            logger.atInfo().log("uploadSpotImage success " +
-                            "file: id={} name={} genName={} uploadDate={}",
-                    createdFile.getId(),
-                    createdFile.getOriginalName(),
-                    createdFile.getGenName(),
-                    createdFile.getUploadDate());
             return createdFile;
         } else {
             throw new NoSuchObjectException("No such spot in DB spotId=" + spotId);
@@ -120,13 +113,11 @@ public class ImageInfoService {
 
     //Скачать картинку пользователя
     public Resource downloadUserImage(String genName) throws IOException{
-        logger.atInfo().log("downloadUserImage genName={}", genName);
         return imageManager.download(usersUploadPath, genName);
     }
 
     //Скачать картинку спота
     public Resource downloadSpotImage(String genName) throws IOException{
-        logger.atInfo().log("downloadSpotImage genName={}", genName);
         return imageManager.download(spotsUploadPath, genName);
     }
 
@@ -135,15 +126,12 @@ public class ImageInfoService {
     //P.s. используется в одном контроллере, там есть проверка на удаление СВОЕЙ картинки
     @Transactional(rollbackFor = NoTransactionException.class)
     public Long deleteUserImage(Long id) throws IOException {
-        logger.atInfo().log("deleteUserImage id={}", id);
         Optional<ImageInfo> file = imageInfoRepo.findById(id);
         if (file.isPresent()) {
-            logger.atInfo().log("deleteUserImage imageInfo with id={} exists", id);
             imageInfoRepo.deleteByIdWithoutRefs(id);
             imageManager.delete(usersUploadPath, file.get().getGenName());
             return id;
         }
-        logger.atError().log("deleteUserImage imageInfo with id={} doesn't exist", id);
         throw new NotFoundException("Images not found in DB");
     }
 
